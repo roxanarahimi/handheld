@@ -24,7 +24,7 @@ class InvoiceController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware(Token::class)->except('readOnly1','repairToday');
+        $this->middleware(Token::class)->except('readOnly1','repairInvoiceItems');
     }
 
     public function index(Request $request)
