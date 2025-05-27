@@ -17,20 +17,14 @@ class InvoiceResource extends JsonResource
     public function toArray(Request $request): array
     {
 
-
-        $barcodes = [];
-        foreach ($this->barcodes as $item) {
-            $barcodes[] = $item->Barcode;
-        }
-
         $state = 0; // not done
-        if (count($barcodes) < $this->Sum) {
+        if (count($this->barcodes) < $this->Sum) {
             $state = 0; // not done
-        }elseif (count($barcodes) < $this->Sum) {
+        }elseif (count($this->barcodes) < $this->Sum) {
             $state = 0; // not done
-        }elseif(count($barcodes) == $this->Sum) {
+        }elseif(count($this->barcodes) == $this->Sum) {
             $state = 1; // done
-        } elseif (count($barcodes) > $this->Sum) {
+        } elseif (count($this->barcodes) > $this->Sum) {
             $state = 2; // over done
         }
         return [
