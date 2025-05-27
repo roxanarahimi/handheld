@@ -16,7 +16,6 @@ class InvoiceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
         $state = 0; // not done
         if (count($this->barcodes) < $this->Sum) {
             $state = 0; // not done
