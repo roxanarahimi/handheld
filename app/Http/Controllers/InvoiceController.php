@@ -150,11 +150,7 @@ class InvoiceController extends Controller
     }
     public function repairInvoiceItems(Request $request)
     {
-        $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])
-            ->with('OrderItems', function ($q) {
-                return $q->with('Part');
-            })
-            ->first();
+        $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])->first();
         $type = match ($item['InventoryVoucherSpecificationRef']) {
             '68' => 'InventoryVoucher',
             '69' => 'Deputation',
@@ -167,7 +163,7 @@ class InvoiceController extends Controller
 
         $invoice = Invoice::where('OrderID', $item['InventoryVoucherID'])->first();
 
-        return ['invoice'=>new InvoiceResource($invoice), 'InventoryVoucher'=>$item];
+//        return ['invoice'=>new InvoiceResource($invoice), 'InventoryVoucher'=>$item];
         if ($invoice) {
             $invoice->invoiceItems()->each->delete();
         } else {
