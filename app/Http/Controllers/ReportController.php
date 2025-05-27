@@ -8,6 +8,7 @@ use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
 use App\Models\Invoice;
+use App\Models\InvoiceAddress;
 use App\Models\InvoiceBarcode;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceProduct;
@@ -22,7 +23,7 @@ class ReportController extends Controller
 {
     public function fix(Request $request)
     {
-        $x= InventoryVoucher::where('InventoryVoucherID','321009')
+        $x = InventoryVoucher::where('InventoryVoucherID', '321009')
             ->with('OrderItems')
             ->first();
         return $x;
@@ -36,17 +37,17 @@ class ReportController extends Controller
         $r = Remittance::orderBy('id')->with('invoice')->paginate('200');
         return $r;
         $rs = DB::table('remittances')
-            ->select('orderID',  DB::raw('COUNT(*) as count'))
+            ->select('orderID', DB::raw('COUNT(*) as count'))
             ->groupBy('orderID')
 //            ->having('count', '>', 1)
             ->where('invoice_id', null)
             ->get();
 //        return $rs;
-        $rs->each(function ($r){
-            $invoice= Invoice::where('OrderID',$r->orderID)->first();
-            $b = Remittance::where('orderID',$r->orderID)->get();
+        $rs->each(function ($r) {
+            $invoice = Invoice::where('OrderID', $r->orderID)->first();
+            $b = Remittance::where('orderID', $r->orderID)->get();
             $b->each(function ($u) use ($invoice) {
-                $u->update(['invoice_id'=>$invoice->id]);
+                $u->update(['invoice_id' => $invoice->id]);
             });
         });
 
@@ -68,7 +69,7 @@ class ReportController extends Controller
             ->having('count', '>', 1)
             ->get();
 
-        return ['iitems:'=>$all, 'invoice dd'=>$duplicates,'rr'=>$rd];
+        return ['iitems:' => $all, 'invoice dd' => $duplicates, 'rr' => $rd];
 
 //        $all->each(function ($invoice) {
 //            $invoice->invoiceItems->each->delete(); // delete each InvoiceItem
@@ -485,6 +486,7 @@ class ReportController extends Controller
 //           ->paginate(100);
 //        return $dat3;
     }
+
     public function getInvoiceBarcodes(Request $request)
     {
         $info = InvoiceBarcode::orderByDesc('id');
@@ -506,6 +508,7 @@ class ReportController extends Controller
         return InvoiceBarcodeResource::collection($info);
 
     }
+
     public function getRemittances(Request $request)
     {
         $info = Remittance::orderByDesc('id');
@@ -522,6 +525,7 @@ class ReportController extends Controller
         return RemittanceResource::collection($info);
 
     }
+
     public function report(Request $request)
     {
         try {
@@ -570,7 +574,6 @@ class ReportController extends Controller
 //                $duplicates2 = array_values(array_unique(array_diff_assoc($bars2, array_unique($bars2))));
 //                return response()->json([['duplicates' => [$duplicates1, $duplicates2]], $paginator], 200);
 //}
-
 
 
         } catch (\Exception $exception) {
@@ -698,77 +701,72 @@ class ReportController extends Controller
 
     public function showInventoryVoucher(Request $request)
     {
-        $x= InventoryVoucher::where('Number',$request['OrderNumber'])
-            ->where('InventoryVoucherID',$request['OrderID'])
-            ->with('OrderItems',function ($q){
+        $x = InventoryVoucher::where('Number', $request['OrderNumber'])
+            ->where('InventoryVoucherID', $request['OrderID'])
+            ->with('OrderItems', function ($q) {
                 return $q->with('Part');
             })
             ->get();
         return $x;
     }
-//    public function repair(Request $request)
-//    {
-//        $item= InventoryVoucher::where('Number',$request['OrderNumber'])->first();
-//        $invoice = Invoice::where('OrderID',$item['InventoryVoucherID'])->first();
-//        if($invoice){
-//            if($invoice['Type']=='InventoryVoucher'){
-//
-//                foreach ($item->OrderItems as $item2) {
-//                    $exist = InvoiceItem::where('invoice_id',$invoice->id)->where('ProductNumber',$item2->Part->Code)->first();
-//                    if ($exist){
-//                        $exist->update(['Quantity'=>$exist->Quantity + $item2->Quantity]);
-//                    }else{
-//                        if (!str_contains($item2->Part->Name,'لیوانی') && !str_contains($item2->Part->Name,'کیلویی')){
-//                            $invoiceItem = InvoiceItem::create([
-//                                'invoice_id' => $invoice->id,
-//                                'ProductNumber' => $item2->Part->Code,
-//                                'Quantity' => $item2->Quantity,
-//                            ]);
-//                        }
-//
-//                    }
-//
-//                    $product = InvoiceProduct::where('ProductNumber', $item2->Part->Code)->first();
-//                    if (!$product) {
-//                        if (!str_contains($item2->Part->Name,'لیوانی')  && !str_contains($item2->Part->Name,'کیلویی')){
-//                            InvoiceProduct::create([
-//                                'ProductName' => $item2->Part->Name,
-//                                'ProductNumber' => $item2->Part->Code,
-//                                'Description' => $item2->Part->Description,
-//                            ]);
-//                        }
-//
-//                    }
-//                }
-//
-//            }
-//            if($invoice['Type']=='Deputation'){
-//                foreach ($item->OrderItems as $item2) {
-//                    $q = $item2->Quantity;
-//                    $int = (int)$item2->Quantity;
-//                    if(str_contains($item2->PartUnit->Name,'پک')){
-//                        $t = (int)PartUnit::where('PartID',$item2->PartRef)->where('Name','like','%کارتن%')->pluck('DSRatio')[0];
-//                        $q = (string)floor($int/$t);
-//                    }
-//                    $exist = InvoiceItem::where('invoice_id',$invoice->id)->where('ProductNumber',$item2->Part->Code)->first();
-//                    if ($exist){
-//                        $exist->update(['Quantity'=>$exist->Quantity + $q]);
-//                    }else{
-//                        if (!str_contains($item2->Part->Name,'لیوانی') && !str_contains($item2->Part->Name,'کیلویی')){
-//                            $invoiceItem = InvoiceItem::create([
-//                                'invoice_id' => $invoice->id,
-//                                'ProductNumber' => $item2->Part->Code,
-//                                'Quantity' => $q,
-//                            ]);
-//                        }
-//                    }
-//                }
-//
-//                $invoice->update(['Sum' => $item->OrderItems->sum('Quantity'),]);
-//            }
-//        }
-//        return response(new InvoiceResource($invoice),200);
-//
-//    }
+
+    public function repairToday(Request $request)
+    {
+        $dataa = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
+            ->orderByDesc('OrderID')
+            ->get();
+        foreach ($dataa as $invoice) {
+            $item = InventoryVoucher::where('InventoryVoucherID', $invoice['OrderID'])->where('Number', $invoice['OrderNumber'])->first();
+//            $invoice = Invoice::where('OrderID', $item['InventoryVoucherID'])->first();
+            if($item->OrderItems->sum('Quantity') != $invoice->Sum){
+                $invoice->OrderItems->each->delete();
+                if ($invoice['Type'] == 'InventoryVoucher') {
+                    foreach ($item->OrderItems as $item2) {
+                        $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
+                        if ($exist) {
+                            $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
+                        } else {
+                            if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
+                                $invoiceItem = InvoiceItem::create([
+                                    'invoice_id' => $invoice->id,
+                                    'ProductNumber' => $item2->Part->Code,
+                                    'Quantity' => $item2->Quantity,
+                                ]);
+                            }
+                        }
+                    }
+                }
+                if ($invoice['Type'] == 'Deputation') {
+                    foreach ($item->OrderItems as $item2) {
+                        $q = $item2->Quantity;
+                        $int = (int)$item2->Quantity;
+                        if (str_contains($item2->PartUnit->Name, 'پک')) {
+                            $t = (int)PartUnit::where('PartID', $item2->PartRef)->where('Name', 'like', '%کارتن%')->pluck('DSRatio')[0];
+                            $q = (string)floor($int / $t);
+                        }
+                        $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
+                        if ($exist) {
+                            $exist->update(['Quantity' => $exist->Quantity + $q]);
+                        } else {
+                            if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
+                                $invoiceItem = InvoiceItem::create([
+                                    'invoice_id' => $invoice->id,
+                                    'ProductNumber' => $item2->Part->Code,
+                                    'Quantity' => $q,
+                                ]);
+                            }
+                        }
+                    }
+                }
+                $invoice->update(['Sum' => $invoice->OrderItems->sum('Quantity')]);
+            }
+        }
+        $dd = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
+            ->orderByDesc('OrderID')
+            ->get();
+        return response(new InvoiceResource($dd), 200);
+    }
+
+
 
 }

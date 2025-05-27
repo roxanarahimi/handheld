@@ -360,7 +360,7 @@ class RemittanceController extends Controller
 //            ->with('PartUnit')
 //            ->get();
 //        return InventoryVoucherItemResource::collection($t);
-        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(30))
+        $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
             ->whereNot('Type', 'Order')
             ->orderByDesc('Type')
             ->orderByDesc('OrderID')

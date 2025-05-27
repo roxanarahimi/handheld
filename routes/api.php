@@ -61,6 +61,12 @@ Route::controller(App\Http\Controllers\CacheController::class)->group(function (
 
 
 
+Route::controller(App\Http\Controllers\InvoiceController::class)->group(function () {
+        Route::post('/repair', 'repairInvoiceItems');
+});
+
+
+
 
 
 Route::controller(App\Http\Controllers\DateController::class)->group(function () {
