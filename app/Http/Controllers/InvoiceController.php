@@ -163,7 +163,16 @@ class InvoiceController extends Controller
 
         $invoice = Invoice::where('OrderID', $item['InventoryVoucherID'])->first();
 
-//        return ['invoice'=>new InvoiceResource($invoice), 'InventoryVoucher'=>$item];
+        return ['invoice'=>new InvoiceResource($invoice),
+            'InventoryVoucher'=>$item,
+           "add"=>[
+                'AddressID' => $item->Store->Plant->Address->AddressID,
+                'AddressName' => $item->Store->Name,
+                'Address' => $item->Store->Plant->Address->Details,
+                'Phone' => $item->Store->Plant->Address->Phone,
+                'city' => $item->City,
+            ]
+            ];
         if ($invoice) {
             $invoice->invoiceItems()->each->delete();
         } else {
