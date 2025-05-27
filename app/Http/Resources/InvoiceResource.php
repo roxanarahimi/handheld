@@ -48,8 +48,8 @@ class InvoiceResource extends JsonResource
             'Progress' => count($this->barcodes) . '/' . $this->Sum,
             'State' => $state,
 
-            "DeliveryDate" => $this->DeliveryDate,
-            'DeliveryDate2' => (new DateController)->toPersian2($this->DeliveryDate),
+//            "DeliveryDate" => $this->DeliveryDate,
+            'DeliveryDate' => (new DateController)->toPersian2($this->DeliveryDate),
 
             "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),
             'created_at' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1],
