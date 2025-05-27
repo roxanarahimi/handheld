@@ -150,7 +150,11 @@ class InvoiceController extends Controller
     }
     public function repairInvoiceItems(Request $request)
     {
-        $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])->first();
+        $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])
+            ->with('OrderItems', function ($q) {
+                return $q->with('Part');
+            })
+            ->first();
         $type = match ($item['InventoryVoucherSpecificationRef']) {
             '68' => 'InventoryVoucher',
             '69' => 'Deputation',
