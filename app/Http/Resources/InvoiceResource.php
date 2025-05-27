@@ -17,14 +17,11 @@ class InvoiceResource extends JsonResource
     public function toArray(Request $request): array
     {
 
-        $testBarcodes = [];
-        foreach ($this->testBarcodes as $item) {
-            $testBarcodes[] = $item->Barcode;
-        }
-        $barcodes = [];
-        foreach ($this->barcodes as $item) {
-            $barcodes[] = $item->Barcode;
-        }
+
+//        $barcodes = [];
+//        foreach ($this->barcodes as $item) {
+//            $barcodes[] = $item->Barcode;
+//        }
 
         $state = 0; // not done
         if (count($barcodes) < $this->Sum) {
@@ -49,14 +46,11 @@ class InvoiceResource extends JsonResource
             'count' => $this->invoiceItems?->sum('Quantity'),
             'Barcodes Count' => count($barcodes),
 //            'Barcodes' => $barcodes,
-//            'TestBarcodes' => $testBarcodes,
             'Progress' => count($barcodes) . '/' . $this->Sum,
-            'ProgressTest' => count($testBarcodes) . '/' . $this->Sum,
-//            'State' => 2,
             'State' => $state,
 
-            "DeliveryDate" => $this->DeliveryDate,
-//            'DeliveryDate' => explode(' ',(new DateController)->toPersian($this->DeliveryDate))[0].' '.explode(' ',(new DateController)->toPersian($this->DeliveryDate))[1],
+//            "DeliveryDate" => $this->DeliveryDate,
+            'DeliveryDate' => explode(' ',(new DateController)->toPersian($this->DeliveryDate))[0].' '.explode(' ',(new DateController)->toPersian($this->DeliveryDate))[1],
 
             "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),
             'created_at' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1],
