@@ -18,10 +18,10 @@ class InvoiceResource extends JsonResource
     {
 
 
-//        $barcodes = [];
-//        foreach ($this->barcodes as $item) {
-//            $barcodes[] = $item->Barcode;
-//        }
+        $barcodes = [];
+        foreach ($this->barcodes as $item) {
+            $barcodes[] = $item->Barcode;
+        }
 
         $state = 0; // not done
         if (count($barcodes) < $this->Sum) {
