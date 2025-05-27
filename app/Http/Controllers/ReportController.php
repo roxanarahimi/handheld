@@ -699,7 +699,7 @@ class ReportController extends Controller
     public function showInventoryVoucher(Request $request)
     {
         $x= InventoryVoucher::where('Number',$request['OrderNumber'])
-//            ->where('InventoryVoucherID')
+            ->where('InventoryVoucherID',$request['OrderID'])
             ->with('OrderItems',function ($q){
                 return $q->with('Part');
             })
