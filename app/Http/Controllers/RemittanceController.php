@@ -62,20 +62,47 @@ class RemittanceController extends Controller
             })
             ->pluck('StoreID');
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef", "AddressID",
+            'GNR3.RegionalDivision.Name as City')
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
+            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
+//            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
-            ->whereIn('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', [68, 69])
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
             })
-            ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
 
+
+        $dat = InventoryVoucherResource::collection($dat);
+        return $dat;
+    }
+    public function getInventoryVouchersDeputation()
+    {
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
+        $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef",
+            "AddressID", 'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone', 'Details', 'GNR3.RegionalDivision.Name as City')
+            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+            ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
+//            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+            ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                $q->whereIn('PartRef', $partIDs);
+            })
+            ->where('GNR3.PartyAddress.IsMainAddress', "1")
+            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->get();
         $dat = InventoryVoucherResource::collection($dat);
         return $dat;
     }
@@ -130,20 +157,22 @@ class RemittanceController extends Controller
     {
         // Old version, Direct request to ERP Server using relationships
         $dat = $this->getInventoryVouchers();
-//        $dat2 = $this->getOrders();
+        $dat2 = $this->getInventoryVouchersDeputation();
         $filtered = json_decode(json_encode($dat));
-//        $filtered2 = json_decode(json_encode($dat2));
+        $filtered2 = json_decode(json_encode($dat2));
         $input1 = array_values($filtered);
-//        $input2 = array_values($filtered2);
-//        $input = array_merge($input1, $input2);
+        $input2 = array_values($filtered2);
+        $input = array_merge($input1, $input2);
+
 
         $offset = 0;
         $perPage = 100;
         if ($request['page'] && $request['page'] > 1) {
             $offset = ($request['page'] - 1) * $perPage;
         }
-        $info = array_slice($input1, $offset, $perPage);
-        $paginator = new LengthAwarePaginator($info, count($input1), $perPage, $request['page']);
+        $info = array_slice($input, $offset, $perPage);
+        $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
+
         return response()->json($paginator, 200);
 
     }
