@@ -47,129 +47,9 @@ class RemittanceController extends Controller
         $this->middleware(Token::class)->except('readOnly', 'readOnly1');
     }
 
-    public function index(Request $request)
-    {
-        try {
-            $info = Remittance::orderByDesc('id');
-            if (isset($request['orderID'])) {
-                $info = $info->where('orderID', $request['orderID']);
-            }
-            if (isset($request['search'])) {
-                $info = $info->where('barcode', 'like', '%' . $request['search'] . '%');
-            }
-            if (isset($request['count'])) {
-                $count = $request['count'];
-                $info = $info->take($count)->get();
-                $info = RemittanceResource::collection($info);
-            } else {
-                $info = $info->paginate(100);
-                $data = RemittanceResource::collection($info);
-            }
-
-            return response($info, 200);
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
-    public function show(Remittance $remittance)
-    {
-        try {
-            return response(new RemittanceResource($remittance), 200);
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
-    public function store(Request $request)
-    {
-        $str = str_replace(' ', '', str_replace('"', '', $request['OrderItems']));
-        $orderItems = explode(',', $str);
-        $myfile = fopen('../storage/logs/failed_data_entries/' . $request['OrderID'] . ".log", "w") or die("Unable to open file!");
-        $txt = json_encode([
-            'OrderID' => $request['OrderID'],
-            'name' => $request['name'],
-            'OrderItems' => $orderItems
-        ]);
-        fwrite($myfile, $txt);
-        fclose($myfile);
-
-
-        try {
-            foreach ($orderItems as $item) {
-                Remittance::create([
-                    "orderID" => $request['OrderID'],
-                    "addressName" => $request['name'],
-                    "barcode" => $item,
-                ]);
-            }
-            $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-            return response(RemittanceResource::collection($remittances), 201);
-        } catch (\Exception $exception) {
-            for ($i = 0; $i < 3; $i++) {
-                try {
-                    foreach ($orderItems as $item) {
-                        Remittance::create([
-                            "orderID" => $request['OrderID'],
-                            "addressName" => $request['name'],
-                            "barcode" => str_replace(' ', '', str_replace('"', '', $item)),
-                        ]);
-                    }
-                    $remittances = Remittance::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-                    if (count($remittances) == count($orderItems)) {
-                        $i = 3;
-                        return response(RemittanceResource::collection($remittances), 201);
-                    }
-                } catch (\Exception $exception) {
-                    return response(['message' =>
-                        'خطای پایگاه داده. لطفا کد '
-                        . $request['OrderID'] .
-                        ' را یادداشت کرده و جهت ثبت بارکد ها به پشتیبانی اطلاع دهید'], 500);
-                }
-            }
-        }
-
-
-    }
-
-    public function update(Request $request, Remittance $remittance)
-    {
-        $validator = Validator::make($request->all('title'),
-            [
-//              'title' => 'required|unique:Remittances,title,' . $remittance['id'],
-//                'title' => 'required',
-            ],
-            [
-//                'title.required' => 'لطفا عنوان را وارد کنید',
-//                'title.unique' => 'این عنوان قبلا ثبت شده است',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json($validator->messages(), 422);
-        }
-        try {
-            $remittance->update($request->all());
-            return response(new RemittanceResource($remittance), 200);
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
-    public function destroy(Remittance $remittance)
-    {
-
-        try {
-            $remittance->delete();
-            return response('Remittance deleted', 200);
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
     public function getInventoryVouchers()
     {
-        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -249,7 +129,7 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         // Old version, Direct request to ERP Server using relationships
-        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -302,7 +182,7 @@ class RemittanceController extends Controller
     {
         try {
             //Mainnnnnnnnn   // Old version, Direct request to ERP Server using join
-            $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->pluck("PartID");
+            $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
             $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
                 ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
                 ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -425,31 +305,6 @@ class RemittanceController extends Controller
             $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
             return response()->json($paginator, 200);
 
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
-
-    public function showProduct($id)
-    {
-        try {
-            $dat = Part::select('PartID as ProductID', 'Name', 'PropertiesComment as Description', 'Code as Number')->where('Code', $id)->first();
-            if (!$dat) {
-                $dat = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
-            }
-            return response()->json($dat, 200);
-
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
-    public function showProductTest($id)
-    {
-        try {
-            $dat = InvoiceProduct::select('id', 'ProductName as Name', 'ProductNumber', 'Description')->where('ProductNumber', $id)->first();
-            return response()->json($dat, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }

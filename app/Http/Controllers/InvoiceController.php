@@ -11,7 +11,10 @@ use App\Models\InventoryVoucher;
 use App\Models\Invoice;
 use App\Models\InvoiceAddress;
 use App\Models\InvoiceItem;
+use App\Models\InvoiceProduct;
+use App\Models\Part;
 use App\Models\PartUnit;
+use App\Models\Product;
 use App\Models\Remittance;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -53,112 +56,25 @@ class InvoiceController extends Controller
         }
     }
 
-    public function show(Invoice $invoice)
+    public function showProduct($id)
     {
         try {
-            return response(new InvoiceResource($invoice), 200);
+            $dat = Part::select('PartID as ProductID', 'Name', 'PropertiesComment as Description', 'Code as Number')->where('Code', $id)->first();
+            if (!$dat) {
+                $dat = Product::select('ProductID', 'Name', 'Description', 'Number')->where('Number', $id)->first();
+            }
+            return response()->json($dat, 200);
+
         } catch (\Exception $exception) {
             return response($exception);
         }
     }
 
-    public function store(Request $request)
+    public function showProductTest($id)
     {
-        $data = json_encode([
-            'OrderID' => $request['OrderID'],
-            'OrderItems' => $request['OrderItems'],
-            'name' => $request['name'],
-        ]);
-        $id = $request['OrderID'];
-        $info = Redis::get($request['OrderID']);
-        if (isset($info)) {
-            $id = $request['OrderID'] . '-' . substr(explode(',', $request['OrderItems'])[0], -4);
-        }
-        Redis::set($id, $data);
-        $value = Redis::get($id);
-        $json = json_decode($value);
-        $orderId = $json->{'OrderID'};
-        $items = explode(',', $json->{'OrderItems'});
-        $name = $json->{'name'};
-        $myfile = fopen('../storage/logs/failed_data_entries/' . $id . ".log", "w") or die("Unable to open file!");
-        $txt = json_encode([
-            'OrderID' => $orderId,
-            'name' => $name,
-            'OrderItems' => $items
-        ]);
-        fwrite($myfile, $txt);
-        fclose($myfile);
-
-        $str = str_replace(' ', '', str_replace('"', '', $request['OrderItems']));
-        $orderItems = explode(',', $str);
         try {
-            foreach ($orderItems as $item) {
-                Invoice::create([
-                    "orderID" => $request['OrderID'],
-                    "addressName" => $request['name'],
-                    "barcode" => $item,
-                ]);
-            }
-            $invoices = Invoice::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-            return response(InvoiceResource::collection($invoices), 201);
-        } catch (\Exception $exception) {
-            for ($i = 0; $i < 3; $i++) {
-                try {
-                    foreach ($orderItems as $item) {
-                        Invoice::create([
-                            "orderID" => $request['OrderID'],
-                            "addressName" => $request['name'],
-                            "barcode" => str_replace(' ', '', str_replace('"', '', $item)),
-                        ]);
-                    }
-                    $invoices = Invoice::orderByDesc('id')->where('orderID', $request['OrderID'])->get();
-                    if (count($invoices) == count($orderItems)) {
-                        $i = 3;
-                        return response(InvoiceResource::collection($invoices), 201);
-                    }
-                } catch (\Exception $exception) {
-                    return response(['message' =>
-                        'خطای پایگاه داده. لطفا کد '
-                        . $id .
-                        ' را یادداشت کرده و جهت ثبت بارکد ها به پشتیبانی اطلاع دهید'], 500);
-                }
-            }
-        }
-
-
-    }
-
-    public function update(Request $request, Invoice $invoice)
-    {
-        $validator = Validator::make($request->all('title'),
-            [
-//              'title' => 'required|unique:Invoices,title,' . $invoice['id'],
-//                'title' => 'required',
-            ],
-            [
-//                'title.required' => 'لطفا عنوان را وارد کنید',
-//                'title.unique' => 'این عنوان قبلا ثبت شده است',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json($validator->messages(), 422);
-        }
-        try {
-            $invoice->update($request->all());
-            return response(new InvoiceResource($invoice), 200);
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-    }
-
-    public function destroy(Invoice $invoice)
-    {
-
-        try {
-            $invoice->invoiceItems()->each->delete();
-            $invoice->delete();
-            return response('Invoice deleted', 200);
+            $dat = InvoiceProduct::select('id', 'ProductName as Name', 'ProductNumber', 'Description')->where('ProductNumber', $id)->first();
+            return response()->json($dat, 200);
         } catch (\Exception $exception) {
             return response($exception);
         }
@@ -255,6 +171,74 @@ class InvoiceController extends Controller
         return response(new InvoiceResource($invoice), 200);
 
 
+    }
+
+    public function repairToday(Request $request)
+    {
+        $dataa = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
+            ->orderByDesc('OrderID')
+            ->get();
+        foreach ($dataa as $invoice) {
+            $item = InventoryVoucher::where('InventoryVoucherID', $invoice['OrderID'])->where('Number', $invoice['OrderNumber'])->first();
+//            $invoice = Invoice::where('OrderID', $item['InventoryVoucherID'])->first();
+            if($item->OrderItems->sum('Quantity') != $invoice->Sum){
+                $invoice->OrderItems->each->delete();
+                if ($invoice['Type'] == 'InventoryVoucher') {
+                    foreach ($item->OrderItems as $item2) {
+                        $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
+                        if ($exist) {
+                            $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
+                        } else {
+                            if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
+                                $invoiceItem = InvoiceItem::create([
+                                    'invoice_id' => $invoice->id,
+                                    'ProductNumber' => $item2->Part->Code,
+                                    'Quantity' => $item2->Quantity,
+                                ]);
+                            }
+                        }
+                    }
+                }
+                if ($invoice['Type'] == 'Deputation') {
+                    foreach ($item->OrderItems as $item2) {
+                        $q = $item2->Quantity;
+                        $int = (int)$item2->Quantity;
+                        if (str_contains($item2->PartUnit->Name, 'پک')) {
+                            $t = (int)PartUnit::where('PartID', $item2->PartRef)->where('Name', 'like', '%کارتن%')->pluck('DSRatio')[0];
+                            $q = (string)floor($int / $t);
+                        }
+                        $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
+                        if ($exist) {
+                            $exist->update(['Quantity' => $exist->Quantity + $q]);
+                        } else {
+                            if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
+                                $invoiceItem = InvoiceItem::create([
+                                    'invoice_id' => $invoice->id,
+                                    'ProductNumber' => $item2->Part->Code,
+                                    'Quantity' => $q,
+                                ]);
+                            }
+                        }
+                    }
+                }
+                $invoice->update(['Sum' => $invoice->OrderItems->sum('Quantity')]);
+            }
+        }
+        $dd = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
+            ->orderByDesc('OrderID')
+            ->get();
+        return response(new InvoiceResource($dd), 200);
+    }
+
+    public function showInventoryVoucher(Request $request)
+    {
+        $x = InventoryVoucher::where('Number', $request['OrderNumber'])
+            ->where('InventoryVoucherID', $request['OrderID'])
+            ->with('OrderItems', function ($q) {
+                return $q->with('Part');
+            })
+            ->get();
+        return $x;
     }
 
 }

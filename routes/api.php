@@ -18,21 +18,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::controller(App\Http\Controllers\RemittanceController::class)->group(function () {
-    Route::prefix('remittance')->group(function () {
-        Route::post('/', 'index');
-        Route::post('/show/{remittance}', 'show');
-        Route::post('/store', 'store');
-        Route::post('/update/{remittance}', 'update');
-        Route::post('/destroy/{remittance}', 'destroy');
-    });
     Route::post('/stores', 'getStores');
 //    Route::post('/read/info', 'readOnly');//???
-//    Route::get('/info', 'readOnly1');
     Route::get('/readOnly1', 'readOnly1');
     Route::get('/readOnly', 'readOnly');
-    Route::post('/product/{id}', 'showProduct');
-    Route::post('/productTest/{id}', 'showProductTest');
-
 });
 
 Route::controller(App\Http\Controllers\InvoiceBarcodeController::class)->group(function () {
@@ -46,34 +35,25 @@ Route::controller(App\Http\Controllers\InvoiceBarcodeController::class)->group(f
     Route::post('/safe/delete/barcode', 'safeDeleteBarcodes');
 
 });
-Route::controller(App\Http\Controllers\TestController::class)->group(function () {
-    Route::prefix('test')->group(function () {
-        Route::post('/', 'index');
-        Route::post('/show/{test}', 'show');
-        Route::post('/store', 'store');
-        Route::post('/update/{test}', 'update');
-        Route::post('/destroy/{test}', 'destroy');
-    });
-});
+
 
 Route::controller(App\Http\Controllers\CacheController::class)->group(function () {
-        Route::post('/cache', 'cacheInvoice');
+    Route::post('/cache', 'cacheInvoice');
 });
 
 Route::controller(App\Http\Controllers\InvoiceController::class)->group(function () {
-        Route::get('/info', 'info');
-        Route::post('/repair', 'repairInvoiceItems');
-});
+    Route::get('/info', 'info');
+    Route::post('/repair', 'repairInvoiceItems');
+    Route::post('/erp', 'showInventoryVoucher');
 
-Route::controller(App\Http\Controllers\DateController::class)->group(function () {
-        Route::get('/tt', 'jalali_to_gregorian');
+    Route::post('/product/{id}', 'showProduct');
+    Route::post('/productTest/{id}', 'showProductTest');//??
 });
 
 Route::controller(App\Http\Controllers\ReportController::class)->group(function () {
     Route::get('/report', 'report');
     Route::post('/fix', 'fix');
     Route::get('/filter', 'filter');
-    Route::post('/erp', 'showInventoryVoucher');
 
 });
 
