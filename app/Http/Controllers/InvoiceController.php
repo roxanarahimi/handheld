@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\Token;
+use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
@@ -234,11 +235,8 @@ class InvoiceController extends Controller
     {
         $x = InventoryVoucher::where('Number', $request['OrderNumber'])
             ->where('InventoryVoucherID', $request['OrderID'])
-            ->with('OrderItems', function ($q) {
-                return $q->with('Part');
-            })
             ->get();
-        return $x;
+        return response(new InventoryVoucherResource($x),200);
     }
 
 }
