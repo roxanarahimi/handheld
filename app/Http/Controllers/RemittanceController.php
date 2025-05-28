@@ -129,51 +129,21 @@ class RemittanceController extends Controller
     public function readOnly1(Request $request)
     {
         // Old version, Direct request to ERP Server using relationships
-        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
-        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
-            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->whereNot(function ($query) {
-                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-                    ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
-            })
-            ->pluck('StoreID');
-        $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef")
-            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
-            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
-            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(7))
-            ->whereIn('LGS3.Store.StoreID', $storeIDs)
-            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
-            ->whereHas('OrderItems', function ($q) use ($partIDs) {
-                $q->whereIn('PartRef', $partIDs);
-            })
-            ->orderByDesc('LGS3.InventoryVoucher.InventoryVoucherID')
-            ->get();
-
-
         $dat = $this->getInventoryVouchers();
-        $dat2 = $this->getOrders();
+//        $dat2 = $this->getOrders();
         $filtered = json_decode(json_encode($dat));
-        $filtered2 = json_decode(json_encode($dat2));
+//        $filtered2 = json_decode(json_encode($dat2));
         $input1 = array_values($filtered);
-        $input2 = array_values($filtered2);
-        $input = array_merge($input1, $input2);
-
+//        $input2 = array_values($filtered2);
+//        $input = array_merge($input1, $input2);
 
         $offset = 0;
         $perPage = 100;
         if ($request['page'] && $request['page'] > 1) {
             $offset = ($request['page'] - 1) * $perPage;
         }
-        $info = array_slice($input, $offset, $perPage);
-        $paginator = new LengthAwarePaginator($info, count($input), $perPage, $request['page']);
-
+        $info = array_slice($input1, $offset, $perPage);
+        $paginator = new LengthAwarePaginator($info, count($input1), $perPage, $request['page']);
         return response()->json($paginator, 200);
 
     }

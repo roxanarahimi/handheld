@@ -36,7 +36,7 @@ class InventoryVoucherResource extends JsonResource
             "CreationDate" => $this->CreationDate,
             "DeliveryDate" => $this->CreationDate,
             "OrderItems" => InventoryVoucherItemResource::collection($this->OrderItems),
-            "ok" => 1,//
+//            "ok" => 1,//
 
         ];
     }
