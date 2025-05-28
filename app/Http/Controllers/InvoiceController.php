@@ -233,7 +233,7 @@ class InvoiceController extends Controller
 
     public function showInventoryVoucher(Request $request)
     {
-        $x = InventoryVoucher::where('Number', $request['OrderNumber'])
+        $x = InventoryVoucher::select('*')->where('Number', $request['OrderNumber'])
             ->where('InventoryVoucherID', $request['OrderID'])
             ->get();
         return response(new InventoryVoucherResource($x),200);
