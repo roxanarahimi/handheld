@@ -24,7 +24,7 @@ class InvoiceController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware(Token::class)->except('readOnly1','repairInvoiceItems');
+        $this->middleware(Token::class)->except('info','repairInvoiceItems');
     }
 
     public function index(Request $request)
@@ -37,6 +37,21 @@ class InvoiceController extends Controller
         }
     }
 
+    public function info(Request $request)
+    {
+        try {
+            $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(10))
+                ->whereNot('Type', 'Order')
+                ->orderByDesc('Type')
+                ->orderByDesc('OrderID')
+                ->paginate(100);
+            $data = InvoiceResource::collection($d3);
+            return response()->json($d3, 200);
+
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
+    }
 
     public function show(Invoice $invoice)
     {
@@ -148,6 +163,7 @@ class InvoiceController extends Controller
             return response($exception);
         }
     }
+
     public function repairInvoiceItems(Request $request)
     {
         $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])

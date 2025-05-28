@@ -26,9 +26,10 @@ Route::controller(App\Http\Controllers\RemittanceController::class)->group(funct
         Route::post('/destroy/{remittance}', 'destroy');
     });
     Route::post('/stores', 'getStores');
-    Route::post('/read/info', 'readOnly');
-    Route::get('/info', 'readOnly1');
-    Route::get('/info2', 'readOnly2');
+//    Route::post('/read/info', 'readOnly');//???
+//    Route::get('/info', 'readOnly1');
+    Route::get('/readOnly1', 'readOnly1');
+    Route::get('/readOnly', 'readOnly');
     Route::post('/product/{id}', 'showProduct');
     Route::post('/productTest/{id}', 'showProductTest');
 
@@ -59,21 +60,14 @@ Route::controller(App\Http\Controllers\CacheController::class)->group(function (
         Route::post('/cache', 'cacheInvoice');
 });
 
-
-
 Route::controller(App\Http\Controllers\InvoiceController::class)->group(function () {
+        Route::get('/info', 'info');
         Route::post('/repair', 'repairInvoiceItems');
 });
-
-
-
-
 
 Route::controller(App\Http\Controllers\DateController::class)->group(function () {
         Route::get('/tt', 'jalali_to_gregorian');
 });
-
-
 
 Route::controller(App\Http\Controllers\ReportController::class)->group(function () {
     Route::get('/report', 'report');
