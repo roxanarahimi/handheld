@@ -239,8 +239,8 @@ class InvoiceController extends Controller
                 return $q->with('Part');
             })
             ->get();
-        return $x;
-        return response(new InventoryVoucherResource($x),200);
+//        return $x;
+        return response(InventoryVoucherResource::collection($x),200);
 
     }
 
