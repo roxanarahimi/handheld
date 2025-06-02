@@ -118,16 +118,6 @@ class InvoiceController extends Controller
                 'Sum' => $item->OrderItems->sum('Quantity'),
                 'DeliveryDate' => $item->DeliveryDate
             ]);
-            $address = InvoiceAddress::where('AddressID', $item->Store->Plant->Address->AddressID)->first();
-            if (!$address) {
-                InvoiceAddress::create([
-                    'AddressID' => $item->Store->Plant->Address->AddressID,
-                    'AddressName' => $item->Store->Name,
-                    'Address' => $item->Store->Plant->Address->Details,
-                    'Phone' => $item->Store->Plant->Address->Phone,
-                    'city' => $item->City,
-                ]);
-            }
         }
 
         if ($type == 'InventoryVoucher') {
@@ -170,8 +160,6 @@ class InvoiceController extends Controller
         }
         $invoice->update(['Sum' => $invoice->invoiceItems->sum('Quantity')]);
         return response(new InvoiceResource($invoice), 200);
-
-
     }
 
     public function repairToday(Request $request)
