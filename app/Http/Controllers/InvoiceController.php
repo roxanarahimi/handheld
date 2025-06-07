@@ -90,15 +90,14 @@ class InvoiceController extends Controller
             $invoice = Invoice::orderByDesc('id')->where('OrderID', $item['InventoryVoucherID'])->where('OrderNumber', $request['OrderNumber'])->first();
             $invoice->invoiceItems->each->delete();
 
-            return $invoice->type;
-            if ($invoice->type == 'InventoryVoucher') {
+            if ($invoice->Type == 'InventoryVoucher') {
                 foreach ($item->OrderItems as $item2) {
                     $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
                     if ($exist) {
                         $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
                     } else {
                         if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
-                           return  $invoiceItem = InvoiceItem::create([
+                             $invoiceItem = InvoiceItem::create([
                                 'invoice_id' => $invoice->id,
                                 'ProductNumber' => $item2->Part->Code,
                                 'Quantity' => $item2->Quantity,
@@ -107,9 +106,8 @@ class InvoiceController extends Controller
                     }
                 }
             }
-            if ($invoice->type == 'Deputation') {
+            if ($invoice->Type == 'Deputation') {
                 foreach ($item->OrderItems as $item2) {
-                    return $item2;
                     $q = $item2->Quantity;
                     $int = (int)$item2->Quantity;
                     if (str_contains($item2->PartUnit->Name, 'پک')) {
@@ -121,7 +119,7 @@ class InvoiceController extends Controller
                         $exist->update(['Quantity' => $exist->Quantity + $q]);
                     } else {
                         if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
-                          return  $invoiceItem = InvoiceItem::create([
+                            $invoiceItem = InvoiceItem::create([
                                 'invoice_id' => $invoice->id,
                                 'ProductNumber' => $item2->Part->Code,
                                 'Quantity' => $q,
