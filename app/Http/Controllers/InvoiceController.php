@@ -84,7 +84,7 @@ class InvoiceController extends Controller
     public function repairInvoiceItems(Request $request)
     {
         $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])->first();
-
+        return $item->OrderItems;
         $invoice = Invoice::orderByDesc('id')->where('OrderID', $item['InventoryVoucherID'])->where('OrderNumber', $request['OrderNumber'])->first();
         $invoice->invoiceItems->each->delete();
 
