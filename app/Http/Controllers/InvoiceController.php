@@ -28,7 +28,7 @@ class InvoiceController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware(Token::class)->except('info','repairInvoiceItems','showInventoryVoucher');
+        $this->middleware(Token::class)->except('info', 'repairInvoiceItems', 'showInventoryVoucher');
     }
 
     public function index(Request $request)
@@ -83,44 +83,12 @@ class InvoiceController extends Controller
 
     public function repairInvoiceItems(Request $request)
     {
-        $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])
-            ->with('OrderItems', function ($q) {
-                return $q->with('Part');
-            })
-            ->with('Store', function ($q) {
-                return $q->with('Plant',function ($z){
-                    return $z->with('Address');
-                });
-            })->first();
-        $invoice = Invoice::where('OrderID', $item['InventoryVoucherID'])->first();
-        return ['invoice'=>new InvoiceResource($invoice), 'InventoryVoucher'=>$item,];
-        $type = match ($item['InventoryVoucherSpecificationRef']) {
-            '68' => 'InventoryVoucher',
-            '69' => 'Deputation',
-            default => null,
-        };
+        $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])->first();
 
-        if ($type === null) {
-            return response('InventoryVoucherSpecificationRef not supported.', 422);
-        }
+        $invoice = Invoice::orderByDesc('id')->where('OrderID', $item['InventoryVoucherID'])->where('OrderNumber', $request['OrderNumber'])->first();
+        $invoice->invoiceItems()->each->delete();
 
-        $invoice = Invoice::where('OrderID', $item['InventoryVoucherID'])->first();
-
-
-        if ($invoice) {
-            $invoice->invoiceItems()->each->delete();
-        } else {
-            $invoice = Invoice::create([
-                'Type' => $type,
-                'OrderID' => $item->InventoryVoucherID,
-                'OrderNumber' => $item->Number,
-                'AddressID' => $item->Store->Plant->Address->AddressID,
-                'Sum' => $item->OrderItems->sum('Quantity'),
-                'DeliveryDate' => $item->DeliveryDate
-            ]);
-        }
-
-        if ($type == 'InventoryVoucher') {
+        if ($invoice->type == 'InventoryVoucher') {
             foreach ($item->OrderItems as $item2) {
                 $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
                 if ($exist) {
@@ -136,7 +104,7 @@ class InvoiceController extends Controller
                 }
             }
         }
-        if ($type == 'Deputation') {
+        if ($invoice->type == 'Deputation') {
             foreach ($item->OrderItems as $item2) {
                 $q = $item2->Quantity;
                 $int = (int)$item2->Quantity;
@@ -170,7 +138,7 @@ class InvoiceController extends Controller
         foreach ($dataa as $invoice) {
             $item = InventoryVoucher::where('InventoryVoucherID', $invoice['OrderID'])->where('Number', $invoice['OrderNumber'])->first();
 //            $invoice = Invoice::where('OrderID', $item['InventoryVoucherID'])->first();
-            if($item->OrderItems->sum('Quantity') != $invoice->Sum){
+            if ($item->OrderItems->sum('Quantity') != $invoice->Sum) {
                 $invoice->OrderItems->each->delete();
                 if ($invoice['Type'] == 'InventoryVoucher') {
                     foreach ($item->OrderItems as $item2) {
@@ -227,7 +195,7 @@ class InvoiceController extends Controller
                 return $q->with('Part');
             })
             ->get();
-        return response(InventoryVoucherResource::collection($x),200);
+        return response(InventoryVoucherResource::collection($x), 200);
 
     }
 
