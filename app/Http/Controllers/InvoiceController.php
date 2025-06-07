@@ -108,6 +108,7 @@ class InvoiceController extends Controller
             }
             if ($invoice->type == 'Deputation') {
                 foreach ($item->OrderItems as $item2) {
+                    return $item2;
                     $q = $item2->Quantity;
                     $int = (int)$item2->Quantity;
                     if (str_contains($item2->PartUnit->Name, 'پک')) {
