@@ -90,6 +90,7 @@ class InvoiceController extends Controller
             $invoice = Invoice::orderByDesc('id')->where('OrderID', $item['InventoryVoucherID'])->where('OrderNumber', $request['OrderNumber'])->first();
             $invoice->invoiceItems->each->delete();
 
+            return $invoice->type;
             if ($invoice->type == 'InventoryVoucher') {
                 foreach ($item->OrderItems as $item2) {
                     $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
