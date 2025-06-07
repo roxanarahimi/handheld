@@ -129,7 +129,7 @@ class InvoiceController extends Controller
                 }
             }
             $invoice->update(['Sum' => $invoice->invoiceItems->sum('Quantity')]);
-            $i = Invoice::orderByDesc('id')->where('OrderID', $item['InventoryVoucherID'])->where('OrderNumber', $request['OrderNumber'])->first();
+            $i = Invoice::where('id', $invoice->id)->first();
             return response(new InvoiceResource($i), 200);
 
         } catch (\Exception $exception) {
