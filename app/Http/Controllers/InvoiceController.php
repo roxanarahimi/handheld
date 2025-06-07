@@ -88,6 +88,8 @@ class InvoiceController extends Controller
             $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])->first();
 
             $invoice = Invoice::orderByDesc('id')->where('OrderID', $item['InventoryVoucherID'])->where('OrderNumber', $request['OrderNumber'])->first();
+//            $invoice =Invoice::where('id', $request['id'])->first();
+
             $invoice->invoiceItems->each->delete();
 
             if ($invoice->Type == 'InventoryVoucher') {
@@ -197,7 +199,7 @@ class InvoiceController extends Controller
     public function showInventoryVoucher(Request $request)
     {
         $x = InventoryVoucher::where('Number', $request['OrderNumber'])
-            ->where('InventoryVoucherID', $request['OrderID'])
+//            ->where('InventoryVoucherID', $request['OrderID'])
             ->with('OrderItems', function ($q) {
                 return $q->with('Part');
             })
