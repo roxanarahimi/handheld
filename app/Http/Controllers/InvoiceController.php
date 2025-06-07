@@ -86,7 +86,7 @@ class InvoiceController extends Controller
 
         try {
             $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])->first();
-//            return $item->OrderItems;
+
             $invoice = Invoice::orderByDesc('id')->where('OrderID', $item['InventoryVoucherID'])->where('OrderNumber', $request['OrderNumber'])->first();
             $invoice->invoiceItems->each->delete();
 
@@ -97,7 +97,7 @@ class InvoiceController extends Controller
                         $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
                     } else {
                         if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
-                            $invoiceItem = InvoiceItem::create([
+                           return  $invoiceItem = InvoiceItem::create([
                                 'invoice_id' => $invoice->id,
                                 'ProductNumber' => $item2->Part->Code,
                                 'Quantity' => $item2->Quantity,
@@ -119,7 +119,7 @@ class InvoiceController extends Controller
                         $exist->update(['Quantity' => $exist->Quantity + $q]);
                     } else {
                         if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
-                            $invoiceItem = InvoiceItem::create([
+                          return  $invoiceItem = InvoiceItem::create([
                                 'invoice_id' => $invoice->id,
                                 'ProductNumber' => $item2->Part->Code,
                                 'Quantity' => $q,
