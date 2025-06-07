@@ -131,7 +131,9 @@ class InvoiceController extends Controller
             $invoice->update(['Sum' => $invoice->invoiceItems->sum('Quantity')]);
             return response(new InvoiceResource($invoice), 200);
 
-        }catch(\Exception $exception){ return response($exception); }
+        } catch (\Exception $exception) {
+            return response($exception);
+        }
     }
 
     public function repairToday(Request $request)
