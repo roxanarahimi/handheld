@@ -199,7 +199,7 @@ class InvoiceController extends Controller
     public function showInventoryVoucher(Request $request)
     {
         $x = InventoryVoucher::orderByDesc('OrderID')->where('Number', $request['OrderNumber'])
-//            ->where('InventoryVoucherID', $request['OrderID'])
+            ->where('InventoryVoucherID', $request['OrderID'])
             ->with('OrderItems', function ($q) {
                 return $q->with('Part');
             })
