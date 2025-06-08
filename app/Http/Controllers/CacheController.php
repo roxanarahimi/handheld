@@ -309,7 +309,7 @@ class CacheController extends Controller
 //                }
 //            }
             $datetime = new \DateTime("now", new \DateTimeZone("Asia/Tehran"));
-            $nowTime = $datetime->format('Y-m-d G:i');
+            $nowTime = $datetime->format('Y-m-d H:i:s');
             echo $nowTime . ' - Tehran Time: cache is ok
 ';
         } catch (\Exception $exception) {
