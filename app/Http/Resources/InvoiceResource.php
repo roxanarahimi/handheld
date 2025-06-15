@@ -16,12 +16,13 @@ class InvoiceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $barcodes_count = count($this->barcodes);
         $state = 0; // not done
-        if (count($this->barcodes) < $this->Sum) {
+        if ($barcodes_count < $this->Sum) {
             $state = 0; // not done
-        }elseif(count($this->barcodes) == $this->Sum) {
+        }elseif($barcodes_count == $this->Sum) {
             $state = 1; // done
-        } elseif (count($this->barcodes) > $this->Sum) {
+        } elseif ($barcodes_count > $this->Sum) {
             $state = 2; // over done
         }
         return [
@@ -35,8 +36,8 @@ class InvoiceResource extends JsonResource
             "Type" => $this->Type,
             'Sum' => $this->Sum,
             'count' => $this->invoiceItems?->sum('Quantity'),
-            'Barcodes Count' => count($this->barcodes),
-            'Progress' => count($this->barcodes) . '/' . $this->Sum,
+            'Barcodes Count' => $barcodes_count,
+            'Progress' => $barcodes_count . '/' . $this->Sum,
             'State' => $state,
 
 //            "DeliveryDate" => $this->DeliveryDate,
