@@ -30,10 +30,8 @@ class InvoiceResource2 extends JsonResource
             'Difference' =>  $scanned - $count,
             'created_at' => explode(' ', (new DateController)->toPersian($this->created_at))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->created_at))[1],
 
-            'Barcodes' => 'http://5.34.204.23/api/report?api_key=Rsxw_q25jhk92345/624087Mnhi.oxcv&OrderNumber='.$this->OrderNumber,
+            'Barcodes' => 'http://37.32.12.74/api/report?api_key=Rsxw_q25jhk92345/624087Mnhi.oxcv&OrderNumber='.$this->OrderNumber,
 //            "DeliveryDate" => $this->DeliveryDate,
-
-
         ];
     }
 }
