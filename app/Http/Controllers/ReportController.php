@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\InvoiceBarcodeResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
@@ -52,7 +53,7 @@ class ReportController extends Controller
             })
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->paginate(200);
-        return $dat;
+        return InventoryVoucherResource::collection($dat);
     }
     public function fix(Request $request)
     {
