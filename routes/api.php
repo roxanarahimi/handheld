@@ -54,6 +54,7 @@ Route::controller(App\Http\Controllers\ReportController::class)->group(function 
     Route::get('/report', 'report');
     Route::post('/fix', 'fix');
     Route::get('/filter', 'filter');
+    Route::get('/test', 'test');
 
 });
 
