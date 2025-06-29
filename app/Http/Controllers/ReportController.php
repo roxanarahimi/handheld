@@ -51,7 +51,8 @@ class ReportController extends Controller
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
             })
-            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
+//            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->orderByDESC('LGS3.InventoryVoucher.InventoryVoucherID')
             ->paginate(200);
         $data = InventoryVoucherResource::collection($dat);
         return $dat;

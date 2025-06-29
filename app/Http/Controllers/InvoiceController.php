@@ -28,7 +28,7 @@ class InvoiceController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware(Token::class)->except('info', 'repairInvoiceItems', 'showInventoryVoucher');
+        $this->middleware(Token::class)->except('info', 'updateInvoiceItems', 'showInventoryVoucher');
     }
 
     public function index(Request $request)
@@ -81,7 +81,7 @@ class InvoiceController extends Controller
         }
     }
 
-    public function repairInvoiceItems(Request $request)
+    public function updateInvoiceItems(Request $request)
     {
 
         try {
