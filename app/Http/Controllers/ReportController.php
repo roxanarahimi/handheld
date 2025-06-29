@@ -56,6 +56,7 @@ class ReportController extends Controller
         $data = InventoryVoucherResource::collection($dat);
         return $dat;
     }
+
     public function fix(Request $request)
     {
 
