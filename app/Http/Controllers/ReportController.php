@@ -53,7 +53,8 @@ class ReportController extends Controller
             })
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->paginate(200);
-        return InventoryVoucherResource::collection($dat);
+        $data = InventoryVoucherResource::collection($dat);
+        return $dat;
     }
     public function fix(Request $request)
     {
