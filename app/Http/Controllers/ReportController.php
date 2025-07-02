@@ -55,9 +55,8 @@ class ReportController extends Controller
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
    $dat2 = InventoryVoucher::
-   select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef", "AddressID",
-            'GNR3.RegionalDivision.Name as City')
+   select("InventoryVoucherID", "Number",
+            "CreationDate", "Date as DeliveryDate", "CounterpartStoreRef", "AddressID")
             ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
