@@ -23,7 +23,9 @@ class CacheController extends Controller
         $productnumbers = InvoiceProduct::
 //        where('CreationDate', '>=', today()->subDays(2))->
         pluck('ProductNumber');
-        $products = Product::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->whereNotIn('Number', $productnumbers)->get();
+        $products = Product::where('CreationDate', '>=', today()->subDays(2))
+            ->where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')
+            ->whereNotIn('Number', $productnumbers)->get();
         foreach ($products as $item) {
             InvoiceProduct::create([
                 'ProductName' => $item->Name,
@@ -32,9 +34,11 @@ class CacheController extends Controller
             ]);
         }
         $Codes = InvoiceProduct::
-//        where('CreationDate', '>=', today()->subDays(2))->
+
         pluck('ProductNumber');
-        $parts = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->whereNotIn('Code', $Codes)->get();
+        $parts = Part::where('CreationDate', '>=', today()->subDays(2))
+            ->where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')
+            ->whereNotIn('Code', $Codes)->get();
         foreach ($parts as $item) {
             InvoiceProduct::create([
                 'ProductName' => $item->Name,
