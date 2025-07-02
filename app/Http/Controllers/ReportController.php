@@ -45,7 +45,7 @@ class ReportController extends Controller
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
         $dat2 = InventoryVoucher::
-        select("InventoryVoucherID", "Number", "Date")->
+//        select("InventoryVoucherID", "Number", "Date")->
         where('Date', '>=', today()->subDays(2))//
 //            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
         ->where('FiscalYearRef', 1405)
@@ -93,7 +93,7 @@ class ReportController extends Controller
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
         $dat4 = InventoryVoucher::
-        select("InventoryVoucherID", "Number", "Date")->
+//        select("InventoryVoucherID", "Number", "Date")->
         where('Date', '>=', today()->subDays(2))//
 //        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
         ->whereHas('Store', function ($s) use ($storeIDs) {
