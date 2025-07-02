@@ -65,6 +65,9 @@ class ReportController extends Controller
             ->paginate(100);
         $storeIDs = Store::orderBy('Code')
             ->where('Name', 'LIKE', '%گرمدره%')
+            ->orWhere('Name', 'LIKE', "%مارکتینگ%")
+                ->orWhere('Name', 'LIKE', "%ضایعات%")
+                ->orWhere('Name', 'LIKE', "%برگشتی%")
             ->paginate(100);
         return $storeIDs;
 
