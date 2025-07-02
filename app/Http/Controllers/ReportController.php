@@ -47,9 +47,10 @@ class ReportController extends Controller
 //            })
 //            ->paginate(100);
 
-        $storeIDs = Store::orderBy('Code')
+        $storeIDs0 = Store::orderBy('Code')
             ->whereNot(function ($query) {
-                $query->where('Name', 'LIKE', "%مارکتینگ%")
+                $query->where('Name', 'LIKE', '%گرمدره%')
+                    ->orwhere('Name', 'LIKE', "%مارکتینگ%")
                     ->orWhere('Name', 'LIKE', "%ضایعات%")
                     ->orWhere('Name', 'LIKE', "%برگشتی%")
                     ->orWhere('Code', "1000");
@@ -79,7 +80,7 @@ class ReportController extends Controller
             ->paginate(100);
         $storeIDs2 = Store::orderBy('Code')
             ->paginate(100);
-        return [$storeIDs,$storeIDs2];
+        return [$storeIDs,$storeIDs2,$storeIDs0];
 
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
