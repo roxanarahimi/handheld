@@ -27,16 +27,17 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 //        $storeIDs = Store::whereNot(function ($query) {
-//            $query->where('Name', 'LIKE', "%مارکتینگ%")
-//                ->orWhere('Name', 'LIKE', "%مرکزی%")
-//                ->orWhere('Name', 'LIKE', "%ضایعات%")
-//                ->orWhere('Name', 'LIKE', "%برگشتی%")
-//                ->orWhere('Code', "1000");
+//        $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+//            ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+//            ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+//            ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+//            ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%")
+//            ->orWhere('LGS3.Store.Code', "1000");
 //
 //        })
 //            ->with('Plant')
 //            ->get();
-        $storeIDs = Store::where('Code', "1000")
+        $storeIDs = Store::orderBy('Code')
             ->with('Plant')
             ->get();
         return $storeIDs;
