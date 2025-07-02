@@ -53,7 +53,6 @@ class CacheController extends Controller
                     ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
                     ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
                     ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
-//                ->orWhere('LGS3.Store.Code', "1000");
             })
             ->pluck('StoreID');
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
