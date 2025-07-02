@@ -45,34 +45,34 @@ class CacheController extends Controller
     public function getInventoryVouchers($inventoryVoucherIDs)
     {
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
-//        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
-//            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-//            ->whereNot(function ($query) {
-//                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-//                    ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-//                    ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-//                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-//                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
-//            })
-//            ->pluck('StoreID');
-        $storeIDs = Store::orderBy('Code')
+        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
+            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
             ->whereNot(function ($query) {
-                $query->where('Name', 'LIKE', '%گرمدره%')
-                    ->orwhere('Name', 'LIKE', "%مارکتینگ%")
-                    ->orWhere('Name', 'LIKE', "%ضایعات%")
-                    ->orWhere('Name', 'LIKE', "%برگشتی%")
-                    ->orWhere('Code', "1000");
-            })
-            ->whereNot(function ($q) {
-                $q->whereHas('Plant', function ($x) {
-                    $x->where('Name', 'LIKE', '%گرمدره%')
-                        ->orwhereHas('Address', function ($y) {
-                            $y->where('Details', 'LIKE', "%گرمدره%");
-                        });
-                });
+                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                    ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
             })
             ->pluck('StoreID');
+//        $storeIDs = Store::orderBy('Code')
+//            ->whereNot(function ($query) {
+//                $query->where('Name', 'LIKE', '%گرمدره%')
+//                    ->orwhere('Name', 'LIKE', "%مارکتینگ%")
+//                    ->orWhere('Name', 'LIKE', "%ضایعات%")
+//                    ->orWhere('Name', 'LIKE', "%برگشتی%")
+//                    ->orWhere('Code', "1000");
+//            })
+//            ->whereNot(function ($q) {
+//                $q->whereHas('Plant', function ($x) {
+//                    $x->where('Name', 'LIKE', '%گرمدره%')
+//                        ->orwhereHas('Address', function ($y) {
+//                            $y->where('Details', 'LIKE', "%گرمدره%");
+//                        });
+//                });
+//            })
+//            ->pluck('StoreID');
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
             "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef", "AddressID",
             'GNR3.RegionalDivision.Name as City')
