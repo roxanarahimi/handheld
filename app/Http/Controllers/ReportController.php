@@ -24,15 +24,18 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
-    public function test(Request $request){
+    public function test(Request $request)
+    {
         $storeIDs = Store::
-            whereNot(function ($query) {
-                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%مرکزی%")
-                    ->orWhere('GNR3.Address.Details', 'LIKE', "%مرکزی%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
-            })
+        whereNot(function ($query) {
+            $query->where('Name', 'LIKE', "%مارکتینگ%")
+                ->orWhere('Name', 'LIKE', "%مرکزی%")
+                ->orWhere('Name', 'LIKE', "%ضایعات%")
+                ->orWhere('Name', 'LIKE', "%برگشتی%")
+                ->orWhereHas('Address', function ($x) {
+                    $x->where('Details', 'LIKE', "%مرکزی%");
+                });
+        })
             ->with('Plant')
             ->get();
         return $storeIDs;
