@@ -72,7 +72,7 @@ class ReportController extends Controller
             })
 //            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->orderByDESC('LGS3.InventoryVoucher.InventoryVoucherID')
-            ->get()->total();
+            ->paginate(200)->total();
         //        $data = InventoryVoucherResource::collection($dat);
       //////////  return $dat;
 
@@ -104,7 +104,7 @@ class ReportController extends Controller
                 $q->whereIn('PartRef', $partIDs);
             })
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
-            ->get()->total();
+            ->paginate(200)->total();
         return [$dat0,$dat];
     }
 
