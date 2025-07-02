@@ -41,7 +41,7 @@ class ReportController extends Controller
             ->with('Plant',function($x){
                 $x->where('Name','LIKE','%گرمدره%');
             })
-            ->get();
+            ->paginate(100);
         return $storeIDs;
 
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
