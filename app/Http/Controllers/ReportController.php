@@ -36,28 +36,31 @@ class ReportController extends Controller
 //
 //        })
 //            ->with('Plant')
-//            ->get();
-        $storeIDs = Store::orderBy('Code')
-            ->with('Plant')
-            ->whereHas('Plant', function ($x) {
-                $x->where('Name', 'LIKE', '%گرمدره%')
-                    ->orwhereHas('Address', function ($y) {
-                        $y->where('Details', 'LIKE', "%گرمدره%");
-                    });
-            })
-            ->paginate(100);
+////            ->get();
+//        $storeIDs = Store::orderBy('Code')
+//            ->with('Plant')
+//            ->whereHas('Plant', function ($x) {
+//                $x->where('Name', 'LIKE', '%گرمدره%')
+//                    ->orwhereHas('Address', function ($y) {
+//                        $y->where('Details', 'LIKE', "%گرمدره%");
+//                    });
+//            })
+//            ->paginate(100);
 
         $storeIDs = Store::orderBy('Code')
             ->whereNot(function ($query) {
-                $query->whereHas('Plant', function ($x) {
+              $query->where('Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('Name', 'LIKE', "%برگشتی%")
+                    ->orWhere('Code', "1000");
+            })
+            ->whereNot(function ($q){
+                $q->whereHas('Plant', function ($x) {
                     $x->where('Name', 'LIKE', '%گرمدره%')
                         ->orwhereHas('Address', function ($y) {
                             $y->where('Details', 'LIKE', "%گرمدره%");
                         });
-                })->where('Name', 'LIKE', "%مارکتینگ%")
-                    ->orWhere('Name', 'LIKE', "%ضایعات%")
-                    ->orWhere('Name', 'LIKE', "%برگشتی%")
-                    ->orWhere('Code', "1000");
+                });
             })
             ->paginate(100);
         return $storeIDs;
