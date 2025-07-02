@@ -134,9 +134,9 @@ class ReportController extends Controller
                 'Type' => 'Deputation',
                 'OrderID' => $item2->InventoryVoucherID,
                 'OrderNumber' => $item2->Number,
-                'AddressID' => $item2->AddressID,
+                'AddressID' => $item2->Party->PartyAddress->Address->AddressID,
                 'Sum' => $item2->OrderItems->sum('Quantity'),
-                'DeliveryDate' => $item2->DeliveryDate
+                'DeliveryDate' => $item2->Date
             ],
             [
                 'AddressID' => $item2->Party->PartyAddress->Address->AddressID,
