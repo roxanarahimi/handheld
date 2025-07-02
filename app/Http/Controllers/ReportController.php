@@ -63,6 +63,9 @@ class ReportController extends Controller
                 });
             })
             ->paginate(100);
+        $storeIDs = Store::orderBy('Code')
+            ->where('Name', 'LIKE', '%گرمدره%')
+            ->paginate(100);
         return $storeIDs;
 
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
