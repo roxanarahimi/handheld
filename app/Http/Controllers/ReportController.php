@@ -26,6 +26,8 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
+        $productnumbers = InvoiceProduct::all();
+        return $productnumbers;
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
             "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef",
