@@ -40,7 +40,10 @@ class ReportController extends Controller
         $storeIDs = Store::orderBy('Code')
             ->with('Plant')
              ->whereHas('Plant',function($x){
-                $x->where('Name','LIKE','%گرمدره%');
+                $x->where('Name','LIKE','%گرمدره%')
+                ->orwhereHas('Address',function ($y){
+                    $y->where('Details', 'LIKE', "%گرمدره%");
+                });
             })
             ->paginate(100);
         return $storeIDs;
