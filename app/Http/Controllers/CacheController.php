@@ -20,8 +20,7 @@ class CacheController extends Controller
     public function cacheProducts()
     {
 //        InvoiceProduct::query()->truncate();
-        $productnumbers = InvoiceProduct:://        where('CreationDate', '>=', today()->subDays(2))->
-        pluck('ProductNumber');
+        $productnumbers = InvoiceProduct::where('CreationDate', '>=', today()->subDays(2))->pluck('ProductNumber');
         $products = Product::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->whereNotIn('Number', $productnumbers)->get();
         foreach ($products as $item) {
             InvoiceProduct::create([
@@ -30,8 +29,7 @@ class CacheController extends Controller
                 'Description' => $item->Description
             ]);
         }
-        $Codes = InvoiceProduct:://        where('CreationDate', '>=', today()->subDays(2))->
-        pluck('ProductNumber');
+        $Codes = InvoiceProduct::where('CreationDate', '>=', today()->subDays(2))->pluck('ProductNumber');
         $parts = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->whereNotIn('Code', $Codes)->get();
         foreach ($parts as $item) {
             InvoiceProduct::create([
@@ -45,76 +43,101 @@ class CacheController extends Controller
     public function getInventoryVouchers($inventoryVoucherIDs)
     {
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
-        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
-            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->whereNot(function ($query) {
-                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-                    ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
-            })
-            ->pluck('StoreID');
-//        $storeIDs = Store::orderBy('Code')
+//        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
+//            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
 //            ->whereNot(function ($query) {
-//                $query->where('Name', 'LIKE', '%گرمدره%')
-//                    ->orwhere('Name', 'LIKE', "%مارکتینگ%")
-//                    ->orWhere('Name', 'LIKE', "%ضایعات%")
-//                    ->orWhere('Name', 'LIKE', "%برگشتی%")
-//                    ->orWhere('Code', "1000");
-//            })
-//            ->whereNot(function ($q) {
-//                $q->whereHas('Plant', function ($x) {
-//                    $x->where('Name', 'LIKE', '%گرمدره%')
-//                        ->orwhereHas('Address', function ($y) {
-//                            $y->where('Details', 'LIKE', "%گرمدره%");
-//                        });
-//                });
+//                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+//                    ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+//                    ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+//                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+//                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
 //            })
 //            ->pluck('StoreID');
-        $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef", "AddressID",
-            'GNR3.RegionalDivision.Name as City')
-            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
-            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
-            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
-            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
-            ->whereIn('LGS3.Store.StoreID', $storeIDs)
-            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
-            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
+        $storeIDs = Store::orderBy('Code')
+            ->whereNot(function ($query) {
+                $query->where('Name', 'LIKE', '%گرمدره%')
+                    ->orwhere('Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('Name', 'LIKE', "%برگشتی%")
+                    ->orWhere('Code', "1000");
+            })
+            ->whereNot(function ($q) {
+                $q->whereHas('Plant', function ($x) {
+                    $x->where('Name', 'LIKE', '%گرمدره%')
+                        ->orwhereHas('Address', function ($y) {
+                            $y->where('Details', 'LIKE', "%گرمدره%");
+                        });
+                });
+            })
+            ->pluck('StoreID');
+//        $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+//            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef", "AddressID",
+//            'GNR3.RegionalDivision.Name as City')
+//            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+//            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+//            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+//            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
+//            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
+//            ->whereIn('LGS3.Store.StoreID', $storeIDs)
+//            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
+//            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
+//            ->whereHas('OrderItems', function ($q) use ($partIDs) {
+//                $q->whereIn('PartRef', $partIDs);
+//            })
+//            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
+//            ->get();
+
+        $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
+        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
+            ->whereHas('Store', function ($s) use ($storeIDs) {
+                $s->whereIn('StoreID', $storeIDs);
+            })
+            ->where('FiscalYearRef', 1405)
+            ->where('InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
             })
-            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->orderBy('InventoryVoucherID')
             ->get();
-
         return $dat;
     }
 
     public function getInventoryVouchersDeputation($deputationIds)
     {
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
-        $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
-            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef",
-            "AddressID", 'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone', 'Details', 'GNR3.RegionalDivision.Name as City')
-            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
-            ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
-            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
-            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
-            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
-            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
-            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+//        $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+//            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef",
+//            "AddressID", 'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone', 'Details', 'GNR3.RegionalDivision.Name as City')
+//            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+//            ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+//            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+//            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
+//            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
+//            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
+//            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+//            ->whereHas('OrderItems', function ($q) use ($partIDs) {
+//                $q->whereIn('PartRef', $partIDs);
+//            })
+//            ->where('GNR3.PartyAddress.IsMainAddress', "1")
+//            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
+//            ->get();
+        $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
+        ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
+            ->where('FiscalYearRef', 1405)
+            ->where('InventoryVoucherSpecificationRef', 69)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
             })
-            ->where('GNR3.PartyAddress.IsMainAddress', "1")
-            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->whereHas('Party', function ($x) use ($partIDs) {
+                $x->whereHas('PartyAddress', function ($t) use ($partIDs) {
+                    $t->where('IsMainAddress', "1");
+                });
+            })
+            ->orderBy('InventoryVoucherID')
             ->get();
-
         return $dat;
     }
 
@@ -175,21 +198,32 @@ class CacheController extends Controller
                 $exx = Invoice::where('OrderID', $item->InventoryVoucherID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->first();
                 if (!$exx) {
                     $invoice = Invoice::create([
+//                        'Type' => 'InventoryVoucher',
+//                        'OrderID' => $item->InventoryVoucherID,
+//                        'OrderNumber' => $item->Number,
+//                        'AddressID' => $item->Store->Plant->Address->AddressID,
+//                        'Sum' => $item->OrderItems->sum('Quantity'),
+//                        'DeliveryDate' => $item->DeliveryDate
                         'Type' => 'InventoryVoucher',
                         'OrderID' => $item->InventoryVoucherID,
                         'OrderNumber' => $item->Number,
                         'AddressID' => $item->Store->Plant->Address->AddressID,
                         'Sum' => $item->OrderItems->sum('Quantity'),
-                        'DeliveryDate' => $item->DeliveryDate
+                        'DeliveryDate' => $item->Date
                     ]);
                     $address = InvoiceAddress::where('AddressID', $item->Store->Plant->Address->AddressID)->first();
                     if (!$address) {
                         InvoiceAddress::create([
+//                            'AddressID' => $item->Store->Plant->Address->AddressID,
+//                            'AddressName' => $item->Store->Name,
+//                            'Address' => $item->Store->Plant->Address->Details,
+//                            'Phone' => $item->Store->Plant->Address->Phone,
+//                            'city' => $item->City,
                             'AddressID' => $item->Store->Plant->Address->AddressID,
                             'AddressName' => $item->Store->Name,
                             'Address' => $item->Store->Plant->Address->Details,
                             'Phone' => $item->Store->Plant->Address->Phone,
-                            'city' => $item->City,
+                            'city' => $item->Store->Plant->Address->Region->Name,
                         ]);
                     }
                     foreach ($item->OrderItems as $item2) {
@@ -225,21 +259,32 @@ class CacheController extends Controller
                 $exx2 = Invoice::where('OrderID', $item->InventoryVoucherID)->where('OrderNumber', $item->Number)->where('Type', 'Deputation')->first();
                 if (!$exx2) {
                     $invoice = Invoice::create([
+//                        'Type' => 'Deputation',
+//                        'OrderID' => $item->InventoryVoucherID,
+//                        'OrderNumber' => $item->Number,
+//                        'AddressID' => $item->AddressID,
+//                        'Sum' => $item->OrderItems->sum('Quantity'),
+//                        'DeliveryDate' => $item->DeliveryDate
                         'Type' => 'Deputation',
-                        'OrderID' => $item->InventoryVoucherID,
-                        'OrderNumber' => $item->Number,
-                        'AddressID' => $item->AddressID,
-                        'Sum' => $item->OrderItems->sum('Quantity'),
-                        'DeliveryDate' => $item->DeliveryDate
+                        'OrderID' => $item2->InventoryVoucherID,
+                        'OrderNumber' => $item2->Number,
+                        'AddressID' => $item2->Party->PartyAddress->Address->AddressID,
+                        'Sum' => $item2->OrderItems->sum('Quantity'),
+                        'DeliveryDate' => $item2->Date
                     ]);
                     $address = InvoiceAddress::where('AddressID', $item->AddressID)->first();
                     if (!$address) {
                         InvoiceAddress::create([
-                            'AddressID' => $item->AddressID,
-                            'AddressName' => $item->AddressName,
-                            'Address' => $item->Details,
-                            'Phone' => $item->Phone,
-                            'city' => $item->City
+//                            'AddressID' => $item->AddressID,
+//                            'AddressName' => $item->AddressName,
+//                            'Address' => $item->Details,
+//                            'Phone' => $item->Phone,
+//                            'city' => $item->City
+                            'AddressID' => $item2->Party->PartyAddress->Address->AddressID,
+                            'AddressName' => $item2->Party->PartyAddress->Address->Name,
+                            'Address' => $item2->Party->PartyAddress->Address->Details,
+                            'Phone' => $item2->Party->PartyAddress->Address->Phone,
+                            'city' => $item2->Party->PartyAddress->Address->Region->Name
                         ]);
                     }
                     foreach ($item->OrderItems as $item2) {
