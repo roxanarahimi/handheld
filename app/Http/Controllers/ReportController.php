@@ -27,6 +27,42 @@ class ReportController extends Controller
     public function test(Request $request)
     {
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
+        $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef",
+            "AddressID", 'GNR3.Address.Name as AddressName', 'GNR3.Address.Phone', 'Details', 'GNR3.RegionalDivision.Name as City')
+            ->join('GNR3.Party', 'GNR3.Party.PartyID', '=', 'LGS3.InventoryVoucher.CounterpartEntityRef')
+            ->join('GNR3.PartyAddress', 'GNR3.PartyAddress.PartyRef', '=', 'GNR3.Party.PartyID')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'GNR3.PartyAddress.AddressRef')
+            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
+//            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
+            ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                $q->whereIn('PartRef', $partIDs);
+            })
+            ->where('GNR3.PartyAddress.IsMainAddress', "1")
+            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->get();
+        $dat2 = InventoryVoucher::
+        where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
+//            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
+        ->where('FiscalYearRef', 1405)
+            ->where('InventoryVoucherSpecificationRef', 69)
+            ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                $q->whereIn('PartRef', $partIDs);
+            })
+            ->whereHas('Party', function ($x) use ($partIDs) {
+                $x->whereHas('PartyAddress', function ($t) use ($partIDs) {
+                    $t->where('IsMainAddress', "1");
+                });
+            })
+            ->orderBy('InventoryVoucherID')
+            ->get();
+
+        return [$dat, $dat2];
+
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
@@ -55,9 +91,9 @@ class ReportController extends Controller
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
         $dat2 = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
-            ->whereHas('Store', function ($s) use ($storeIDs) {
-                $s->whereIn('StoreID', $storeIDs);
-            })
+        ->whereHas('Store', function ($s) use ($storeIDs) {
+            $s->whereIn('StoreID', $storeIDs);
+        })
             ->where('FiscalYearRef', 1405)
             ->where('InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
