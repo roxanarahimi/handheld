@@ -104,7 +104,7 @@ class ReportController extends Controller
                 $q->whereIn('PartRef', $partIDs);
             })
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
-            ->get();
+            ->paginate(200);
         return [InventoryVoucherResource::collection($dat0),InventoryVoucherResource::collection($dat)];
     }
 
