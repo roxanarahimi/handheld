@@ -60,7 +60,7 @@ class ReportController extends Controller
             ->orderBy('InventoryVoucherID')
             ->get();
 
-        return [$dat, $dat2];
+
 
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
@@ -74,7 +74,7 @@ class ReportController extends Controller
                     ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
             })
             ->pluck('StoreID');
-        $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+        $dat3 = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
             "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef", "AddressID",
             'GNR3.RegionalDivision.Name as City')
             ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
@@ -82,6 +82,7 @@ class ReportController extends Controller
             ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
             ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
             ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
+            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
             ->whereIn('LGS3.Store.StoreID', $storeIDs)
             ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
             ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
@@ -90,7 +91,9 @@ class ReportController extends Controller
             })
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
-        $dat2 = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
+        $dat4 = InventoryVoucher::
+        where('Date', '>=', today()->subDays(2))//
+//        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
         ->whereHas('Store', function ($s) use ($storeIDs) {
             $s->whereIn('StoreID', $storeIDs);
         })
@@ -103,7 +106,41 @@ class ReportController extends Controller
             ->get();
 
 
-        return [$dat, $dat2];
+        $item = $dat2[0];
+        $item2 = $dat4[0];
+        return [
+            [
+                'Type' => 'InventoryVoucher',
+                'OrderID' => $item->InventoryVoucherID,
+                'OrderNumber' => $item->Number,
+                'AddressID' => $item->Store->Plant->Address->AddressID,
+                'Sum' => $item->OrderItems->sum('Quantity'),
+                'DeliveryDate' => $item->Date
+            ],
+            [
+                'AddressID' => $item->Store->Plant->Address->AddressID,
+                'AddressName' => $item->Store->Name,
+                'Address' => $item->Store->Plant->Address->Details,
+                'Phone' => $item->Store->Plant->Address->Phone,
+                'city' => $item->Store->Plant->Address->Region->Name,
+            ],
+
+            [
+                'Type' => 'Deputation',
+                'OrderID' => $item->InventoryVoucherID,
+                'OrderNumber' => $item->Number,
+                'AddressID' => $item->AddressID,
+                'Sum' => $item->OrderItems->sum('Quantity'),
+                'DeliveryDate' => $item->DeliveryDate
+            ],
+            [
+                'AddressID' => $item->Party->PartAddress->Address->AddressID,
+                'AddressName' => $item->Party->PartAddress->Address->Name,
+                'Address' => $item->Party->PartAddress->Address->Details,
+                'Phone' => $item->Party->PartAddress->Address->Phone,
+                'city' => $item->Store->Plant->Address->Region->Name
+            ]
+            ];
 
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = Store::orderBy('Code')
