@@ -20,7 +20,9 @@ class CacheController extends Controller
     public function cacheProducts()
     {
 //        InvoiceProduct::query()->truncate();
-        $productnumbers = InvoiceProduct::where('CreationDate', '>=', today()->subDays(2))->pluck('ProductNumber');
+        $productnumbers = InvoiceProduct::
+//        where('CreationDate', '>=', today()->subDays(2))->
+        pluck('ProductNumber');
         $products = Product::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->whereNotIn('Number', $productnumbers)->get();
         foreach ($products as $item) {
             InvoiceProduct::create([
@@ -29,7 +31,9 @@ class CacheController extends Controller
                 'Description' => $item->Description
             ]);
         }
-        $Codes = InvoiceProduct::where('CreationDate', '>=', today()->subDays(2))->pluck('ProductNumber');
+        $Codes = InvoiceProduct::
+//        where('CreationDate', '>=', today()->subDays(2))->
+        pluck('ProductNumber');
         $parts = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->whereNotIn('Code', $Codes)->get();
         foreach ($parts as $item) {
             InvoiceProduct::create([
