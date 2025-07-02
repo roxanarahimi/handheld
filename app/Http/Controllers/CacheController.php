@@ -151,27 +151,44 @@ class CacheController extends Controller
 
     public function getOrders($orderIDs)
     {
-        $dat2 = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
-            "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
-            'GNR3.Address.AddressID', 'GNR3.RegionalDivision.Name as City')
-            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
-            ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
-            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
-//            ->where('SLS3.Order.Date', '>=', today()->subDays(2))
-            ->whereNotIn('SLS3.Order.OrderID', $orderIDs)
-            ->where('SLS3.Order.InventoryRef', 1)
-            ->where('SLS3.Order.State', 2)
-            ->where('SLS3.Order.FiscalYearRef', 1405)
-            ->where('SLS3.CustomerAddress.Type', 2)
+//        $dat2 = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
+//            "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
+//            'GNR3.Address.AddressID', 'GNR3.RegionalDivision.Name as City')
+//            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+//            ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
+//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+//            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+////            ->where('SLS3.Order.Date', '>=', today()->subDays(2))
+//            ->whereNotIn('SLS3.Order.OrderID', $orderIDs)
+//            ->where('SLS3.Order.InventoryRef', 1)
+//            ->where('SLS3.Order.State', 2)
+//            ->where('SLS3.Order.FiscalYearRef', 1405)
+//            ->where('SLS3.CustomerAddress.Type', 2)
+//            ->whereHas('OrderItems')
+//            ->whereHas('OrderItems', function ($q) {
+//                $q->havingRaw('SUM(Quantity) >= ?', [50]);
+//            })
+//            ->orderBy('OrderID')
+//            ->get();
+
+//        $dat2 = OrderResource::collection($dat2);
+        $dat2 = Order::
+        where('Date', '>=', today()->subDays(2))
+            ->whereNotIn('OrderID', $orderIDs)
+            ->where('InventoryRef', 1)
+            ->where('State', 2)
+            ->where('FiscalYearRef', 1405)
+            ->whereHas('Customer',function ($c){
+                $c->whereHas('CustomerAddress',function ($a){
+                    $a->where('Type', 2);
+                });
+            })
             ->whereHas('OrderItems')
             ->whereHas('OrderItems', function ($q) {
                 $q->havingRaw('SUM(Quantity) >= ?', [50]);
             })
             ->orderBy('OrderID')
             ->get();
-
-//        $dat2 = OrderResource::collection($dat2);
         return $dat2;
     }
 
@@ -337,7 +354,7 @@ class CacheController extends Controller
 //                        'Type' => 'Order',
 //                        'OrderID' => $item->OrderID,
 //                        'OrderNumber' => $item->Number,
-//                        'AddressID' => $item->AddressID,
+//                        'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
 //                        'Sum' => $item->OrderItems->sum('Quantity'),
 //                        'DeliveryDate' => $item->DeliveryDate
 //                    ]);
@@ -348,7 +365,7 @@ class CacheController extends Controller
 //                            'AddressName' => $item->Customer->CustomerAddress->Address->Name,
 //                            'Address' => $item->Customer->CustomerAddress->Address->Details,
 //                            'Phone' => $item->Customer->CustomerAddress->Address->Phone,
-//                            'city' => $item->City
+//                            'city' => $item->Customer->CustomerAddress->Address->Region->Name
 //                        ]);
 //                    }
 //                    foreach ($item->OrderItems as $item2) {
