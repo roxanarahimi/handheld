@@ -26,28 +26,9 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-//        $storeIDs = Store::whereNot(function ($query) {
-//        $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-//            ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
-//            ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
-//            ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-//            ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%")
-//            ->orWhere('LGS3.Store.Code', "1000");
-//
-//        })
-//            ->with('Plant')
-////            ->get();
-//        $storeIDs = Store::orderBy('Code')
-//            ->with('Plant')
-//            ->whereHas('Plant', function ($x) {
-//                $x->where('Name', 'LIKE', '%گرمدره%')
-//                    ->orwhereHas('Address', function ($y) {
-//                        $y->where('Details', 'LIKE', "%گرمدره%");
-//                    });
-//            })
-//            ->paginate(100);
 
-        $storeIDs0 = Store::orderBy('Code')
+
+        $storeIDs = Store::orderBy('Code')
             ->whereNot(function ($query) {
                 $query->where('Name', 'LIKE', '%گرمدره%')
                     ->orwhere('Name', 'LIKE', "%مارکتینگ%")
@@ -64,23 +45,8 @@ class ReportController extends Controller
                 });
             })
             ->paginate(100);
-        $storeIDs = Store::orderBy('Code')
-            ->where('Name', 'LIKE', '%گرمدره%')
-            ->orWhere('Name', 'LIKE', "%مارکتینگ%")
-            ->orWhere('Name', 'LIKE', "%ضایعات%")
-            ->orWhere('Name', 'LIKE', "%برگشتی%")
-            ->orWhere(function ($q) {
-                $q->whereHas('Plant', function ($x) {
-                    $x->where('Name', 'LIKE', '%گرمدره%')
-                        ->orwhereHas('Address', function ($y) {
-                            $y->where('Details', 'LIKE', "%گرمدره%");
-                        });
-                });
-            })
-            ->paginate(100);
-        $storeIDs2 = Store::orderBy('Code')
-            ->paginate(100);
-        return [$storeIDs,$storeIDs2,$storeIDs0];
+
+        return $storeIDs;
 
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
