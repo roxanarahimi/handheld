@@ -45,7 +45,7 @@ class ReportController extends Controller
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
         $dat2 = InventoryVoucher::
-        where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
+        where('Date', '>=', today()->subDays(2))//
 //            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
         ->where('FiscalYearRef', 1405)
             ->where('InventoryVoucherSpecificationRef', 69)
@@ -106,8 +106,13 @@ class ReportController extends Controller
             ->get();
 
 
-        $item = $dat2[0];
-        $item2 = $dat4[0];
+        $item = $dat4[0];
+        $item2 = $dat2[0];
+//        return [
+//           'Store'=> $item->Store,
+//            'Plant'=> $item->Store->Plant,
+//            'Address'=> $item->Store->Plant->Address,
+//        ];
         return [
             [
                 'Type' => 'InventoryVoucher',
@@ -127,18 +132,18 @@ class ReportController extends Controller
 
             [
                 'Type' => 'Deputation',
-                'OrderID' => $item->InventoryVoucherID,
-                'OrderNumber' => $item->Number,
-                'AddressID' => $item->AddressID,
-                'Sum' => $item->OrderItems->sum('Quantity'),
-                'DeliveryDate' => $item->DeliveryDate
+                'OrderID' => $item2->InventoryVoucherID,
+                'OrderNumber' => $item2->Number,
+                'AddressID' => $item2->AddressID,
+                'Sum' => $item2->OrderItems->sum('Quantity'),
+                'DeliveryDate' => $item2->DeliveryDate
             ],
             [
-                'AddressID' => $item->Party->PartAddress->Address->AddressID,
-                'AddressName' => $item->Party->PartAddress->Address->Name,
-                'Address' => $item->Party->PartAddress->Address->Details,
-                'Phone' => $item->Party->PartAddress->Address->Phone,
-                'city' => $item->Store->Plant->Address->Region->Name
+                'AddressID' => $item2->Party->PartAddress->Address->AddressID,
+                'AddressName' => $item2->Party->PartAddress->Address->Name,
+                'Address' => $item2->Party->PartAddress->Address->Details,
+                'Phone' => $item2->Party->PartAddress->Address->Phone,
+                'city' => $item2->Store->Plant->Address->Region->Name
             ]
             ];
 
