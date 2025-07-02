@@ -54,32 +54,20 @@ class ReportController extends Controller
             })
             ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->get();
-   $dat2 = InventoryVoucher::
-            where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
-            ->whereIn('LGS3.Store.StoreID', $storeIDs)
-            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
-            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
+        $dat2 = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
+            ->whereHas('Store', function ($s) use ($storeIDs) {
+                $s->whereIn('StoreID', $storeIDs);
+            })
+            ->where('FiscalYearRef', 1405)
+            ->where('InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
             })
-            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->orderBy('InventoryVoucherID')
             ->get();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return [$dat, $dat2];
 
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = Store::orderBy('Code')
