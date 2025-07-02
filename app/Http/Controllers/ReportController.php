@@ -39,23 +39,22 @@ class ReportController extends Controller
 //            ->get();
         $storeIDs = Store::orderBy('Code')
             ->with('Plant')
-             ->whereHas('Plant',function($x){
-                $x->where('Name','LIKE','%گرمدره%')
-                ->orwhereHas('Address',function ($y){
-                    $y->where('Details', 'LIKE', "%گرمدره%");
-                });
+            ->whereHas('Plant', function ($x) {
+                $x->where('Name', 'LIKE', '%گرمدره%')
+                    ->orwhereHas('Address', function ($y) {
+                        $y->where('Details', 'LIKE', "%گرمدره%");
+                    });
             })
             ->paginate(100);
 
         $storeIDs = Store::orderBy('Code')
-            ->whereHas('Plant',function($x){
-                $x->where('Name','LIKE','%گرمدره%')
-                    ->orwhereHas('Address',function ($y){
-                        $y->where('Details', 'LIKE', "%گرمدره%");
-                    });
-            })
             ->whereNot(function ($query) {
-                $query->where('Name', 'LIKE', "%مارکتینگ%")
+                $query->whereHas('Plant', function ($x) {
+                    $x->where('Name', 'LIKE', '%گرمدره%')
+                        ->orwhereHas('Address', function ($y) {
+                            $y->where('Details', 'LIKE', "%گرمدره%");
+                        });
+                })->where('Name', 'LIKE', "%مارکتینگ%")
                     ->orWhere('Name', 'LIKE', "%ضایعات%")
                     ->orWhere('Name', 'LIKE', "%برگشتی%")
                     ->orWhere('Code', "1000");
