@@ -139,11 +139,11 @@ class ReportController extends Controller
                 'DeliveryDate' => $item2->DeliveryDate
             ],
             [
-                'AddressID' => $item2->Party->PartAddress->Address->AddressID,
-                'AddressName' => $item2->Party->PartAddress->Address->Name,
-                'Address' => $item2->Party->PartAddress->Address->Details,
-                'Phone' => $item2->Party->PartAddress->Address->Phone,
-                'city' => $item2->Store->Plant->Address->Region->Name
+                'AddressID' => $item2->Party->PartyAddress->Address->AddressID,
+                'AddressName' => $item2->Party->PartyAddress->Address->Name,
+                'Address' => $item2->Party->PartyAddress->Address->Details,
+                'Phone' => $item2->Party->PartyAddress->Address->Phone,
+                'city' => $item2->Party->PartyAddress->Address->Region->Name
             ]
             ];
 
