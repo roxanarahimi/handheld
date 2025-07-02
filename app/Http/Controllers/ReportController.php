@@ -17,6 +17,7 @@ use App\Models\OrderItem;
 use App\Models\Part;
 use App\Models\PartUnit;
 use App\Models\Remittance;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -24,16 +25,15 @@ use Illuminate\Support\Facades\DB;
 class ReportController extends Controller
 {
     public function test(Request $request){
-        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
-            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->whereNot(function ($query) {
+        $storeIDs = Store::
+            whereNot(function ($query) {
                 $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
                     ->orWhere('LGS3.Store.Name', 'LIKE', "%مرکزی%")
                     ->orWhere('GNR3.Address.Details', 'LIKE', "%مرکزی%")
                     ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
                     ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
             })
+            ->with('Plant')
             ->get();
         return $storeIDs;
 

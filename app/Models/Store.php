@@ -18,6 +18,6 @@ class Store extends Model
 
     public function Plant()
     {
-        return $this->hasOne(Plant::class, 'PlantID', 'PlantRef');
+        return $this->hasOne(Plant::class, 'PlantID', 'PlantRef')->with('Address');//
     }
 }
