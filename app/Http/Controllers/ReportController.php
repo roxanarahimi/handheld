@@ -68,6 +68,14 @@ class ReportController extends Controller
             ->orWhere('Name', 'LIKE', "%مارکتینگ%")
                 ->orWhere('Name', 'LIKE', "%ضایعات%")
                 ->orWhere('Name', 'LIKE', "%برگشتی%")
+            ->orWhere(function ($q){
+                $q->whereHas('Plant', function ($x) {
+                    $x->where('Name', 'LIKE', '%گرمدره%')
+                        ->orwhereHas('Address', function ($y) {
+                            $y->where('Details', 'LIKE', "%گرمدره%");
+                        });
+                });
+                })
             ->paginate(100);
         return $storeIDs;
 
