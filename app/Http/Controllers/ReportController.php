@@ -46,6 +46,21 @@ class ReportController extends Controller
                 });
             })
             ->paginate(100);
+
+        $storeIDs = Store::orderBy('Code')
+            ->whereHas('Plant',function($x){
+                $x->where('Name','LIKE','%گرمدره%')
+                    ->orwhereHas('Address',function ($y){
+                        $y->where('Details', 'LIKE', "%گرمدره%");
+                    });
+            })
+            ->whereNot(function ($query) {
+                $query->where('Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('Name', 'LIKE', "%برگشتی%")
+                    ->orWhere('Code', "1000");
+            })
+            ->paginate(100);
         return $storeIDs;
 
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
