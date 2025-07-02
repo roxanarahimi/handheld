@@ -26,8 +26,18 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-
-
+        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
+//        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
+//            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+//            ->whereNot(function ($query) {
+//                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+//                    ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+//                    ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+//                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+//                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
+//            })
+//            ->pluck('StoreID');
         $storeIDs = Store::orderBy('Code')
             ->whereNot(function ($query) {
                 $query->where('Name', 'LIKE', '%گرمدره%')
@@ -43,21 +53,6 @@ class ReportController extends Controller
                             $y->where('Details', 'LIKE', "%گرمدره%");
                         });
                 });
-            })
-            ->paginate(100);
-
-        return $storeIDs;
-
-        $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
-        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
-            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
-            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
-            ->whereNot(function ($query) {
-                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%مرکزی%")
-                    ->orWhere('GNR3.Address.Details', 'LIKE', "%مرکزی%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
-                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
             })
             ->pluck('StoreID');
         $dat = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
@@ -78,8 +73,39 @@ class ReportController extends Controller
 //            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
             ->orderByDESC('LGS3.InventoryVoucher.InventoryVoucherID')
             ->paginate(200);
-        $data = InventoryVoucherResource::collection($dat);
-        return $dat;
+//        $data = InventoryVoucherResource::collection($dat);
+      //////////  return $dat;
+
+
+        $storeIDs0 = DB::connection('sqlsrv')->table('LGS3.Store')
+            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+            ->whereNot(function ($query) {
+                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%گرمدره%")
+                    ->orWhere('GNR3.Address.Details', 'LIKE', "%گرمدره%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
+            })
+            ->pluck('StoreID');
+        $dat0 = InventoryVoucher::select("LGS3.InventoryVoucher.InventoryVoucherID", "LGS3.InventoryVoucher.Number",
+            "LGS3.InventoryVoucher.CreationDate", "Date as DeliveryDate", "CounterpartStoreRef", "AddressID",
+            'GNR3.RegionalDivision.Name as City')
+            ->join('LGS3.Store', 'LGS3.Store.StoreID', '=', 'LGS3.InventoryVoucher.CounterpartStoreRef')
+            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
+//            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
+            ->whereIn('LGS3.Store.StoreID', $storeIDs0)
+            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
+            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
+            ->whereHas('OrderItems', function ($q) use ($partIDs) {
+                $q->whereIn('PartRef', $partIDs);
+            })
+            ->orderBy('LGS3.InventoryVoucher.InventoryVoucherID')
+            ->get();
+        return [InventoryVoucherResource::collection($dat0),InventoryVoucherResource::collection($dat)];
     }
 
     public function fix(Request $request)
