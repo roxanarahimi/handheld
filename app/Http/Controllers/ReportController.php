@@ -24,6 +24,19 @@ use Illuminate\Support\Facades\DB;
 class ReportController extends Controller
 {
     public function test(Request $request){
+        $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
+            ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
+            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'LGS3.Plant.AddressRef')
+            ->whereNot(function ($query) {
+                $query->where('LGS3.Store.Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%مرکزی%")
+                    ->orWhere('GNR3.Address.Details', 'LIKE', "%مرکزی%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('LGS3.Store.Name', 'LIKE', "%برگشتی%");
+            })
+            ->get();
+        return $storeIDs;
+
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = DB::connection('sqlsrv')->table('LGS3.Store')
             ->join('LGS3.Plant', 'LGS3.Plant.PlantID', '=', 'LGS3.Store.PlantRef')
