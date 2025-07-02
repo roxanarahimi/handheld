@@ -32,8 +32,10 @@ class ReportController extends Controller
                 ->orWhere('Name', 'LIKE', "%مرکزی%")
                 ->orWhere('Name', 'LIKE', "%ضایعات%")
                 ->orWhere('Name', 'LIKE', "%برگشتی%")
-                ->orWhereHas('Address', function ($x) {
-                    $x->where('Details', 'LIKE', "%مرکزی%");
+                ->orWhereHas('Plant', function ($x) {
+                    $x->whereHas('Address', function ($y) {
+                        $y->where('Details', 'LIKE', "%مرکزی%");
+                    });
                 });
         })
             ->with('Plant')
