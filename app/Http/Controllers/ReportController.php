@@ -54,6 +54,7 @@ class ReportController extends Controller
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
             })
+            ->with('OrderItems')
             ->orderBy('InventoryVoucherID')
             ->get();
         return $dat;
