@@ -44,7 +44,7 @@ class ReportController extends Controller
                 });
             })
             ->pluck('StoreID');
-        $dat = InventoryVoucher::where('CreationDate', '>=', today()->subDays(2))//
+        $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
 //        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
             ->whereHas('Store', function ($s) use ($storeIDs) {
                 $s->whereIn('StoreID', $storeIDs);
