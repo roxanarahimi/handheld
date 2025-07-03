@@ -21,7 +21,6 @@ class CacheController extends Controller
     {
 //        InvoiceProduct::query()->truncate();
         $productnumbers = InvoiceProduct::
-//        where('CreationDate', '>=', today()->subDays(2))->
         pluck('ProductNumber');
         $products = Product::where('CreationDate', '>=', today()->subDays(2))
             ->where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')
@@ -406,8 +405,6 @@ class CacheController extends Controller
             echo $nowTime . ' - Tehran Time: ' . $exception->getMessage() . '
 ';
         }
-//where('DeliveryDate', '>=', today()->subDays(2))
-
     }
 
 }
