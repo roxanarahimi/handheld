@@ -39,6 +39,7 @@ class ReportController extends Controller
 //        $t = Invoice::whereIn('id',[50,778,934,1007,2853])->with('invoiceItems')->with('barcodes')->with('rBarcodes')->get();
 //        $t = InvoiceProduct::orderByDesc('id')->with('invoiceItems')->doesntHave('invoiceItems')->get()->each->delete();
         $t = Invoice::orderByDesc('id')->with('invoiceItems')->doesntHave('invoiceItems')->get();
+        $t = InvoiceItem::orderByDesc('id')->with('product')->doesntHave('product')->get();
         return $t;
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = Store::orderBy('Code')
