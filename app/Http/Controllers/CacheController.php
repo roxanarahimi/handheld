@@ -222,12 +222,6 @@ class CacheController extends Controller
                 $exx = Invoice::where('OrderID', $item->InventoryVoucherID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->first();
                 if (!$exx) {
                     $invoice = Invoice::create([
-//                        'Type' => 'InventoryVoucher',
-//                        'OrderID' => $item->InventoryVoucherID,
-//                        'OrderNumber' => $item->Number,
-//                        'AddressID' => $item->Store->Plant->Address->AddressID,
-//                        'Sum' => $item->OrderItems->sum('Quantity'),
-//                        'DeliveryDate' => $item->DeliveryDate
                         'Type' => 'InventoryVoucher',
                         'OrderID' => $item->InventoryVoucherID,
                         'OrderNumber' => $item->Number,
@@ -238,11 +232,6 @@ class CacheController extends Controller
                     $address = InvoiceAddress::where('AddressID', $item->Store->Plant->Address->AddressID)->first();
                     if (!$address) {
                         InvoiceAddress::create([
-//                            'AddressID' => $item->Store->Plant->Address->AddressID,
-//                            'AddressName' => $item->Store->Name,
-//                            'Address' => $item->Store->Plant->Address->Details,
-//                            'Phone' => $item->Store->Plant->Address->Phone,
-//                            'city' => $item->City,
                             'AddressID' => $item->Store->Plant->Address->AddressID,
                             'AddressName' => $item->Store->Name,
                             'Address' => $item->Store->Plant->Address->Details,
@@ -283,12 +272,6 @@ class CacheController extends Controller
                 $exx2 = Invoice::where('OrderID', $item->InventoryVoucherID)->where('OrderNumber', $item->Number)->where('Type', 'Deputation')->first();
                 if (!$exx2) {
                     $invoice = Invoice::create([
-//                        'Type' => 'Deputation',
-//                        'OrderID' => $item->InventoryVoucherID,
-//                        'OrderNumber' => $item->Number,
-//                        'AddressID' => $item->AddressID,
-//                        'Sum' => $item->OrderItems->sum('Quantity'),
-//                        'DeliveryDate' => $item->DeliveryDate
                         'Type' => 'Deputation',
                         'OrderID' => $item->InventoryVoucherID,
                         'OrderNumber' => $item->Number,
@@ -296,14 +279,9 @@ class CacheController extends Controller
                         'Sum' => $item->OrderItems->sum('Quantity'),
                         'DeliveryDate' => $item->Date
                     ]);
-                    $address = InvoiceAddress::where('AddressID', $item->AddressID)->first();
+                    $address = InvoiceAddress::where('AddressID', $item->Party->PartyAddress->Address->AddressID)->first();
                     if (!$address) {
                         InvoiceAddress::create([
-//                            'AddressID' => $item->AddressID,
-//                            'AddressName' => $item->AddressName,
-//                            'Address' => $item->Details,
-//                            'Phone' => $item->Phone,
-//                            'city' => $item->City
                             'AddressID' => $item->Party->PartyAddress->Address->AddressID,
                             'AddressName' => $item->Party->PartyAddress->Address->Name,
                             'Address' => $item->Party->PartyAddress->Address->Details,
