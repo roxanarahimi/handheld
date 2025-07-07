@@ -9,8 +9,8 @@ class InvoiceProduct extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-    public function invoiceItem()
+    public function invoiceItems()
     {
-        return $this->hasOne(InvoiceProduct::class,  'ProductNumber','ProductNumber');
+        return $this->hasMany(InvoiceItem::class,  'ProductNumber','ProductNumber');
     }
 }

@@ -31,8 +31,8 @@ class ReportController extends Controller
 //            ->groupBy('AddressID')
 //            ->havingRaw('COUNT(*) > 1')
 //            ->pluck('AddressID');
-//        return $duplicates;
-        $t = InvoiceAddress::orderByDesc('id')->get();
+//        return $duplicates;SELECT * FROM `invoice_products` WHERE ProductName LIKE '%کیلویی%'
+        $t = InvoiceProduct::orderByDesc('id')->where('ProductName', 'Like','%کیلویی%' )->whereHas('invoiceItems')->with('invoiceItems')->get();
         return $t;
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = Store::orderBy('Code')
