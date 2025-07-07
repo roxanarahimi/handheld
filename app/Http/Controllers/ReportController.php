@@ -34,7 +34,7 @@ class ReportController extends Controller
 //        return $duplicates;
 //        $t = InvoiceAddress::orderByDesc('id')->with('invoices')->whereHas('invoices')->paginate(200);
 //        $t = InvoiceAddress::orderByDesc('id')->with('invoices')->doesntHave('invoices')->get()->each->delete();
-        $t = InvoiceProduct::orderByDesc('id')->where('ProductName', 'Like','%کیلویی%' )->doesntHave('invoiceItems')->with('invoiceItems')->paginate(100);
+        $t = InvoiceProduct::orderByDesc('id')->where('ProductName', 'Like','%کیلویی%' )->whereHas('invoiceItems')->with('invoiceItems')->get();
 
         return $t;
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
