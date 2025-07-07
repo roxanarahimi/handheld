@@ -290,11 +290,11 @@ class CacheController extends Controller
 //                        'Sum' => $item->OrderItems->sum('Quantity'),
 //                        'DeliveryDate' => $item->DeliveryDate
                         'Type' => 'Deputation',
-                        'OrderID' => $item2->InventoryVoucherID,
-                        'OrderNumber' => $item2->Number,
-                        'AddressID' => $item2->Party->PartyAddress->Address->AddressID,
-                        'Sum' => $item2->OrderItems->sum('Quantity'),
-                        'DeliveryDate' => $item2->Date
+                        'OrderID' => $item->InventoryVoucherID,
+                        'OrderNumber' => $item->Number,
+                        'AddressID' => $item->Party->PartyAddress->Address->AddressID,
+                        'Sum' => $item->OrderItems->sum('Quantity'),
+                        'DeliveryDate' => $item->Date
                     ]);
                     $address = InvoiceAddress::where('AddressID', $item->AddressID)->first();
                     if (!$address) {
@@ -304,11 +304,11 @@ class CacheController extends Controller
 //                            'Address' => $item->Details,
 //                            'Phone' => $item->Phone,
 //                            'city' => $item->City
-                            'AddressID' => $item2->Party->PartyAddress->Address->AddressID,
-                            'AddressName' => $item2->Party->PartyAddress->Address->Name,
-                            'Address' => $item2->Party->PartyAddress->Address->Details,
-                            'Phone' => $item2->Party->PartyAddress->Address->Phone,
-                            'city' => $item2->Party->PartyAddress->Address->Region->Name
+                            'AddressID' => $item->Party->PartyAddress->Address->AddressID,
+                            'AddressName' => $item->Party->PartyAddress->Address->Name,
+                            'Address' => $item->Party->PartyAddress->Address->Details,
+                            'Phone' => $item->Party->PartyAddress->Address->Phone,
+                            'city' => $item->Party->PartyAddress->Address->Region->Name
                         ]);
                     }
                     foreach ($item->OrderItems as $item2) {
