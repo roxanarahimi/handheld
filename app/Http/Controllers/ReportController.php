@@ -26,12 +26,14 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $duplicates = DB::table('invoice_addresses')
-            ->select('AddressID')
-            ->groupBy('AddressID')
-            ->havingRaw('COUNT(*) > 1')
-            ->pluck('AddressID');
-        return $duplicates;
+//        $duplicates = DB::table('invoice_addresses')
+//            ->select('AddressID')
+//            ->groupBy('AddressID')
+//            ->havingRaw('COUNT(*) > 1')
+//            ->pluck('AddressID');
+//        return $duplicates;
+        $t = InvoiceAddress::orderByDesc('id')->with('invoice')->paginate(200);
+        return $t;
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = Store::orderBy('Code')
             ->whereNot(function ($query) {

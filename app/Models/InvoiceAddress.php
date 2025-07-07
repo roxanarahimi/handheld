@@ -9,4 +9,9 @@ class InvoiceAddress extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class, 'AddressID', 'AddressID');
+    }
 }
