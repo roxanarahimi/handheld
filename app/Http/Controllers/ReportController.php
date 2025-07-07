@@ -37,7 +37,7 @@ class ReportController extends Controller
         $t = InvoiceProduct::orderByDesc('id')->where('ProductName', 'Like','%کیلویی%' )->whereHas('invoiceItems')->with('invoiceItems')->get();
 
         $t = Invoice::whereIn('id',[50,778,934,1007,2853])->with('invoiceItems')->get();
-        return new InvoiceResource($t);
+        return $t;
         $partIDs = Part::where('Name', 'like', '%نودالیت%')->whereNot('Name', 'like', '%لیوانی%')->whereNot('Name', 'like', '%کیلویی%')->pluck("PartID");
         $storeIDs = Store::orderBy('Code')
             ->whereNot(function ($query) {
