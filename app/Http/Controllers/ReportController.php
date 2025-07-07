@@ -27,7 +27,7 @@ class ReportController extends Controller
     public function test(Request $request)
     {
         $duplicates = DB::table('invoice_addresses')
-            ->select('AddressID')
+            ->select('*')
             ->groupBy('AddressID')
             ->havingRaw('COUNT(*) > 1')
             ->pluck('AddressID');
