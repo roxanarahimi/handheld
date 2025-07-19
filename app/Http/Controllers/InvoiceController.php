@@ -100,7 +100,7 @@ class InvoiceController extends Controller
                         $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
                     } else {
                         if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
-                             $invoiceItem = InvoiceItem::create([
+                             InvoiceItem::create([
                                 'invoice_id' => $invoice->id,
                                 'ProductNumber' => $item2->Part->Code,
                                 'Quantity' => $item2->Quantity,
@@ -122,7 +122,7 @@ class InvoiceController extends Controller
                         $exist->update(['Quantity' => $exist->Quantity + $q]);
                     } else {
                         if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
-                            $invoiceItem = InvoiceItem::create([
+                            InvoiceItem::create([
                                 'invoice_id' => $invoice->id,
                                 'ProductNumber' => $item2->Part->Code,
                                 'Quantity' => $q,
