@@ -87,7 +87,7 @@ class InvoiceController extends Controller
         try {
 //            $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])->first();
 //            $invoice = Invoice::orderByDesc('id')->where('OrderID', $item['InventoryVoucherID'])->where('OrderNumber', $request['OrderNumber'])->first();
-            $invoice =Invoice::find($request['id'])->first();
+            $invoice =Invoice::find($request['id']);
             return $invoice;
             $item = InventoryVoucher::where('InventoryVoucherID', $invoice['OrderID'])->first();
 
