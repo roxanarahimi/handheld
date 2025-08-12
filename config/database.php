@@ -102,6 +102,17 @@ return [
             'prefix' => '',
 
         ],
+ 'sqlsrv2' => [
+            'driver' => 'sqlsrv',
+            'host' => '92.61.183.36',
+            'port' => '1433',
+            'database' => 'MER-ALazizP-DB',
+            'username' => 'daniyal',
+            'password' => 'D@niy@l#2025@!',
+            'charset' => 'utf8',
+            'prefix' => '',
+
+        ],
 
     ],
 

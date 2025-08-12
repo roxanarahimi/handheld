@@ -26,6 +26,10 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
+        $r = DB::connection('sqlsrv');
+        return $r;
+//            ->table('LGS3.Store')
+
 //        $duplicates = DB::table('invoice_addresses')
 //            ->select('AddressID')
 //            ->groupBy('AddressID')
