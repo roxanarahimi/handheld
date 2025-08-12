@@ -103,12 +103,13 @@ return [
 
         ],
  'sqlsrv2' => [
-            'driver' => 'mysql',
+            'driver' => 'sqlsrv',
             'host' => '92.61.182.38',
-            'port' => '3306',
-            'database' => 'Rahkaran_Alpa',
+            'port' => '1433',
+//            'database' => 'MER-ALazizP-DB',
+            'database' => 'Amadehlaziz',
             'username' => 'daniyal',
-            'password' => 'D@niy@l#2025@!',
+            'password' => 'D@niy@l#2025@!21',
             'charset' => 'utf8',
             'prefix' => '',
 
