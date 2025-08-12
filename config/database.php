@@ -106,7 +106,7 @@ return [
             'driver' => 'mysql',
             'host' => '92.61.182.38',
             'port' => '3306',
-            'database' => 'MER-ALazizP-DB',
+            'database' => 'Rahkaran_Alpa',
             'username' => 'daniyal',
             'password' => 'D@niy@l#2025@!',
             'charset' => 'utf8',
