@@ -26,9 +26,9 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $r = DB::connection('sqlsrv');
+        $r = DB::connection('sqlsrv')->table('LGS3.Category')->select('CategoryID')->take(10)->get();
         return $r;
-//            ->table('LGS3.Store')
+//
 
 //        $duplicates = DB::table('invoice_addresses')
 //            ->select('AddressID')
