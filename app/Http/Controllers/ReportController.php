@@ -26,7 +26,7 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $r = DB::connection('sqlsrv2')->table('LGS3.Category')->paginate(20);
+        $r = DB::connection('sqlsrv2')->table('LGS3.Category')->select('CategoryID')->paginate(20);
         return $r;
 //
 
