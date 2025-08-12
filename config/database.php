@@ -104,7 +104,7 @@ return [
         ],
  'sqlsrv2' => [
             'driver' => 'mysql',
-            'host' => '92.61.182.38',
+            'host' => '92.61.183.36',
             'port' => '3306',
 //            'database' => 'MER-ALazizP-DB',
             'database' => 'Amadehlaziz',
