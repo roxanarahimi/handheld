@@ -26,7 +26,7 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $x = InvoiceItem::find('7011762405');
+        $x = InvoiceItem::find(17587);
         $x->update(['quantity'=>40]);
         $y = InvoiceItem::create([
             'invoice_id' => 3938,
