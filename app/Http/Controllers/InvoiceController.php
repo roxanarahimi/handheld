@@ -44,7 +44,7 @@ class InvoiceController extends Controller
     public function info(Request $request)
     {
         try {
-            $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(10))
+            $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
                 ->whereNot('Type', 'Order')
                 ->orderByDesc('Type')
                 ->orderByDesc('OrderID')
