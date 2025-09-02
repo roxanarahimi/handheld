@@ -27,14 +27,18 @@ class ReportController extends Controller
     public function test(Request $request)
     {
         $x = InvoiceItem::where('id',17587)->first();
-        $x->update(['quantity'=>40]);
+        $x->update(['Quantity'=>40]);
         InvoiceItem::create([
             'invoice_id' => 3938,
-            'ProductNumber' => "7011762405",
+            'ProductNumber' => "7011762411",
             'Quantity' => 50
         ]);
+$s = InvoiceItem::where('id',17746)->first();
+$d = InvoiceItem::where('id',17746)->first();
+$s->delete();
+$d->delete();
         $t = Invoice::where('id',3938)->first();
-        return new InvoiceResource($t);
+        return new InvoiceResource($t) ;
 //        $r = DB::connection('sqlsrv2')->table('LGS3.Category')->select('CategoryID')->paginate(20);
 //        return $r;
 //
