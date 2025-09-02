@@ -28,13 +28,13 @@ class ReportController extends Controller
     {
         $x = InvoiceItem::where('id',17587)->first();
         $x->update(['quantity'=>40]);
-        $y = InvoiceItem::create([
+        InvoiceItem::create([
             'invoice_id' => 3938,
             'ProductNumber' => "7011762405",
             'Quantity' => 50
         ]);
         $t = Invoice::where('id',3938)->first();
-        return $t;
+        return new InvoiceResource($t);
 //        $r = DB::connection('sqlsrv2')->table('LGS3.Category')->select('CategoryID')->paginate(20);
 //        return $r;
 //
