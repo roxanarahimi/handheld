@@ -26,14 +26,14 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $x = InvoiceItem::find(17587);
+        $x = InvoiceItem::where('id',17587)->first();
         $x->update(['quantity'=>40]);
         $y = InvoiceItem::create([
             'invoice_id' => 3938,
             'ProductNumber' => "7011762405",
             'Quantity' => 50
         ]);
-        $t = Invoice::find(3938);
+        $t = Invoice::where('id',3938)->first();
         return $t;
 //        $r = DB::connection('sqlsrv2')->table('LGS3.Category')->select('CategoryID')->paginate(20);
 //        return $r;
