@@ -26,16 +26,8 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $x = InvoiceItem::where('id',17587)->first();
-        $x->update(['Quantity'=>40]);
-        InvoiceItem::create([
-            'invoice_id' => 3938,
-            'ProductNumber' => "7011762411",
-            'Quantity' => 50
-        ]);
-$s = InvoiceItem::where('id',17746)->first();
-$d = InvoiceItem::where('id',17746)->first();
-$s->delete();
+
+$d = InvoiceItem::where('id',17747)->first();
 $d->delete();
         $t = Invoice::where('id',3938)->first();
         return new InvoiceResource($t) ;
