@@ -20,13 +20,12 @@ class InvoiceResource extends JsonResource
         $state = 0; // not done
         if ($barcodes_count < $this->Sum) {
             $state = 0; // not done
-        }elseif($barcodes_count == $this->Sum) {
+        } elseif ($barcodes_count == $this->Sum) {
             $state = 1; // done
         } elseif ($barcodes_count > $this->Sum) {
             $state = 2; // over done
-        }   $state = 1; // done
-
-        } if ($this->id === 3978) {
+        }
+        if ($this->id == 3978) {
             $state = 0; // over done
         }
         return [
@@ -48,8 +47,8 @@ class InvoiceResource extends JsonResource
             'DeliveryDate' => (new DateController)->toPersian2($this->DeliveryDate),
 
             "OrderItems" => InvoiceItemResource::collection($this->invoiceItems),
-            'created_at' => explode(' ',(new DateController)->toPersian($this->created_at))[0].' '.explode(' ',(new DateController)->toPersian($this->created_at))[1],
-            'updated_at' => explode(' ',(new DateController)->toPersian($this->updated_at))[0].' '.explode(' ',(new DateController)->toPersian($this->updated_at))[1],
+            'created_at' => explode(' ', (new DateController)->toPersian($this->created_at))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->created_at))[1],
+            'updated_at' => explode(' ', (new DateController)->toPersian($this->updated_at))[0] . ' ' . explode(' ', (new DateController)->toPersian($this->updated_at))[1],
 
 
         ];
