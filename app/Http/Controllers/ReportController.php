@@ -28,10 +28,10 @@ class ReportController extends Controller
     {
 
 //         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 20]);
-        $dm = InvoiceItem::where('id' , 17801)->first();
-        $dm->delete();
-        $d = InvoiceItem::where('id' , 17749)->first();
-        $d->update([ 'Quantity' => 13]);
+//        $dm = InvoiceItem::where('id' , 17801)->first();
+//        $dm->delete();
+        $d = InvoiceItem::where('id' , 17800)->first();
+        $d->update([ 'Quantity' => 16]);
         $t = Invoice::where('id', 3978)->first();
         return new InvoiceResource($t);
 //        $r = DB::connection('sqlsrv2')->table('LGS3.Category')->select('CategoryID')->paginate(20);
