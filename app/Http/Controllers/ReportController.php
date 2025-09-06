@@ -27,10 +27,11 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-$d = InvoiceItem::where('id',17747)->first();
-$d->delete();
-        $t = Invoice::where('id',3938)->first();
-        return new InvoiceResource($t) ;
+         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 20]);
+        $d = InvoiceItem::where('id' , 17749)->first();
+        $d->update([ 'Quantity' => 20]);
+        $t = Invoice::where('id', 3978)->first();
+        return new InvoiceResource($t);
 //        $r = DB::connection('sqlsrv2')->table('LGS3.Category')->select('CategoryID')->paginate(20);
 //        return $r;
 //
@@ -43,7 +44,7 @@ $d->delete();
 //        return $duplicates;
 //        $t = InvoiceAddress::orderByDesc('id')->with('invoices')->whereHas('invoices')->paginate(200);
 //        $t = InvoiceAddress::orderByDesc('id')->with('invoices')->doesntHave('invoices')->get()->each->delete();
-        $t = InvoiceProduct::orderByDesc('id')->where('ProductName', 'Like','%کیلویی%' )->whereHas('invoiceItems')->with('invoiceItems')->get();
+        $t = InvoiceProduct::orderByDesc('id')->where('ProductName', 'Like', '%کیلویی%')->whereHas('invoiceItems')->with('invoiceItems')->get();
 
 //        $t = Invoice::whereIn('id',[50,778,934,1007,2853])->with('invoiceItems')->with('barcodes')->with('rBarcodes')->get();
 //        $t = InvoiceProduct::orderByDesc('id')->with('invoiceItems')->doesntHave('invoiceItems')->get()->each->delete();
@@ -70,9 +71,9 @@ $d->delete();
             ->pluck('StoreID');
         $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
 //        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
-            ->whereHas('Store', function ($s) use ($storeIDs) {
-                $s->whereIn('StoreID', $storeIDs);
-            })
+        ->whereHas('Store', function ($s) use ($storeIDs) {
+            $s->whereIn('StoreID', $storeIDs);
+        })
             ->where('FiscalYearRef', 1405)
             ->where('InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
