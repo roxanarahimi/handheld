@@ -27,9 +27,9 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 20]);
+//         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 20]);
         $d = InvoiceItem::where('id' , 17749)->first();
-        $d->update([ 'Quantity' => 20]);
+        $d->update([ 'Quantity' => 13]);
         $t = Invoice::where('id', 3978)->first();
         return new InvoiceResource($t);
 //        $r = DB::connection('sqlsrv2')->table('LGS3.Category')->select('CategoryID')->paginate(20);
