@@ -27,11 +27,11 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 16]);
+//         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 16]);
 //        $dm = InvoiceItem::where('id' , 17801)->first();
 //        $dm->delete();
-        $d = InvoiceItem::where('id' , 17800)->first();
-        $d->update([ 'Quantity' => 16]);
+        $d = InvoiceItem::where('id' , 17813)->first();
+        $d->update([ 'Quantity' => 11]);
         $t = Invoice::where('id', 3978)->first();
         return new InvoiceResource($t);
 //        $r = DB::connection('sqlsrv2')->table('LGS3.Category')->select('CategoryID')->paginate(20);
