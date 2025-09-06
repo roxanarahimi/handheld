@@ -27,7 +27,7 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-//         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 20]);
+         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 16]);
 //        $dm = InvoiceItem::where('id' , 17801)->first();
 //        $dm->delete();
         $d = InvoiceItem::where('id' , 17800)->first();
