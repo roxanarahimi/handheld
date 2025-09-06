@@ -27,15 +27,15 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 21]);
+//         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 21]);
 //        $dm = InvoiceItem::where('id' , 17801)->first();
 //        $dm->delete();
-        $d = InvoiceItem::where('id' , 17824)->first();
-        $d->update([ 'Quantity' => 91]);
-         $d1 = InvoiceItem::where('id' , 17826)->first();
-        $d1->update([ 'Quantity' => 47]);
+//        $d = InvoiceItem::where('id' , 17824)->first();
+//        $d->update([ 'Quantity' => 91]);
+//         $d1 = InvoiceItem::where('id' , 17826)->first();
+//        $d1->update([ 'Quantity' => 47]);
         $t = Invoice::where('id', 3978)->first();
-        $t->update(['sum'=>800]);
+        $t->update(['Sum'=>800]);
         $te = Invoice::where('id', 3978)->first();
 
         return new InvoiceResource($te);
