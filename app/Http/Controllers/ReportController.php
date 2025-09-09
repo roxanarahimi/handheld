@@ -25,22 +25,20 @@ use Illuminate\Support\Facades\DB;
 class ReportController extends Controller
 {
     public function test(Request $request)
-    {  $t = Invoice::where('id', 3978)->first();
-        $t->update(['Sum'=>256]);
+    {  $t = Invoice::where('id', 3997)->first();
+        $t->update(['Sum'=>456]);
 //        foreach ($t->invoiceItems as $item)
 //        {
 //            $item->delete();
 //        }
 
-         InvoiceItem::create(['invoice_id' => 3978, 'ProductNumber' => "7011762405", 'Quantity' => 88]);
-        $dm = InvoiceItem::where('id' , 17866)->first();
-        $dm->delete();
-        $d = InvoiceItem::where('id' , 17867)->first();
-        $d->update([ 'Quantity' => 66]);
-         $d1 = InvoiceItem::where('id' , 17868)->first();
-        $d1->update([ 'Quantity' => 35]);
+         InvoiceItem::create(['invoice_id' => 3997, 'ProductNumber' => "7010305351", 'Quantity' => 42]);
+        $dm = InvoiceItem::where('id' , 17901)->first();
+        $dm->update(['Quantity' => 73]);
+        $d = InvoiceItem::where('id' , 17902)->first();
+        $d->update([ 'Quantity' => 1000]);
 
-        $te = Invoice::where('id', 3978)->first();
+        $te = Invoice::where('id', 3997)->first();
 
         return new InvoiceResource($te);
 //        $r = DB::connection('sqlsrv2')->table('LGS3.Category')->select('CategoryID')->paginate(20);
