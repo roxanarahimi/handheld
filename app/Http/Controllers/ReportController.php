@@ -26,17 +26,17 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {  $t = Invoice::where('id', 3997)->first();
-        $t->update(['Sum'=>456]);
+        $t->update(['Sum'=>888]);
 //        foreach ($t->invoiceItems as $item)
 //        {
 //            $item->delete();
 //        }
 
-         InvoiceItem::create(['invoice_id' => 3997, 'ProductNumber' => "7010304351", 'Quantity' => 8756]);
-        $dm = InvoiceItem::where('id' , 17955)->first();
-        $dm->update(['Quantity' => 985]);
-        $d = InvoiceItem::where('id' , 17956)->first();
-        $d->update([ 'Quantity' => 658]);
+         InvoiceItem::create(['invoice_id' => 3997, 'ProductNumber' => "7010304351", 'Quantity' => 1111]);
+        $dm = InvoiceItem::where('invoice_id' , 3997)->where('ProductNumber' , "7010301351")->first();
+        $dm->update(['Quantity' => 222]);
+        $d = InvoiceItem::where('invoice_id' , 3997)->where('ProductNumber' , "7010302351")->first();
+        $d->update([ 'Quantity' => 333]);
 
         $te = Invoice::where('id', 3997)->first();
 
