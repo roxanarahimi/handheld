@@ -32,11 +32,11 @@ class ReportController extends Controller
 //            $item->delete();
 //        }
 
-         InvoiceItem::create(['invoice_id' => 3997, 'ProductNumber' => "7010305351", 'Quantity' => 42]);
-        $dm = InvoiceItem::where('id' , 17901)->first();
-        $dm->update(['Quantity' => 73]);
-        $d = InvoiceItem::where('id' , 17902)->first();
-        $d->update([ 'Quantity' => 1000]);
+         InvoiceItem::create(['invoice_id' => 3997, 'ProductNumber' => "7010304351", 'Quantity' => 8756]);
+        $dm = InvoiceItem::where('id' , 17955)->first();
+        $dm->update(['Quantity' => 985]);
+        $d = InvoiceItem::where('id' , 17956)->first();
+        $d->update([ 'Quantity' => 658]);
 
         $te = Invoice::where('id', 3997)->first();
 
