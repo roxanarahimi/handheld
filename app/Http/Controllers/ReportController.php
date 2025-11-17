@@ -28,7 +28,7 @@ class ReportController extends Controller
 {
     public function test(Request $request){
 
-          $dat = Store::where('Number','2145549811')->orWhere('Code','2145549811')->get();
+          $dat = Plant::where('Number','2145549811')->orWhere('Code','2145549811')->get();
 
           return $dat;
 
