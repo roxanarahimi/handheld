@@ -29,9 +29,8 @@ class ReportController extends Controller
     {
 
         $dat = Address::with('Plant', function ($q) {
-            $q->with('Store');
-        })
-            ->where('Name', 'LIKE', '%' . 'قزوین' . '%')->get();
+            return $q->with('Store');
+        })->where('Name', 'LIKE', '%' . 'قزوین' . '%')->get();
 
 
         return $dat;
