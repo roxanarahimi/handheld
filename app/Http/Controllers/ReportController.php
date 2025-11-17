@@ -7,6 +7,7 @@ use App\Http\Resources\InvoiceBarcodeResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\RemittanceResource;
+use App\Models\Address;
 use App\Models\InventoryVoucher;
 use App\Models\Invoice;
 use App\Models\InvoiceAddress;
@@ -24,8 +25,13 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
-    public function test(Request $request)
-    {  $t = Invoice::where('id', 3997)->first();
+    public function test(Request $request){
+
+          $dat = Address::where('Name','LIKE','%'.'قزوین'.'%')->get();
+
+          return $dat;
+
+  $t = Invoice::where('id', 3997)->first();
         $t->update(['Sum'=>888]);
 //        foreach ($t->invoiceItems as $item)
 //        {
