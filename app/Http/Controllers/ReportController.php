@@ -17,7 +17,6 @@ use App\Models\InvoiceProduct;
 use App\Models\OrderItem;
 use App\Models\Part;
 use App\Models\PartUnit;
-use App\Models\Plant;
 use App\Models\Remittance;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -26,24 +25,29 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
-    public function test(Request $request){
+    public function test(Request $request)
+    {
 
-          $dat = Plant::where('Number','2145549811')->get();
+        $dat = Address::with('Plant', function ($q) {
+            $q->with('Store');
+        })
+            ->where('Name', 'LIKE', '%' . 'قزوین' . '%')->get();
 
-          return $dat;
 
-  $t = Invoice::where('id', 3997)->first();
-        $t->update(['Sum'=>888]);
+        return $dat;
+
+        $t = Invoice::where('id', 3997)->first();
+        $t->update(['Sum' => 888]);
 //        foreach ($t->invoiceItems as $item)
 //        {
 //            $item->delete();
 //        }
 
-         InvoiceItem::create(['invoice_id' => 3997, 'ProductNumber' => "7010304351", 'Quantity' => 1111]);
-        $dm = InvoiceItem::where('invoice_id' , 3997)->where('ProductNumber' , "7010301351")->first();
+        InvoiceItem::create(['invoice_id' => 3997, 'ProductNumber' => "7010304351", 'Quantity' => 1111]);
+        $dm = InvoiceItem::where('invoice_id', 3997)->where('ProductNumber', "7010301351")->first();
         $dm->update(['Quantity' => 222]);
-        $d = InvoiceItem::where('invoice_id' , 3997)->where('ProductNumber' , "7010302351")->first();
-        $d->update([ 'Quantity' => 333]);
+        $d = InvoiceItem::where('invoice_id', 3997)->where('ProductNumber', "7010302351")->first();
+        $d->update(['Quantity' => 333]);
 
         $te = Invoice::where('id', 3997)->first();
 
