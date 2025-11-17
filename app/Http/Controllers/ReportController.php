@@ -28,7 +28,7 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-        $dat = Address::with('Plant')->where('Name', 'LIKE', '%' . 'شعبه قزوین' . '%')->paginage(500);
+        $dat = Address::with('Plant')->where('Name', 'LIKE', '%' . 'شعبه قزوین' . '%')->get();
 
 
         return $dat;
