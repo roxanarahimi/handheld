@@ -13,7 +13,7 @@ class Address extends Model
 
     public function Plant()
     {
-        return $this->belongsTo(Store::class,'AddressID', 'AddressRef' );
+        return $this->belongsTo(Plant::class,'AddressID', 'AddressRef' );
     }
 
     public function CustomerAddress()
