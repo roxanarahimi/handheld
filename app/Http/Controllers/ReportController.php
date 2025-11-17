@@ -17,7 +17,6 @@ use App\Models\InvoiceProduct;
 use App\Models\OrderItem;
 use App\Models\Part;
 use App\Models\PartUnit;
-use App\Models\Plant;
 use App\Models\Remittance;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -29,9 +28,7 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-        $dat = Plant::whereHas('Address',function ($q){
-             $q->where('Name', 'LIKE', '%' . 'شعبه قزوین' . '%');
-        })->get();
+        $dat = Address::with('Plant')->where('Name', 'LIKE', '%' . 'شعبه قزوین' . '%')->get();
 
 
         return $dat;
