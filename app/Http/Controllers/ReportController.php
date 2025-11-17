@@ -27,13 +27,7 @@ class ReportController extends Controller
 {
     public function test(Request $request){
 
-          $dat = Store::
-          with('Store',function ($q){
-              $q->with('Plant',function ($q){
-                  $q->with('Address');
-              });
-          })->
-          where('Code','214554981')->get();
+          $dat = Store::where('Code','2145549811')->get();
 
           return $dat;
 
