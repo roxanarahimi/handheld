@@ -13,11 +13,8 @@ class Plant extends Model
 
     public function Address()
     {
-        return $this->hasOne(Address::class,  'AddressRef','AddressID');
+        return $this->hasOne(Address::class, 'AddressID', 'AddressRef');
     }
-    public function Store()
-    {
-        return $this->belongsTo(Store::class, 'PlantRef','PlantID');
-    }
+
 
 }
