@@ -30,7 +30,7 @@ class ReportController extends Controller
     {
 
         $dat = Plant::with('Address',function ($q){
-            $q->where('Name', 'LIKE', '%' . 'شعبه قزوین' . '%');
+            return $q->where('Name', 'LIKE', '%' . 'شعبه قزوین' . '%');
         })->get();
 
 
