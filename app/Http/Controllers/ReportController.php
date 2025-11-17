@@ -27,7 +27,7 @@ class ReportController extends Controller
 {
     public function test(Request $request){
 
-          $dat = Party::where('Number','2145549811')->get();
+          $dat = Store::where('Number','2145549811')->get();
 
           return $dat;
 
