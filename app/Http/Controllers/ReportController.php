@@ -17,6 +17,7 @@ use App\Models\InvoiceProduct;
 use App\Models\OrderItem;
 use App\Models\Part;
 use App\Models\PartUnit;
+use App\Models\Plant;
 use App\Models\Remittance;
 use App\Models\Store;
 use Illuminate\Http\Request;
