@@ -30,7 +30,7 @@ class ReportController extends Controller
 
         $dat = Store::whereHas('Plant',function ($q){
             $q->whereHas('Address',function ($z){
-                $z->where('Name', 'LIKE', '%' . 'شعبه قزوین' . '%');
+                $z->where('Name', 'LIKE', '%' . 'قزوین' . '%');
             });
         })->get();
 
