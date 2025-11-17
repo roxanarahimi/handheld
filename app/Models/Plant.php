@@ -17,7 +17,7 @@ class Plant extends Model
     }
     public function Store()
     {
-        return $this->belongsTo(Store::class, 'PlantID', 'PlantRef');
+        return $this->belongsTo(Store::class, 'PlantRef','PlantID');
     }
 
 }
