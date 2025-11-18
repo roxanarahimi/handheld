@@ -29,9 +29,7 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-        $dat = Plant::whereHas('Address', function ($z) {
-            $z->where('Name', 'LIKE', '%' . 'قزوین' . '%');
-        })->get();
+        $dat = Tour::orderByDesc('TourID')->take(100)->get();
 
 
         return $dat;
