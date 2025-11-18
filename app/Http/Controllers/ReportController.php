@@ -8,6 +8,8 @@ use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\RemittanceResource;
 use App\Models\Address;
+use App\Models\Assignment;
+use App\Models\AssignmentDeliveryItem;
 use App\Models\InventoryVoucher;
 use App\Models\Invoice;
 use App\Models\InvoiceAddress;
@@ -19,6 +21,7 @@ use App\Models\Part;
 use App\Models\PartUnit;
 use App\Models\Plant;
 use App\Models\Remittance;
+use App\Models\SalesOffice;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -29,10 +32,14 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-        $dat = Tour::orderByDesc('TourID')->take(100)->get();
+        $dat = Tour::orderByDesc('TourID')->first();
+        $dat2 = Broker::orderByDesc('BrokerID')->first();
+        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')->first();
+        $dat4 = Assignment::orderByDesc('AssignmentID')->first();
+        $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
 
-        return $dat;
+        return [$dat,$dat2,$dat3,$dat4,$dat5];
 
         $t = Invoice::where('id', 3997)->first();
         $t->update(['Sum' => 888]);
