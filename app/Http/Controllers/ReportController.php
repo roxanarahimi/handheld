@@ -34,24 +34,24 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-                $dat = Broker::orderByDesc('BrokerID')
-                    ->with('AssignmentDeliveryItem',function ($q){
-                        $q->with('Assignment',function ($x){
-                            $x->with('Tour')->with('SalesOffice');
-                        });
-    })
-                    ->take(5)->get();
+//                $dat = Broker::orderByDesc('BrokerID')
+//                    ->with('Assignment',function ($q){
+//                        $q->with('AssignmentDeliveryItem',function ($x){
+//                            $x->with('Tour')->with('SalesOffice');
+//                        });
+//    })
+//                    ->take(5)->get();
 
-        return [$dat];
+//        return [$dat];
 
-//        $dat = Tour::orderByDesc('TourID')->first();
-//        $dat2 = Broker::orderByDesc('BrokerID')->first();
-//        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')->first();
-//        $dat4 = Assignment::orderByDesc('AssignmentID')->first();
-//        $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
+        $dat = Tour::orderByDesc('TourID')->first();
+        $dat2 = Broker::orderByDesc('BrokerID')->first();
+        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')->first();
+        $dat4 = Assignment::orderByDesc('AssignmentID')->first();
+        $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
 
-//        return [$dat,$dat2,$dat3,$dat4,$dat5];
+        return [$dat,$dat2,$dat3,$dat4,$dat5];
 
         $t = Invoice::where('id', 3997)->first();
         $t->update(['Sum' => 888]);
