@@ -12,7 +12,7 @@ class Broker extends Model
     protected $hidden = ['Version'];
     use HasFactory;
 
-    public function Assignment()
+    public function Assignments()
     {
         return $this->hasMany(Assignment::class, 'BrokerID', 'BrokerRef');
     }

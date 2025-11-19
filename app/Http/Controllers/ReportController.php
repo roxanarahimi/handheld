@@ -34,15 +34,24 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-//                $dat = Broker::orderByDesc('BrokerID')
-//                    ->with('Assignment',function ($q){
-//                        $q->with('AssignmentDeliveryItem',function ($x){
-//                            $x->with('Tour')->with('SalesOffice');
-//                        });
-//    })
-//                    ->take(5)->get();
+        $dat = Broker::orderByDesc('BrokerID')
+            ->with('Assignments', function ($q) {
+                $q->with('AssignmentDeliveryItem', function ($x) {
+                    $x->whereHas('Tour',function ($t){
+                        $t->where('State', 2);
+                        $t->whereDate('StartDate','>=', date(today()->subDays(2)));
+                    });
+                    $x->with('Tour', function ($s) {
+                        $s->with('SalesOffice', function ($a) {
+                            $a->with('Address');
+                        });
+                    });
 
-//        return [$dat];
+                });
+            })
+            ->take(5)->get();
+
+        return [$dat];
 
         $dat = Tour::orderByDesc('TourID')->first();
         $dat2 = Broker::orderByDesc('BrokerID')->first();
@@ -51,7 +60,7 @@ class ReportController extends Controller
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
 
-        return [$dat,$dat2,$dat3,$dat4,$dat5];
+        return [$dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
         $t->update(['Sum' => 888]);

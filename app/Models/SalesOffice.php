@@ -15,4 +15,8 @@ class SalesOffice extends Model
     {
         return $this->hasMany(Tour::class, 'TourID', 'TourRef');
     }
+    public function Address()
+    {
+        return $this->hasOne(Address::class, 'AddressID', 'AddressRef');
+    }
 }
