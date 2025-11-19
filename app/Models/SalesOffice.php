@@ -11,4 +11,8 @@ class SalesOffice extends Model
     protected $table = 'SLS3.SalesOffice';
     protected $hidden = ['Version'];
     use HasFactory;
+    public function Tour()
+    {
+        return $this->hasMany(Tour::class, 'TourID', 'TourRef');
+    }
 }

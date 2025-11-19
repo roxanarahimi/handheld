@@ -11,4 +11,9 @@ class Tour extends Model
     protected $table = 'DSD3.Tour';
     protected $hidden = ['Version'];
     use HasFactory;
+
+    public function SalesOffice()
+    {
+        return $this->belongsTo(SalesOffice::class, 'SalesOfficeID', 'SalesOfficeRef');
+    }
 }

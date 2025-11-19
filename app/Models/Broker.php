@@ -11,4 +11,9 @@ class Broker extends Model
     protected $table = 'SLS3.Broker';
     protected $hidden = ['Version'];
     use HasFactory;
+
+    public function Assignment()
+    {
+        return $this->hasMany(Assignment::class, 'BrokerID', 'BrokerRef');
+    }
 }

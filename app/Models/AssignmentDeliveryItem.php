@@ -11,5 +11,8 @@ class AssignmentDeliveryItem extends Model
     protected $table = 'DSD3.AssignmentDeliveryItem';
     protected $hidden = ['Version'];
     use HasFactory;
-
+    public function Assignment()
+    {
+        return $this->hasOne(Assignment::class, 'AssignmentID', 'AssignmentRef');
+    }
 }

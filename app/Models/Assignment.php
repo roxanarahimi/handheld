@@ -11,4 +11,16 @@ class Assignment extends Model
     protected $table = 'DSD3.Assignment';
     protected $hidden = ['Version'];
     use HasFactory;
+    public function AssignmentDeliveryItem()
+    {
+        return $this->belongsTo(AssignmentDeliveryItem::class, 'AssignmentID', 'AssignmentRef');
+    }
+    public function Broker()
+    {
+        return $this->belongsTo(Broker::class, 'BrokerID', 'BrokerRef');
+    }
+    public function SalesOffice()
+    {
+        return $this->hasMany(Broker::class, 'SalesOfficeID', 'SalesOfficeRef');
+    }
 }
