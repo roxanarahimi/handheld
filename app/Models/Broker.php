@@ -14,6 +14,6 @@ class Broker extends Model
 
     public function Assignments()
     {
-        return $this->hasMany(Assignment::class, 'BrokerID', 'BrokerRef');
+        return $this->hasMany(Assignment::class, 'BrokerRef','BrokerID');
     }
 }

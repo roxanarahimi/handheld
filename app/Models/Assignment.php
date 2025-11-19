@@ -17,7 +17,7 @@ class Assignment extends Model
     }
     public function Broker()
     {
-        return $this->belongsTo(Broker::class,  'BrokerRef','BrokerID');
+        return $this->belongsTo(Broker::class, 'BrokerID', 'BrokerRef');
     }
     public function SalesOffice()
     {
