@@ -34,24 +34,24 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-        $dat = Broker::orderByDesc('BrokerID')
-            ->with('Assignments', function ($q) {
-                $q->with('AssignmentDeliveryItem', function ($x) {
-                    $x->whereHas('Tour',function ($t){
-                        $t->where('State', 2);
-                        $t->whereDate('StartDate','>=', date(today()->subDays(2)));
-                    });
-                    $x->with('Tour', function ($s) {
-                        $s->with('SalesOffice', function ($a) {
-                            $a->with('Address');
-                        });
-                    });
-
-                });
-            })
-            ->take(5)->get();
-
-        return [$dat];
+//        $dat = Broker::orderByDesc('BrokerID')
+//            ->with('Assignments', function ($q) {
+//                $q->with('AssignmentDeliveryItem', function ($x) {
+//                    $x->whereHas('Tour',function ($t){
+//                        $t->where('State', 2);
+//                        $t->whereDate('StartDate','>=', date(today()->subDays(2)));
+//                    });
+//                    $x->with('Tour', function ($s) {
+//                        $s->with('SalesOffice', function ($a) {
+//                            $a->with('Address');
+//                        });
+//                    });
+//
+//                });
+//            })
+//            ->take(5)->get();
+//
+//        return [$dat];
 
         $dat = Tour::orderByDesc('TourID')->first();
         $dat2 = Broker::orderByDesc('BrokerID')->first();
