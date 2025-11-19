@@ -35,30 +35,31 @@ class ReportController extends Controller
     {
 
         $dat = Broker::orderByDesc('BrokerID')
+            ->whereHas('Assignments')
             ->with('Assignments'
-//                , function ($q) {
-//                $q->with('AssignmentDeliveryItem', function ($x) {
-//                    $x->whereHas('Tour', function ($t) {
-//                        $t->where('State', 2);
-//                        $t->whereDate('StartDate', '>=', date(today()->subDays(2)));
-//                    });
-//                    $x->with('Tour', function ($s) {
-//                        $s->with('SalesOffice', function ($a) {
-//                            $a->with('Address');
-//                        });
-//                    });
-//                    $x->with('Order', function ($o) {
-//                        $o->with('SalesOffice', function ($c) {
-//                            $c->with('Customer', function ($p) {
-//                                $p->with('CustomerAddress', function ($f) {
-//                                    $f->with('Address');
-//                                });
-//                            });
-//                        });
-//                    });
-//
-//                });
-//            }
+                , function ($q) {
+                $q->with('AssignmentDeliveryItem', function ($x) {
+                    $x->whereHas('Tour', function ($t) {
+                        $t->where('State', 2);
+                        $t->whereDate('StartDate', '>=', date(today()->subDays(2)));
+                    });
+                    $x->with('Tour', function ($s) {
+                        $s->with('SalesOffice', function ($a) {
+                            $a->with('Address');
+                        });
+                    });
+                    $x->with('Order', function ($o) {
+                        $o->with('SalesOffice', function ($c) {
+                            $c->with('Customer', function ($p) {
+                                $p->with('CustomerAddress', function ($f) {
+                                    $f->with('Address');
+                                });
+                            });
+                        });
+                    });
+
+                });
+            }
             )
             ->take(5)->get();
 
