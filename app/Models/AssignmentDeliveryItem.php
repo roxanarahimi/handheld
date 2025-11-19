@@ -17,7 +17,7 @@ class AssignmentDeliveryItem extends Model
     }
     public function Tour()
     {
-        return $this->hasOne(Assignment::class, 'AssignmentID', 'AssignmentRef');
+        return $this->hasOne(Tour::class, 'TourID', 'TourRef');
     }
     public function Order()
     {
