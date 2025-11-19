@@ -34,7 +34,7 @@ class ReportController extends Controller
     public function test(Request $request)
     {
 
-                $dat = Broker::orderByDesc('Broker')
+                $dat = Broker::orderByDesc('BrokerID')
                     ->with('AssignmentDeliveryItem',function ($q){
                         $q->with('Assignment',function ($x){
                             $x->with('Tour')->with('SalesOffice');
