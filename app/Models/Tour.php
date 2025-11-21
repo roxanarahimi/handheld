@@ -18,6 +18,6 @@ class Tour extends Model
     }
     public function Broker()
     {
-        return $this->hasOne(Broker::class, 'BrokerRef', 'BrokerID');
+        return $this->hasOne(Broker::class, 'BrokerID','BrokerRef' );
     }
 }
