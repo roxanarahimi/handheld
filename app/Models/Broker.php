@@ -16,4 +16,8 @@ class Broker extends Model
     {
         return $this->hasMany(Assignment::class, 'BrokerRef','BrokerID');
     }
+    public function Tour()
+    {
+        return $this->belongsTo(Tour::class, 'BrokerRef', 'BrokerID');
+    }
 }

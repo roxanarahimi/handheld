@@ -16,4 +16,8 @@ class Tour extends Model
     {
         return $this->belongsTo(SalesOffice::class, 'SalesOfficeID', 'SalesOfficeRef');
     }
+    public function Broker()
+    {
+        return $this->hasOne(Broker::class, 'BrokerRef', 'BrokerID');
+    }
 }
