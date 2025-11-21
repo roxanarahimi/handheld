@@ -35,7 +35,6 @@ class ReportController extends Controller
     {
 
         $dat = Broker::orderByDesc('BrokerID')
-            ->whereHas('Assignments')
             ->whereHas('Tour', function ($t) {
                 $t->where('State', 2);
                 $t->whereDate('StartDate', '>=', date(today()->subDays(2)));
@@ -45,10 +44,10 @@ class ReportController extends Controller
                     $a->with('Address');
                 });
             })
+            ->whereHas('Assignments')
             ->with('Assignments'
                 , function ($q) {
                     $q->with('AssignmentDeliveryItem', function ($x) {
-
                         $x->with('Order', function ($o) {
                             $o->with('SalesOffice', function ($c) {
                                 $c->with('Customer', function ($p) {

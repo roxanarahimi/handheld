@@ -18,6 +18,6 @@ class Broker extends Model
     }
     public function Tour()
     {
-        return $this->belongsTo(Tour::class, 'BrokerRef', 'BrokerID');
+        return $this->belongsTo(Tour::class,  'BrokerID','BrokerRef');
     }
 }
