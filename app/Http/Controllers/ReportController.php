@@ -48,15 +48,15 @@ class ReportController extends Controller
             ->with('Assignments'
                 , function ($q) {
                     $q->with('AssignmentDeliveryItem', function ($x) {
-                        $x->with('Order', function ($o) {
-                            $o->with('SalesOffice', function ($c) {
-                                $c->with('Customer', function ($p) {
-                                    $p->with('CustomerAddress', function ($f) {
-                                        $f->with('Address');
-                                    });
-                                });
-                            });
-                        });
+//                        $x->with('Order', function ($o) {
+//                            $o->with('SalesOffice', function ($c) {
+//                                $c->with('Customer', function ($p) {
+//                                    $p->with('CustomerAddress', function ($f) {
+//                                        $f->with('Address');
+//                                    });
+//                                });
+//                            });
+//                        });
 
                     });
                 }
