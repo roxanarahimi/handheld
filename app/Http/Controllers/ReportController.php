@@ -97,7 +97,7 @@ class ReportController extends Controller
 //                        $g->where('OrderRef','6903577');
 //                    });
 //        })
-->where('SalesOfficeID','10003');->first();
+->where('SalesOfficeID','10003')->first();
         $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
