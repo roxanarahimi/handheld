@@ -35,9 +35,9 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat0 = Order::
+        $dat0 = InventoryVoucher::
         where('Date', '>=', today()->subDays(20))->
-        whereIn('OrderID',['39518','38994','39505','39508','39642','39479'])
+        whereIn('Number',['39518','38994','39505','39508','39642','39479'])
 //            ->where('InventoryRef', 1)
 //            ->where('InventoryRef', 1)
 //            ->where('State', 2)
