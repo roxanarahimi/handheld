@@ -35,7 +35,7 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat0 = Order::  where('Date', '>=', today()->subDays(15))
+        $dat0 = InventoryVoucher::  where('Date', '>=', today()->subDays(15))
 //            ->whereIn('Number',['39518','38994','39505','39508','39642','39479','39507'])
 //            ->where('InventoryRef', 1)
 //            ->where('State', 2)
@@ -53,7 +53,7 @@ class ReportController extends Controller
             $q->havingRaw('SUM(Quantity) >= ?', [200]);
         })
             ->with('OrderItems')
-            ->orderBy('OrderID')
+//            ->orderBy('OrderID')
             ->get();
         return OrderResource::collection($dat0);
 
