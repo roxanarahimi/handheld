@@ -36,42 +36,44 @@ class ReportController extends Controller
     public function test(Request $request)
     {
         $dat0 = Order::  where('Date', '>=', today()->subDays(15))
-            ->where('InventoryRef', 1)
-            ->where('State', 2)
-            ->where('FiscalYearRef', 1405)
-            ->whereHas('Customer',function ($c){
-                $c->whereHas('CustomerAddress',function ($a){
-                    $a->where('Type', 2);
-                });
-            })
-        ->whereHas('AssignmentDeliveryItem', function ($p) {
-            $p->whereHas('Assignment');
-        })
-
-        ->whereHas('OrderItems', function ($q) {
-            $q->havingRaw('SUM(Quantity) >= ?', [200]);
-        })
+            ->whereIn('Number',['39518','38994','39505','39508','39642','39479',])
+//            ->where('InventoryRef', 1)
+//            ->where('InventoryRef', 1)
+//            ->where('State', 2)
+//            ->where('FiscalYearRef', 1405)
+//            ->whereHas('Customer',function ($c){
+//                $c->whereHas('CustomerAddress',function ($a){
+//                    $a->where('Type', 2);
+//                });
+//            })
+//        ->whereHas('AssignmentDeliveryItem', function ($p) {
+//            $p->whereHas('Assignment');
+//        })
+//
+//        ->whereHas('OrderItems', function ($q) {
+//            $q->havingRaw('SUM(Quantity) >= ?', [200]);
+//        })
             ->with('OrderItems')
             ->orderBy('OrderID')
             ->get();
-//        return  $dat0;
+        return  $dat0;
 
-        $dat2 = Order::
-        where('Date', '>=', today()->subDays(15))
-            ->where('InventoryRef', 1)
-            ->where('State', 2)
-            ->where('FiscalYearRef', 1405)
-            ->whereHas('Customer',function ($c){
-                $c->whereHas('CustomerAddress',function ($a){
-                    $a->where('Type', 2);
-                });
-            })
-            ->whereHas('OrderItems')
-            ->whereHas('OrderItems', function ($q) {
-                $q->havingRaw('SUM(Quantity) >= ?', [50]);
-            })
-            ->orderBy('OrderID')
-            ->get();
+//        $dat2 = Order::
+//        where('Date', '>=', today()->subDays(15))
+//            ->where('InventoryRef', 1)
+//            ->where('State', 2)
+//            ->where('FiscalYearRef', 1405)
+//            ->whereHas('Customer',function ($c){
+//                $c->whereHas('CustomerAddress',function ($a){
+//                    $a->where('Type', 2);
+//                });
+//            })
+//            ->whereHas('OrderItems')
+//            ->whereHas('OrderItems', function ($q) {
+//                $q->havingRaw('SUM(Quantity) >= ?', [50]);
+//            })
+//            ->orderBy('OrderID')
+//            ->get();
         return OrderResource::collection($dat2);
 
 //        $dat = Broker::orderByDesc('BrokerID')
