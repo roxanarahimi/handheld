@@ -45,9 +45,7 @@ class ReportController extends Controller
                 });
             })
         ->whereHas('AssignmentDeliveryItem', function ($p) {
-            $p->whereHas('Assignment',function ($b){
-//                $b->where('SalesOfficeRef','10003');
-            });
+            $p->whereHas('Assignments');
         })
 
         ->whereHas('OrderItems', function ($q) {
@@ -57,7 +55,7 @@ class ReportController extends Controller
             ->orderBy('OrderID')
             ->get();
 //        return  $dat0;
-//        return OrderResource::collection($dat0);
+        return OrderResource::collection($dat0);
 
 //        $dat = Broker::orderByDesc('BrokerID')
 //            ->whereHas('Tour', function ($t) {
@@ -92,12 +90,11 @@ class ReportController extends Controller
         $dat = Tour::orderByDesc('TourID')->first();
         $dat2 = Broker::orderByDesc('BrokerID')->first();
         $dat3 = SalesOffice::orderByDesc('SalesOfficeID')
-//             ->whereHas('Assignments',function ($s){
-//                    $s->whereHas('AssignmentDeliveryItem',function ($g){
-//                        $g->where('OrderRef','6903577');
-//                    });
-//        })
-->where('SalesOfficeID','10003')->first();
+             ->whereHas('Assignments',function ($s){
+                    $s->whereHas('AssignmentDeliveryItem',function ($g){
+                        $g->where('OrderRef','6903577');
+                    });
+        })->first();
         $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
