@@ -13,7 +13,7 @@ class SalesOffice extends Model
     use HasFactory;
     public function Tour()
     {
-        return $this->hasMany(Tour::class,'SalesOfficeRef','SalesOfficeID');
+        return $this->hasMany(Tour::class,'SalesOfficeID','SalesOfficeRef');
     }
     public function Address()
     {
