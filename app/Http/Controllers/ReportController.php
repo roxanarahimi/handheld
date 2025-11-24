@@ -93,7 +93,6 @@ class ReportController extends Controller
                 $s->whereHas('AssignmentDeliveryItem', function ($g) {
                     $g->where('OrderRef', '6903577');
                 });
-                $s->with('AssignmentDeliveryItem');
 
             })
             ->with('Assignments')
