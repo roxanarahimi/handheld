@@ -52,9 +52,11 @@ class ReportController extends Controller
 
         ->whereHas('OrderItems', function ($q) {
             $q->havingRaw('SUM(Quantity) >= ?', [200]);
-        })->with('OrderItems')
+        })
+            ->with('OrderItems')
             ->orderBy('OrderID')
             ->get();
+//        return  $dat0;
 //        return OrderResource::collection($dat0);
 
 //        $dat = Broker::orderByDesc('BrokerID')
@@ -90,11 +92,12 @@ class ReportController extends Controller
         $dat = Tour::orderByDesc('TourID')->first();
         $dat2 = Broker::orderByDesc('BrokerID')->first();
         $dat3 = SalesOffice::orderByDesc('SalesOfficeID')
-             ->whereHas('Assignments',function ($s){
-                    $s->whereHas('AssignmentDeliveryItem',function ($g){
-                        $g->where('OrderRef','6903577');
-                    });
-        })->first();
+//             ->whereHas('Assignments',function ($s){
+//                    $s->whereHas('AssignmentDeliveryItem',function ($g){
+//                        $g->where('OrderRef','6903577');
+//                    });
+//        })
+->where('SalesOfficeID','10003');->first();
         $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
