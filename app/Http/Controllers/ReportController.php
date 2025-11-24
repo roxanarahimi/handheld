@@ -48,7 +48,7 @@ class ReportController extends Controller
         })->with('OrderItems')
             ->orderBy('OrderID')
             ->take(100)->get();
-        return
+        return $dat;
         $dat = Broker::orderByDesc('BrokerID')
             ->whereHas('Tour', function ($t) {
                 $t->where('State', 2);
