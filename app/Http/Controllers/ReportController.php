@@ -55,9 +55,9 @@ class ReportController extends Controller
 //            $q->havingRaw('SUM(Quantity) >= ?', [200]);
 //        })
             ->with('OrderItems')
-            ->orderBy('OrderID')
+//            ->orderBy('OrderID')
             ->get();
-        return OrderResource::collection($dat0);
+        return InventoryVoucherResource::collection($dat0);
 
 //        $dat2 = Order::
 //        where('Date', '>=', today()->subDays(15))
