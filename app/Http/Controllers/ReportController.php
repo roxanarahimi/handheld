@@ -89,14 +89,11 @@ class ReportController extends Controller
 
         $dat = Tour::orderByDesc('TourID')->first();
         $dat2 = Broker::orderByDesc('BrokerID')->first();
-        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')->whereHas('Tour',function ($d){
-            $d->whereHas('SalesOffice',function ($f){
-                $f->whereHas('Assignment',function ($s){
+        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')
+             ->whereHas('Assignment',function ($s){
                     $s->whereHas('AssignmentDeliveryItem',function ($g){
                         $g->where('OrderRef','6903577');
                     });
-                });
-            });
         })->first();
         $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
