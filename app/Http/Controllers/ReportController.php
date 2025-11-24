@@ -35,7 +35,7 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat = Order::  where('Date', '>=', today()->subDays(2))
+        $dat0 = Order::  where('Date', '>=', today()->subDays(2))
             ->where('InventoryRef', 1)
             ->where('State', 2)
             ->where('FiscalYearRef', 1405)
@@ -49,21 +49,22 @@ class ReportController extends Controller
         })->with('OrderItems')
             ->orderBy('OrderID')
             ->take(100)->get();
-        return OrderResource::collection($dat);
-        $dat = Broker::orderByDesc('BrokerID')
-            ->whereHas('Tour', function ($t) {
-                $t->where('State', 2);
-                $t->whereDate('StartDate', '>=', date(today()->subDays(2)));
-            })
-            ->with('Tour', function ($s) {
-                $s->with('SalesOffice', function ($a) {
-                    $a->with('Address');
-                });
-            })
-            ->whereHas('Assignments')
-            ->with('Assignments'
-                , function ($q) {
-                    $q->with('AssignmentDeliveryItem', function ($x) {
+//        return OrderResource::collection($dat0);
+
+//        $dat = Broker::orderByDesc('BrokerID')
+//            ->whereHas('Tour', function ($t) {
+//                $t->where('State', 2);
+//                $t->whereDate('StartDate', '>=', date(today()->subDays(2)));
+//            })
+//            ->with('Tour', function ($s) {
+//                $s->with('SalesOffice', function ($a) {
+//                    $a->with('Address');
+//                });
+//            })
+//            ->whereHas('Assignments')
+//            ->with('Assignments'
+//                , function ($q) {
+//                    $q->with('AssignmentDeliveryItem', function ($x) {
 //                        $x->with('Order', function ($o) {
 //                            $o->with('SalesOffice', function ($c) {
 //                                $c->with('Customer', function ($p) {
@@ -73,13 +74,12 @@ class ReportController extends Controller
 //                                });
 //                            });
 //                        });
+//
+//                    });
+//                }
+//            )
+//            ->take(5)->get();
 
-                    });
-                }
-            )
-            ->take(5)->get();
-
-        return [$dat];
 
         $dat = Tour::orderByDesc('TourID')->first();
         $dat2 = Broker::orderByDesc('BrokerID')->first();
@@ -88,7 +88,7 @@ class ReportController extends Controller
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
 
-        return [$dat, $dat2, $dat3, $dat4, $dat5];
+        return [OrderResource::collection($dat0),$dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
         $t->update(['Sum' => 888]);
