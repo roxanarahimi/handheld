@@ -54,7 +54,7 @@ class ReportController extends Controller
             $q->havingRaw('SUM(Quantity) >= ?', [200]);
         })->with('OrderItems')
             ->orderBy('OrderID')
-            ->take(100)->get();
+            ->get();
 //        return OrderResource::collection($dat0);
 
 //        $dat = Broker::orderByDesc('BrokerID')
