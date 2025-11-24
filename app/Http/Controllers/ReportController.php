@@ -93,12 +93,16 @@ class ReportController extends Controller
              ->whereHas('Assignments',function ($s){
                     $s->whereHas('AssignmentDeliveryItem',function ($g){
                         $g->where('OrderRef','6903577');
+                        $g->with('AssignmentDeliveryItem');
                     });
-        })->first();
+        })
+            ->with('Assignments')
+        ->first();
         $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
 
+        return  $dat3;
         return [OrderResource::collection($dat0),$dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
