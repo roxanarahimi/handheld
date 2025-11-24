@@ -39,20 +39,19 @@ class ReportController extends Controller
             ->where('InventoryRef', 1)
             ->where('State', 2)
             ->where('FiscalYearRef', 1405)
-            ->whereHas('Customer',function ($c){
-                $c->whereHas('CustomerAddress',function ($a){
+            ->whereHas('Customer', function ($c) {
+                $c->whereHas('CustomerAddress', function ($a) {
                     $a->where('Type', 2);
                 });
             })
-        ->whereHas('AssignmentDeliveryItem', function ($p) {
-            $p->whereHas('Assignment',function ($b){
+            ->whereHas('AssignmentDeliveryItem', function ($p) {
+                $p->whereHas('Assignment', function ($b) {
 //                $b->where('SalesOfficeRef','10003');
-            });
-        })
-
-        ->whereHas('OrderItems', function ($q) {
-            $q->havingRaw('SUM(Quantity) >= ?', [200]);
-        })->with('OrderItems')
+                });
+            })
+            ->whereHas('OrderItems', function ($q) {
+                $q->havingRaw('SUM(Quantity) >= ?', [200]);
+            })->with('OrderItems')
             ->orderBy('OrderID')
             ->get();
 //        return OrderResource::collection($dat0);
@@ -90,20 +89,21 @@ class ReportController extends Controller
         $dat = Tour::orderByDesc('TourID')->first();
         $dat2 = Broker::orderByDesc('BrokerID')->first();
         $dat3 = SalesOffice::orderByDesc('SalesOfficeID')
-             ->whereHas('Assignments',function ($s){
-                    $s->whereHas('AssignmentDeliveryItem',function ($g){
-                        $g->where('OrderRef','6903577');
-                        $g->with('AssignmentDeliveryItem');
-                    });
-        })
+            ->whereHas('Assignments', function ($s) {
+                $s->whereHas('AssignmentDeliveryItem', function ($g) {
+                    $g->where('OrderRef', '6903577');
+                });
+                $s->with('AssignmentDeliveryItem');
+
+            })
             ->with('Assignments')
-        ->first();
+            ->first();
         $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
 
-        return  $dat3;
-        return [OrderResource::collection($dat0),$dat, $dat2, $dat3, $dat4, $dat5];
+        return $dat3;
+        return [OrderResource::collection($dat0), $dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
         $t->update(['Sum' => 888]);
