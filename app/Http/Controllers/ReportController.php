@@ -54,7 +54,7 @@ class ReportController extends Controller
         })
             ->with('OrderItems')
 //            ->orderBy('OrderID')
-            ->get();
+          -> take(200)->get();
         return OrderResource::collection($dat0);
 
         return  $dat0;
