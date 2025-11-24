@@ -55,6 +55,8 @@ class ReportController extends Controller
             ->with('OrderItems')
             ->orderBy('OrderID')
             ->get();
+        return OrderResource::collection($dat0);
+
         return  $dat0;
 
 //        $dat2 = Order::
