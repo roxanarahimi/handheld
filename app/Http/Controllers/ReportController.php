@@ -94,9 +94,7 @@ class ReportController extends Controller
                     $s->whereHas('AssignmentDeliveryItem',function ($g){
                         $g->where('OrderRef','6903577');
                     });
-        })
-            ->with('Assignments')
-        ->first();
+        })->first();
         $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
