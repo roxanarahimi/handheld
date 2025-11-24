@@ -40,11 +40,11 @@ class ReportController extends Controller
 //            ->where('InventoryRef', 1)
 //            ->where('State', 2)
             ->where('FiscalYearRef', 1405)
-            ->whereHas('Customer',function ($c){
-                $c->whereHas('CustomerAddress',function ($a){
-                    $a->where('Type', 2);
-                });
-            })
+//            ->whereHas('Customer',function ($c){
+//                $c->whereHas('CustomerAddress',function ($a){
+//                    $a->where('Type', 2);
+//                });
+//            })
 //        ->whereHas('AssignmentDeliveryItem', function ($p) {
 //            $p->whereHas('Assignment');
 //        })
@@ -55,7 +55,7 @@ class ReportController extends Controller
             ->with('OrderItems')
 //            ->orderBy('OrderID')
           -> take(200)->get();
-        return OrderResource::collection($dat0);
+        return InventoryVoucherResource::collection($dat0);
 
         return  $dat0;
 
