@@ -33,6 +33,10 @@ class Order extends Model
     {
         return $this->belongsTo(Customer::class, 'CustomerRef', 'CustomerID');
     }
+ public function AssignmentDeliveryItem()
+    {
+        return $this->belongsTo(AssignmentDeliveryItem::class, 'OrderRef', 'OrderID');
+    }
 
 
 }
