@@ -45,7 +45,7 @@ class ReportController extends Controller
                 });
             })
         ->whereHas('AssignmentDeliveryItem', function ($p) {
-            $p->whereHas('Assignments');
+            $p->whereHas('Assignment');
         })
 
         ->whereHas('OrderItems', function ($q) {
