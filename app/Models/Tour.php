@@ -14,7 +14,7 @@ class Tour extends Model
 
     public function SalesOffice()
     {
-        return $this->belongsTo(SalesOffice::class ,'SalesOfficeID','SalesOfficeRef');
+        return $this->belongsTo(SalesOffice::class, 'SalesOfficeRef', 'SalesOfficeID');
     }
     public function Broker()
     {
