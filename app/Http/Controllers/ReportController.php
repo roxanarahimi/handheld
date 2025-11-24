@@ -57,7 +57,7 @@ class ReportController extends Controller
             ->with('OrderItems')
             ->orderBy('OrderID')
             ->get();
-        return  $dat0;
+        return OrderResource::collection($dat0);
 
 //        $dat2 = Order::
 //        where('Date', '>=', today()->subDays(15))
