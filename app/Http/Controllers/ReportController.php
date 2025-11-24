@@ -6,6 +6,7 @@ use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\InvoiceBarcodeResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
+use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\Address;
 use App\Models\Assignment;
@@ -48,7 +49,7 @@ class ReportController extends Controller
         })->with('OrderItems')
             ->orderBy('OrderID')
             ->take(100)->get();
-        return $dat;
+        return OrderResource::collection($dat);
         $dat = Broker::orderByDesc('BrokerID')
             ->whereHas('Tour', function ($t) {
                 $t->where('State', 2);
