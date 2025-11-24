@@ -21,6 +21,6 @@ class Assignment extends Model
     }
     public function SalesOffice()
     {
-        return $this->hasMany(Broker::class, 'SalesOfficeID', 'SalesOfficeRef');
+        return $this->hasMany(SalesOffice::class, 'SalesOfficeID', 'SalesOfficeRef');
     }
 }

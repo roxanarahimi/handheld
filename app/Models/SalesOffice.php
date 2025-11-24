@@ -19,4 +19,8 @@ class SalesOffice extends Model
     {
         return $this->hasOne(Address::class, 'AddressID', 'AddressRef');
     }
+    public function Assignment()
+    {
+        return $this->hasMany(Assignment::class, 'SalesOfficeID', 'SalesOfficeRef');
+    }
 }
