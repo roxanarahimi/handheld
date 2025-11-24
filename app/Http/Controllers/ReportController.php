@@ -90,7 +90,7 @@ class ReportController extends Controller
         $dat = Tour::orderByDesc('TourID')->first();
         $dat2 = Broker::orderByDesc('BrokerID')->first();
         $dat3 = SalesOffice::orderByDesc('SalesOfficeID')
-             ->whereHas('Assignment',function ($s){
+             ->whereHas('Assignments',function ($s){
                     $s->whereHas('AssignmentDeliveryItem',function ($g){
                         $g->where('OrderRef','6903577');
                     });
