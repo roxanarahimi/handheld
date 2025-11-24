@@ -35,7 +35,7 @@ class Order extends Model
     }
  public function AssignmentDeliveryItem()
     {
-        return $this->belongsTo(AssignmentDeliveryItem::class, 'OrderRef', 'OrderID');
+        return $this->hasOne(AssignmentDeliveryItem::class, 'OrderRef', 'OrderID');
     }
 
 
