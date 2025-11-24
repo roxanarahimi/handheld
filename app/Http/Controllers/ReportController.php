@@ -17,6 +17,7 @@ use App\Models\InvoiceAddress;
 use App\Models\InvoiceBarcode;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceProduct;
+use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Part;
 use App\Models\PartUnit;
@@ -33,7 +34,21 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-
+        $dat = Order::  where('Date', '>=', today()->subDays(2))
+            ->where('InventoryRef', 1)
+            ->where('State', 2)
+            ->where('FiscalYearRef', 1405)
+            ->whereHas('Customer',function ($c){
+                $c->whereHas('CustomerAddress',function ($a){
+                    $a->where('Type', 2);
+                });
+            })
+        ->whereHas('OrderItems', function ($q) {
+            $q->havingRaw('SUM(Quantity) >= ?', [200]);
+        })->with('OrderItems')
+            ->orderBy('OrderID')
+            ->take(100)->get();
+        return
         $dat = Broker::orderByDesc('BrokerID')
             ->whereHas('Tour', function ($t) {
                 $t->where('State', 2);
