@@ -58,7 +58,7 @@ class ReportController extends Controller
 //            ->with('AssignmentDeliveryItem')
             ->with('OrderItems')
             ->orderBy('InventoryVoucherID')
-            ->get();
+            ->take(100)->get();
 //        $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
 ////        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
 //            ->whereHas('Store')
