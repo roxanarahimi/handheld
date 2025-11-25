@@ -35,34 +35,33 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat0 = Order::  where('Date', '>=', today()->subDays(15))
+        $dat0 = InventoryVoucher::  where('Date', '>=', today()->subDays(15))
 //            ->whereIn('Number',['39518','38994','39505','39508','39642','39479','39507'])
-            ->where('InventoryRef', 1)
-            ->where('State', 2)
-            ->where('FiscalYearRef', 1405)
-            ->where('OrderID', '6959220')
-            ->whereHas('Customer',function ($c){
-                $c->whereHas('CustomerAddress',function ($a){
-                    $a->where('Type', 2);
-                });
-            })
-            ->whereHas('AssignmentDeliveryItem', function ($p) {
-            $p->whereHas('Assignment',function ($d){
-                $d->with('SalesOffice');
-            });
-            $p->with('Assignment');
-        })
-
+            ->where('InventoryVoucherSpecificationRef', 10003)
+//            ->where('State', 2)
+//            ->where('FiscalYearRef', 1405)
+//            ->where('OrderID', '6959220')
+//            ->whereHas('Customer', function ($c) {
+//                $c->whereHas('CustomerAddress', function ($a) {
+//                    $a->where('Type', 2);
+//                });
+//            })
+//            ->whereHas('AssignmentDeliveryItem', function ($p) {
+//                $p->whereHas('Assignment', function ($d) {
+//                    $d->with('SalesOffice');
+//                });
+//                $p->with('Assignment');
+//            })
             ->whereHas('OrderItems', function ($q) {
-            $q->havingRaw('SUM(Quantity) >= ?', [200]);
-        })
-            ->with('AssignmentDeliveryItem')
+                $q->havingRaw('SUM(Quantity) >= ?', [200]);
+            })
+//            ->with('AssignmentDeliveryItem')
             ->with('OrderItems')
-            ->orderBy('OrderID')
+            ->orderBy('InventoryVoucherID')
             ->get();
 //        return OrderResource::collection($dat0);
 
-        return  $dat0;
+        return $dat0;
 
 //        $dat2 = Order::
 //        where('Date', '>=', today()->subDays(15))
@@ -115,17 +114,17 @@ class ReportController extends Controller
         $dat = Tour::orderByDesc('TourID')->first();
         $dat2 = Broker::orderByDesc('BrokerID')->first();
         $dat3 = SalesOffice::orderByDesc('SalesOfficeID')
-             ->whereHas('Assignments',function ($s){
-                    $s->whereHas('AssignmentDeliveryItem',function ($g){
-                        $g->where('OrderRef','6903577');
-                    });
-        })->first();
+            ->whereHas('Assignments', function ($s) {
+                $s->whereHas('AssignmentDeliveryItem', function ($g) {
+                    $g->where('OrderRef', '6903577');
+                });
+            })->first();
         $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
 
-        return  $dat3;
-        return [OrderResource::collection($dat0),$dat, $dat2, $dat3, $dat4, $dat5];
+        return $dat3;
+        return [OrderResource::collection($dat0), $dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
         $t->update(['Sum' => 888]);
