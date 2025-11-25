@@ -41,11 +41,11 @@ class ReportController extends Controller
             ->where('State', 2)
             ->where('FiscalYearRef', 1405)
             ->where('OrderID', '6959220')
-//            ->whereHas('Customer',function ($c){
-//                $c->whereHas('CustomerAddress',function ($a){
-//                    $a->where('Type', 2);
-//                });
-//            })
+            ->whereHas('Customer',function ($c){
+                $c->whereHas('CustomerAddress',function ($a){
+                    $a->where('Type', 2);
+                });
+            })
             ->whereHas('AssignmentDeliveryItem', function ($p) {
             $p->whereHas('Assignment',function ($d){
                 $d->with('SalesOffice');
