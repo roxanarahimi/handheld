@@ -46,12 +46,12 @@ class ReportController extends Controller
 //                    $a->where('Type', 2);
 //                });
 //            })
-//            ->whereHas('AssignmentDeliveryItem', function ($p) {
-//                $p->whereHas('Assignment', function ($d) {
-//                    $d->with('SalesOffice');
-//                });
-//                $p->with('Assignment');
-//            })
+            ->whereHas('AssignmentDeliveryItem', function ($p) {
+                $p->whereHas('Assignment', function ($d) {
+                    $d->with('SalesOffice');
+                });
+                $p->with('Assignment');
+            })
             ->whereHas('OrderItems', function ($q) {
                 $q->havingRaw('SUM(Quantity) >= ?', [200]);
             })
