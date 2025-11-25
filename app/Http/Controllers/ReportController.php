@@ -47,7 +47,7 @@ class ReportController extends Controller
 //            })
         ->whereHas('AssignmentDeliveryItem', function ($p) {
             $p->whereHas('Assignment',function ($d){
-                $d->where('SalesOfficeRef','10003');
+                $d->where('SalesOfficeRef','1003');
             });
         })
 
