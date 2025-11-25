@@ -40,20 +40,23 @@ class ReportController extends Controller
 //            ->where('InventoryRef', 1)
 //            ->where('State', 2)
             ->where('FiscalYearRef', 1405)
+            ->where('OrderID', '6959220')
 //            ->whereHas('Customer',function ($c){
 //                $c->whereHas('CustomerAddress',function ($a){
 //                    $a->where('Type', 2);
 //                });
 //            })
-//        ->whereHas('AssignmentDeliveryItem', function ($p) {
-//            $p->whereHas('Assignment',function ($d){
-//                $d->where('SalesOfficeRef','10003');
-//            });
-//        })
+            ->whereHas('AssignmentDeliveryItem', function ($p) {
+            $p->whereHas('Assignment',function ($d){
+                $d->with('SalesOffice');
+            });
+            $p->with('Assignment');
+        })
 
-        ->whereHas('OrderItems', function ($q) {
+            ->whereHas('OrderItems', function ($q) {
             $q->havingRaw('SUM(Quantity) >= ?', [200]);
         })
+            ->with('AssignmentDeliveryItem')
             ->with('OrderItems')
             ->orderBy('OrderID')
             ->get();
