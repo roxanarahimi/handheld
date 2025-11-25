@@ -52,9 +52,9 @@ class ReportController extends Controller
 //                });
 //                $p->with('Assignment');
 //            })
-//            ->whereHas('OrderItems', function ($q) {
-//                $q->havingRaw('SUM(Quantity) >= ?', [200]);
-//            })
+            ->whereHas('OrderItems', function ($q) {
+                $q->havingRaw('SUM(Quantity) >= ?', [200]);
+            })
 //            ->with('AssignmentDeliveryItem')
             ->with('OrderItems')
             ->orderBy('InventoryVoucherID')
