@@ -36,8 +36,8 @@ class ReportController extends Controller
     public function test(Request $request)
     {
         $dat0 = InventoryVoucher::  where('Date', '>=', today()->subDays(15))
-            ->whereIn('Number',['39518','38994','39505','39508','39642','39479','39507'])
-//            ->where('InventoryVoucherSpecificationRef', 10003)
+//            ->whereIn('Number',['39518','38994','39505','39508','39642','39479','39507'])
+            ->where('InventoryVoucherSpecificationRef', 10003)
 //            ->where('State', 2)
 //            ->where('FiscalYearRef', 1405)
 //            ->where('Number', '840040')
@@ -58,7 +58,7 @@ class ReportController extends Controller
 //            ->with('AssignmentDeliveryItem')
             ->with('OrderItems')
             ->orderBy('InventoryVoucherID')
-            ->take(100)->get();
+            ->paginate(200);
 //        $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
 ////        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
 //            ->whereHas('Store')
