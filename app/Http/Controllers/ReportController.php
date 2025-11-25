@@ -39,7 +39,7 @@ class ReportController extends Controller
 //            ->whereIn('Number',['39518','38994','39505','39508','39642','39479','39507'])
             ->where('InventoryVoucherSpecificationRef', 10003)
 //            ->where('State', 2)
-//            ->where('FiscalYearRef', 1405)
+            ->where('FiscalYearRef', 1405)
 //            ->where('Number', '840040')
 //            ->whereHas('Customer', function ($c) {
 //                $c->whereHas('CustomerAddress', function ($a) {
