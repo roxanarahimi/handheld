@@ -59,7 +59,7 @@ class ReportController extends Controller
             ->with('OrderItems')
             ->orderBy('InventoryVoucherID')
             ->get();
-//        return OrderResource::collection($dat0);
+        return InventoryVoucherResource::collection($dat0);
 
         return $dat0;
 
