@@ -37,10 +37,10 @@ class ReportController extends Controller
     {
         $dat0 = InventoryVoucher::  where('Date', '>=', today()->subDays(15))
 //            ->whereIn('Number',['39518','38994','39505','39508','39642','39479','39507'])
-            ->where('InventoryVoucherSpecificationRef', 10003)
+//            ->where('InventoryVoucherSpecificationRef', 10003)
 //            ->where('State', 2)
-            ->where('FiscalYearRef', 1405)
-//            ->where('OrderID', '6959220')
+//            ->where('FiscalYearRef', 1405)
+            ->where('Number', '840040')
 //            ->whereHas('Customer', function ($c) {
 //                $c->whereHas('CustomerAddress', function ($a) {
 //                    $a->where('Type', 2);
@@ -52,9 +52,9 @@ class ReportController extends Controller
 //                });
 //                $p->with('Assignment');
 //            })
-            ->whereHas('OrderItems', function ($q) {
-                $q->havingRaw('SUM(Quantity) >= ?', [200]);
-            })
+//            ->whereHas('OrderItems', function ($q) {
+//                $q->havingRaw('SUM(Quantity) >= ?', [200]);
+//            })
 //            ->with('AssignmentDeliveryItem')
             ->with('OrderItems')
             ->orderBy('InventoryVoucherID')
