@@ -35,45 +35,45 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat0 = InventoryVoucher::  where('Date', '>=', today()->subDays(15))
-//            ->whereIn('Number',['39518','38994','39505','39508','39642','39479','39507'])
-            ->where('InventoryVoucherSpecificationRef', 10003)
-//            ->where('State', 2)
-            ->where('FiscalYearRef', 1405)
-//            ->where('Number', '840040')
-//            ->whereHas('Customer', function ($c) {
-//                $c->whereHas('CustomerAddress', function ($a) {
-//                    $a->where('Type', 2);
-//                });
-//            })
-            ->whereHas('AssignmentDeliveryItem', function ($p) {
-                $p->whereHas('Assignment', function ($d) {
-                    $d->with('SalesOffice');
-                });
-                $p->with('Assignment');
-            })
-            ->whereHas('OrderItems', function ($q) {
-                $q->havingRaw('SUM(Quantity) >= ?', [200]);
-            })
-//            ->with('AssignmentDeliveryItem')
-            ->with('OrderItems')
-            ->orderBy('InventoryVoucherID')
-            ->paginate(200);
-//        $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
-////        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
-//            ->whereHas('Store')
-//            ->where('FiscalYearRef', 1405)
+//        $dat0 = InventoryVoucher::  where('Date', '>=', today()->subDays(15))
+////            ->whereIn('Number',['39518','38994','39505','39508','39642','39479','39507'])
 //            ->where('InventoryVoucherSpecificationRef', 10003)
+////            ->where('State', 2)
+//            ->where('FiscalYearRef', 1405)
+////            ->where('Number', '840040')
+////            ->whereHas('Customer', function ($c) {
+////                $c->whereHas('CustomerAddress', function ($a) {
+////                    $a->where('Type', 2);
+////                });
+////            })
+//            ->whereHas('AssignmentDeliveryItem', function ($p) {
+//                $p->whereHas('Assignment', function ($d) {
+//                    $d->with('SalesOffice');
+//                });
+//                $p->with('Assignment');
+//            })
 //            ->whereHas('OrderItems', function ($q) {
 //                $q->havingRaw('SUM(Quantity) >= ?', [200]);
 //            })
+////            ->with('AssignmentDeliveryItem')
+//            ->with('OrderItems')
 //            ->orderBy('InventoryVoucherID')
-//            ->get();
-//        return $dat;
-
-        return InventoryVoucherResource::collection($dat0);
-
-        return $dat0;
+//            ->paginate(200);
+////        $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
+//////        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
+////            ->whereHas('Store')
+////            ->where('FiscalYearRef', 1405)
+////            ->where('InventoryVoucherSpecificationRef', 10003)
+////            ->whereHas('OrderItems', function ($q) {
+////                $q->havingRaw('SUM(Quantity) >= ?', [200]);
+////            })
+////            ->orderBy('InventoryVoucherID')
+////            ->get();
+////        return $dat;
+//
+//        return InventoryVoucherResource::collection($dat0);
+//
+//        return $dat0;
 
 //        $dat2 = Order::
 //        where('Date', '>=', today()->subDays(15))
@@ -91,7 +91,7 @@ class ReportController extends Controller
 //            })
 //            ->orderBy('OrderID')
 //            ->get();
-        return OrderResource::collection($dat2);
+//        return OrderResource::collection($dat2);
 
 //        $dat = Broker::orderByDesc('BrokerID')
 //            ->whereHas('Tour', function ($t) {
@@ -135,8 +135,8 @@ class ReportController extends Controller
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
 
-        return $dat3;
-        return [OrderResource::collection($dat0), $dat, $dat2, $dat3, $dat4, $dat5];
+//        return $dat3;
+        return [ $dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
         $t->update(['Sum' => 888]);
