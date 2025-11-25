@@ -45,11 +45,11 @@ class ReportController extends Controller
 //                    $a->where('Type', 2);
 //                });
 //            })
-        ->whereHas('AssignmentDeliveryItem', function ($p) {
-            $p->whereHas('Assignment',function ($d){
-                $d->where('SalesOfficeRef','1003');
-            });
-        })
+//        ->whereHas('AssignmentDeliveryItem', function ($p) {
+//            $p->whereHas('Assignment',function ($d){
+//                $d->where('SalesOfficeRef','10003');
+//            });
+//        })
 
         ->whereHas('OrderItems', function ($q) {
             $q->havingRaw('SUM(Quantity) >= ?', [200]);
