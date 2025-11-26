@@ -35,8 +35,10 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-//        $dat0 = InventoryVoucher::  where('Date', '>=', today()->subDays(15))
-////            ->whereIn('Number',['39518','38994','39505','39508','39642','39479','39507'])
+        $dat0 = InventoryVoucher::
+        where('Date', '>=', today()->subDays(15))
+            ->where('Number','39497')->get();
+        return $dat0;
 //            ->where('InventoryVoucherSpecificationRef', 10003)
 ////            ->where('State', 2)
 //            ->where('FiscalYearRef', 1405)
