@@ -35,7 +35,7 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat0 = InventoryVoucher::
+        $dat0 = Order::
         where('Date', '>=', today()->subDays(15))
             ->where('Number','39497')->get();
         return $dat0;
