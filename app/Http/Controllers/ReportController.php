@@ -135,7 +135,7 @@ class ReportController extends Controller
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
         $dat6 = IssuePermit::orderByDesc('IssuePermitID')->first();
-        $dat7 = IssuePermitItem::orderByDesc('IssuePermititemID')->first();
+        $dat7 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
 
 
 //        return $dat3;

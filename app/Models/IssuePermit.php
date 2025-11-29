@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class IssuePermit extends Model
 {
     protected $connection = 'sqlsrv';
-    protected $table = 'IssuePermit';
+    protected $table = 'LGS3.IssuePermit';
     protected $hidden = ['Version'];
     use HasFactory;
 }
