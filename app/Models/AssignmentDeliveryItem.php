@@ -20,4 +20,8 @@ class AssignmentDeliveryItem extends Model
     {
         return $this->hasOne(Order::class, 'OrderID', 'OrderRef');
     }
+    public function Invoice()
+    {
+        return $this->hasOne(Invoice::class, 'InvoiceID', 'InvoiceRef');
+    }
 }
