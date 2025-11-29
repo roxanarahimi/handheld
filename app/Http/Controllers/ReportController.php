@@ -18,6 +18,8 @@ use App\Models\InvoiceAddress;
 use App\Models\InvoiceBarcode;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceProduct;
+use App\Models\IssuePermit;
+use App\Models\IssuePermitItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Part;
@@ -35,112 +37,109 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat0 = Order::
-        where('Date', '>=', today()->subDays(15))
-            ->where('Number','39497')->get();
-        return $dat0;
-//            ->where('InventoryVoucherSpecificationRef', 10003)
-////            ->where('State', 2)
-//            ->where('FiscalYearRef', 1405)
-////            ->where('Number', '840040')
-////            ->whereHas('Customer', function ($c) {
-////                $c->whereHas('CustomerAddress', function ($a) {
-////                    $a->where('Type', 2);
-////                });
-////            })
-//            ->whereHas('AssignmentDeliveryItem', function ($p) {
-//                $p->whereHas('Assignment', function ($d) {
-//                    $d->with('SalesOffice');
-//                });
-//                $p->with('Assignment');
-//            })
-//            ->whereHas('OrderItems', function ($q) {
-//                $q->havingRaw('SUM(Quantity) >= ?', [200]);
-//            })
-////            ->with('AssignmentDeliveryItem')
-//            ->with('OrderItems')
-//            ->orderBy('InventoryVoucherID')
-//            ->paginate(200);
-////        $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
-//////        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
-////            ->whereHas('Store')
-////            ->where('FiscalYearRef', 1405)
+//        $dat0 = Order::
+//
+//        where('Date', '>=', today()->subDays(15))
+//            ->where('Number','39497')->get();
+//        return $dat0;
 ////            ->where('InventoryVoucherSpecificationRef', 10003)
+//////            ->where('State', 2)
+////            ->where('FiscalYearRef', 1405)
+//////            ->where('Number', '840040')
+//////            ->whereHas('Customer', function ($c) {
+//////                $c->whereHas('CustomerAddress', function ($a) {
+//////                    $a->where('Type', 2);
+//////                });
+//////            })
+////            ->whereHas('AssignmentDeliveryItem', function ($p) {
+////                $p->whereHas('Assignment', function ($d) {
+////                    $d->with('SalesOffice');
+////                });
+////                $p->with('Assignment');
+////            })
 ////            ->whereHas('OrderItems', function ($q) {
 ////                $q->havingRaw('SUM(Quantity) >= ?', [200]);
 ////            })
+//////            ->with('AssignmentDeliveryItem')
+////            ->with('OrderItems')
 ////            ->orderBy('InventoryVoucherID')
+////            ->paginate(200);
+//////        $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
+////////        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
+//////            ->whereHas('Store')
+//////            ->where('FiscalYearRef', 1405)
+//////            ->where('InventoryVoucherSpecificationRef', 10003)
+//////            ->whereHas('OrderItems', function ($q) {
+//////                $q->havingRaw('SUM(Quantity) >= ?', [200]);
+//////            })
+//////            ->orderBy('InventoryVoucherID')
+//////            ->get();
+//////        return $dat;
+////
+////        return InventoryVoucherResource::collection($dat0);
+////
+////        return $dat0;
+//
+////        $dat2 = Order::
+////        where('Date', '>=', today()->subDays(15))
+////            ->where('InventoryRef', 1)
+////            ->where('State', 2)
+////            ->where('FiscalYearRef', 1405)
+////            ->whereHas('Customer',function ($c){
+////                $c->whereHas('CustomerAddress',function ($a){
+////                    $a->where('Type', 2);
+////                });
+////            })
+////            ->whereHas('OrderItems')
+////            ->whereHas('OrderItems', function ($q) {
+////                $q->havingRaw('SUM(Quantity) >= ?', [50]);
+////            })
+////            ->orderBy('OrderID')
 ////            ->get();
-////        return $dat;
+////        return OrderResource::collection($dat2);
 //
-//        return InventoryVoucherResource::collection($dat0);
-//
-//        return $dat0;
-
-//        $dat2 = Order::
-//        where('Date', '>=', today()->subDays(15))
-//            ->where('InventoryRef', 1)
-//            ->where('State', 2)
-//            ->where('FiscalYearRef', 1405)
-//            ->whereHas('Customer',function ($c){
-//                $c->whereHas('CustomerAddress',function ($a){
-//                    $a->where('Type', 2);
-//                });
-//            })
-//            ->whereHas('OrderItems')
-//            ->whereHas('OrderItems', function ($q) {
-//                $q->havingRaw('SUM(Quantity) >= ?', [50]);
-//            })
-//            ->orderBy('OrderID')
-//            ->get();
-//        return OrderResource::collection($dat2);
-
-//        $dat = Broker::orderByDesc('BrokerID')
-//            ->whereHas('Tour', function ($t) {
-//                $t->where('State', 2);
-//                $t->whereDate('StartDate', '>=', date(today()->subDays(2)));
-//            })
-//            ->with('Tour', function ($s) {
-//                $s->with('SalesOffice', function ($a) {
-//                    $a->with('Address');
-//                });
-//            })
-//            ->whereHas('Assignments')
-//            ->with('Assignments'
-//                , function ($q) {
-//                    $q->with('AssignmentDeliveryItem', function ($x) {
-//                        $x->with('Order', function ($o) {
-//                            $o->with('SalesOffice', function ($c) {
-//                                $c->with('Customer', function ($p) {
-//                                    $p->with('CustomerAddress', function ($f) {
-//                                        $f->with('Address');
-//                                    });
-//                                });
-//                            });
-//                        });
-//
-//                    });
-//                }
-//            )
-//            ->take(5)->get();
+////        $dat = Broker::orderByDesc('BrokerID')
+////            ->whereHas('Tour', function ($t) {
+////                $t->where('State', 2);
+////                $t->whereDate('StartDate', '>=', date(today()->subDays(2)));
+////            })
+////            ->with('Tour', function ($s) {
+////                $s->with('SalesOffice', function ($a) {
+////                    $a->with('Address');
+////                });
+////            })
+////            ->whereHas('Assignments')
+////            ->with('Assignments'
+////                , function ($q) {
+////                    $q->with('AssignmentDeliveryItem', function ($x) {
+////                        $x->with('Order', function ($o) {
+////                            $o->with('SalesOffice', function ($c) {
+////                                $c->with('Customer', function ($p) {
+////                                    $p->with('CustomerAddress', function ($f) {
+////                                        $f->with('Address');
+////                                    });
+////                                });
+////                            });
+////                        });
+////
+////                    });
+////                }
+////            )
+////            ->take(5)->get();
 
 
         $dat = Tour::orderByDesc('TourID')->first();
         $dat2 = Broker::orderByDesc('BrokerID')->first();
-        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')
-                              ->where('Code', '10003')
-//  ->whereHas('Assignments', function ($s) {
-//                $s->whereHas('AssignmentDeliveryItem', function ($g) {
-//                    $g->where('OrderRef', '6903577');
-//                });
-//            })
-        ->first();
+        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')->first();
         $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')->first();
 
+        $dat6 = IssuePermit::orderByDesc('IssuePermitID')->first();
+        $dat7 = IssuePermitItem::orderByDesc('IssuePermititemID')->first();
+
 
 //        return $dat3;
-        return [ $dat, $dat2, $dat3, $dat4, $dat5];
+        return [ $dat6, $dat7,$dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
         $t->update(['Sum' => 888]);
