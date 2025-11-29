@@ -143,7 +143,7 @@ class ReportController extends Controller
             ->first();
 
 
-//        return $dat3;
+        return $dat;
         return [ $dat6, $dat7,$dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
