@@ -22,6 +22,6 @@ class AssignmentDeliveryItem extends Model
     }
     public function Invoice()
     {
-        return $this->hasOne(Invoice::class, 'InvoiceID', 'InvoiceRef');
+        return $this->hasOne(InvoiceERP::class, 'InvoiceID', 'InvoiceRef');
     }
 }
