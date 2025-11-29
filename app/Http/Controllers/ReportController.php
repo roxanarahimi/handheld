@@ -138,13 +138,13 @@ class ReportController extends Controller
         $dat6 = IssuePermit::where('Number','38993')->with('OrderItems')->first();
         $dat7 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
 
-        $dat = Customer::where('Number','0021601002')
-            ->with('CustomerAddress')
-            ->with('Party')
-            ->first();
-
-
-        return $dat;
+//        $dat = Customer::where('Number','0021601002')
+//            ->with('CustomerAddress')
+//            ->with('Party')
+//            ->first();
+//
+//
+//        return $dat;
         return [ $dat6, $dat7,$dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
