@@ -140,6 +140,7 @@ class ReportController extends Controller
 
         $dat = Customer::where('Number','0021601002')
             ->with('CustomerAddress')
+            ->with('Party')
             ->first();
 
 
