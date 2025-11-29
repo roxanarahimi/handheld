@@ -12,6 +12,7 @@ use App\Models\Address;
 use App\Models\Assignment;
 use App\Models\AssignmentDeliveryItem;
 use App\Models\Broker;
+use App\Models\Customer;
 use App\Models\InventoryVoucher;
 use App\Models\Invoice;
 use App\Models\InvoiceAddress;
@@ -136,6 +137,10 @@ class ReportController extends Controller
 
         $dat6 = IssuePermit::where('Number','38993')->with('OrderItems')->first();
         $dat7 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
+
+        $dat = Customer::where('Number','0021601002')
+            ->with('CustomerAddress')
+            ->first();
 
 
 //        return $dat3;
