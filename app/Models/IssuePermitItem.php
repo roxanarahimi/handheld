@@ -11,5 +11,8 @@ class IssuePermitItem extends Model
     protected $table = 'LGS3.IssuePermititem';
     protected $hidden = ['Version'];
     use HasFactory;
-
+    public function Part()
+    {
+        return $this->hasOne(Part::class, 'PartID', 'PartRef');
+    }
 }
