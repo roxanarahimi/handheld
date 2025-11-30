@@ -134,14 +134,14 @@ class ReportController extends Controller
 //        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')->first();
 //        $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')
-            ->where('CounterpartEntityRef','10003')
+
 //            ->WhereHas('Invoice')
 //            ->with('Invoice')
             ->with('Order')
             ->first();
-
-        $dat6 = IssuePermit::where('Number','38993')->with('OrderItems')->first();
-        $dat7 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
+//        where('Number','38993')
+        $dat6 = IssuePermit::where('CounterpartEntityRef','10003')->with('OrderItems')->first();
+//        $dat7 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
 
 //        $dat = Customer::where('Number','0021601002')
 //            ->with('CustomerAddress')
