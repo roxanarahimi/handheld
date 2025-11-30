@@ -129,13 +129,13 @@ class ReportController extends Controller
 ////            ->take(5)->get();
 
 
-        $dat = Tour::orderByDesc('TourID')->first();
-        $dat2 = Broker::orderByDesc('BrokerID')->first();
-        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')->first();
-        $dat4 = Assignment::orderByDesc('AssignmentID')->first();
+//        $dat = Tour::orderByDesc('TourID')->first();
+//        $dat2 = Broker::orderByDesc('BrokerID')->first();
+//        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')->first();
+//        $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')
-            ->WhereHas('Invoice')
-            ->with('Invoice')
+//            ->WhereHas('Invoice')
+//            ->with('Invoice')
             ->with('Order')
             ->first();
 
@@ -149,6 +149,7 @@ class ReportController extends Controller
 //
 //
 //        return $dat;
+        return [ $dat6, $dat7, $dat5];
         return [ $dat6, $dat7,$dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
