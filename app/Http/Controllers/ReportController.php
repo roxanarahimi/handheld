@@ -14,6 +14,7 @@ use App\Models\AssignmentDeliveryItem;
 use App\Models\Broker;
 use App\Models\Customer;
 use App\Models\InventoryVoucher;
+use App\Models\InventoryVoucherItem;
 use App\Models\Invoice;
 use App\Models\InvoiceAddress;
 use App\Models\InvoiceBarcode;
@@ -138,8 +139,9 @@ class ReportController extends Controller
             ->with('Order')
             ->first();
 //        where('Number','38993')
-        $dat6 = IssuePermit::orderByDesc('IssuePermitID')->first();
+//        $dat6 = IssuePermit::orderByDesc('IssuePermitID')->first();
         $dat7 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
+        $dat8 = InventoryVoucherItem::orderByDesc('InventoryVoucherItemID')->first();
 
 //        $dat = Customer::where('Number','0021601002')
 //            ->with('CustomerAddress')
@@ -150,7 +152,7 @@ class ReportController extends Controller
 //        return $dat;
 //        inventoryvoucherItem
 //        issuepermitItem
-        return [ $dat4, $dat5,$dat6, $dat7];
+        return [ $dat7,$dat8];
         return [ $dat6, $dat7,$dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
