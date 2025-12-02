@@ -140,7 +140,7 @@ class ReportController extends Controller
             ->first();
 //        where('Number','38993')
 //        $dat6 = IssuePermit::orderByDesc('IssuePermitID')->first();
-        $dat5 = IssuePermit::orderByDesc('IssuePermitItemID')->first();
+        $dat5 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
         $dat6 = InventoryVoucherItem::orderByDesc('InventoryVoucherItemID')->first();
         $dat7 = IssuePermit::orderByDesc('IssuePermitID')->first();
         $dat8 = InventoryVoucher::orderByDesc('InventoryVoucherID')->first();
