@@ -140,19 +140,14 @@ class ReportController extends Controller
             ->first();
 //        where('Number','38993')
 //        $dat6 = IssuePermit::orderByDesc('IssuePermitID')->first();
+        $dat5 = IssuePermit::orderByDesc('IssuePermitItemID')->first();
+        $dat6 = InventoryVoucherItem::orderByDesc('InventoryVoucherItemID')->first();
         $dat7 = IssuePermit::orderByDesc('IssuePermitID')->first();
         $dat8 = InventoryVoucher::orderByDesc('InventoryVoucherID')->first();
 
-//        $dat = Customer::where('Number','0021601002')
-//            ->with('CustomerAddress')
-//            ->with('Party')
-//            ->first();
-//
-//
-//        return $dat;
 //        inventoryvoucherItem
 //        issuepermitItem
-        return [ $dat7,$dat8];
+        return [ $dat5,$dat6,$dat7,$dat8];
         return [ $dat6, $dat7,$dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
