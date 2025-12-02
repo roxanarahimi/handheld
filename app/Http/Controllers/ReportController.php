@@ -138,7 +138,7 @@ class ReportController extends Controller
             ->with('Order')
             ->first();
 //        where('Number','38993')
-        $dat6 = IssuePermit::where('CounterpartEntityRef','10003')->with('OrderItems')->first();
+        $dat6 = IssuePermit::orderByDesc('IssuePermitID')->first();
         $dat7 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
 
 //        $dat = Customer::where('Number','0021601002')
