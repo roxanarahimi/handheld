@@ -132,7 +132,7 @@ class ReportController extends Controller
 //        $dat = Tour::orderByDesc('TourID')->first();
 //        $dat2 = Broker::orderByDesc('BrokerID')->first();
 //        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')->first();
-//        $dat4 = Assignment::orderByDesc('AssignmentID')->first();
+        $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')
             ->with('Invoice')
             ->with('Order')
@@ -148,7 +148,7 @@ class ReportController extends Controller
 //
 //
 //        return $dat;
-        return [  $dat5];
+        return [ $dat4, $dat5];
         return [ $dat6, $dat7,$dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
