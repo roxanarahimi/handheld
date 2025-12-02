@@ -134,7 +134,6 @@ class ReportController extends Controller
 //        $dat3 = SalesOffice::orderByDesc('SalesOfficeID')->first();
 //        $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')
-            ->WhereHas('Invoice')
             ->with('Invoice')
             ->with('Order')
             ->first();
