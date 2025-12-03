@@ -18,6 +18,6 @@ class IssuePermitItem extends Model
 
     public function InventoryVoucherItem()
     {
-        return $this->belongsTo(InventoryVoucherItem::class, 'RefrenceRef', 'IssuePermitItemID');
+        return $this->belongsTo(InventoryVoucherItem::class, 'ReferenceRef', 'IssuePermitItemID');
     }
 }
