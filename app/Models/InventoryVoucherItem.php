@@ -31,6 +31,6 @@ class InventoryVoucherItem extends Model
 
     public function IssuePermitItem()
     {
-        return $this->hasOne(IssuePermitItem::class, 'IssuePermitItemID','RefrenceRef);
+        return $this->hasOne(IssuePermitItem::class, 'IssuePermitItemID','RefrenceRef');
     }
 }
