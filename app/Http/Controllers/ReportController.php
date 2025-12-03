@@ -147,7 +147,7 @@ class ReportController extends Controller
             ->where('InventoryVoucherSpecificationRef','10003')
             ->whereHas('OrderItems')
             ->with('OrderItems',function ($q){
-                $q->with('IssuePermitItem');
+                $q->whereHas('IssuePermitItem')->with('IssuePermitItem');
             })
             ->first();
 
