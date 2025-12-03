@@ -145,6 +145,7 @@ class ReportController extends Controller
 //        $dat7 = IssuePermit::orderByDesc('IssuePermitID')->first();
         $dat8 = InventoryVoucher::orderByDesc('InventoryVoucherID')
             ->where('InventoryVoucherSpecificationRef','10003')
+            ->whereHas('OrderItems')
             ->with('OrderItems',function ($q){
                 $q->with('IssuePermitItem');
             })
