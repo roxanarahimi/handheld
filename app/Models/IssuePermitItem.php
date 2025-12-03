@@ -15,4 +15,9 @@ class IssuePermitItem extends Model
     {
         return $this->hasOne(Part::class, 'PartID', 'PartRef');
     }
+
+    public function InventoryVoucherItem()
+    {
+        return $this->belongsTo(InventoryVoucherItem::class, 'RefrenceRef', 'IssuePermitItemID');
+    }
 }

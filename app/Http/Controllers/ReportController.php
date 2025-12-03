@@ -140,13 +140,19 @@ class ReportController extends Controller
             ->first();
 //        where('Number','38993')
 //        $dat6 = IssuePermit::orderByDesc('IssuePermitID')->first();
-        $dat5 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
-        $dat6 = InventoryVoucherItem::orderByDesc('InventoryVoucherItemID')->first();
-        $dat7 = IssuePermit::orderByDesc('IssuePermitID')->first();
-        $dat8 = InventoryVoucher::orderByDesc('InventoryVoucherID')->first();
+//        $dat5 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
+//        $dat6 = InventoryVoucherItem::orderByDesc('InventoryVoucherItemID')->first();
+//        $dat7 = IssuePermit::orderByDesc('IssuePermitID')->first();
+        $dat8 = InventoryVoucher::orderByDesc('InventoryVoucherID')
+            ->where('InventoryVoucherSpecificationRef','10003')
+            ->with('OrderItems',function ($q){
+                $q->with('IssuePermitItem');
+            })
+            ->first();
 
 //        inventoryvoucherItem
 //        issuepermitItem
+        return [$dat8];
         return [ $dat5,$dat6,$dat7,$dat8];
         return [ $dat6, $dat7,$dat, $dat2, $dat3, $dat4, $dat5];
 

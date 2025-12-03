@@ -28,4 +28,9 @@ class InventoryVoucherItem extends Model
     {
         return $this->hasOne(PartUnit::class, 'PartUnitID','PartUnitRef' );
     }
+
+    public function IssuePermitItem()
+    {
+        return $this->hasOne(IssuePermitItem::class, 'IssuePermitItemID','RefrenceRef);
+    }
 }
