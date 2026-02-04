@@ -39,7 +39,7 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat = InventoryVoucher::orderByDesc('InventoryVoucherID')
+        $dat = Order::orderByDesc('InventoryVoucherID')
             ->where('Number',$request['Number'])
             ->first();
         return $dat;
