@@ -42,6 +42,7 @@ class ReportController extends Controller
         $dat = InventoryVoucher::orderByDesc('InventoryVoucherID')
             ->where('Number',$request['Number'])
             ->first();
+        return $dat;
         return new InventoryVoucherResource($dat);
 //        $dat0 = Order::
 //
