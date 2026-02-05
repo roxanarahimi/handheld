@@ -39,11 +39,15 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat = InventoryVoucher::orderByDesc('InventoryVoucherID')
+//        $dat = InventoryVoucher::orderByDesc('InventoryVoucherID')
+//            ->where('Number',$request['Number'])
+//            ->get();
+//        return InventoryVoucherResource::collection($dat);
+//
+        $dat = Order::orderByDesc('OrderID')
             ->where('Number',$request['Number'])
             ->get();
-//        return $dat;
-        return InventoryVoucherResource::collection($dat);
+        return OrderResource::collection($dat);
 //        $dat0 = Order::
 //
 //        where('Date', '>=', today()->subDays(15))
