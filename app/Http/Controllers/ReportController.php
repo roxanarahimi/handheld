@@ -43,7 +43,7 @@ class ReportController extends Controller
             ->where('Number',$request['Number'])
             ->get();
 //        return $dat;
-        return new InventoryVoucherResource($dat);
+        return InventoryVoucherResource::collection($dat);
 //        $dat0 = Order::
 //
 //        where('Date', '>=', today()->subDays(15))
