@@ -40,8 +40,13 @@ class ReportController extends Controller
     public function test(Request $request)
     {
         $dat = Order::orderByDesc('OrderID')
-            ->where('Number',56156)->with('AssignmentDeliveryItem',function($q){
-                $q->with('Assignment');
+            ->where('Number',56156)
+            ->with('AssignmentDeliveryItem',function($q){
+                $q->with('Assignment',function($z){
+                    $z->with('SalesOffice',function($t){
+                        $t->with('Address');
+                    });
+                });
             })
             ->get();
         return $dat;
