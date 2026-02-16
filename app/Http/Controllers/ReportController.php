@@ -41,6 +41,7 @@ class ReportController extends Controller
     {
         $dat = Order::orderByDesc('OrderID')
             ->where('Number',56156)
+            ->with('OderItems',function($x){})
             ->with('AssignmentDeliveryItem',function($q){
                 $q->with('Assignment',function($z){
                     $z->with('SalesOffice',function($t){
