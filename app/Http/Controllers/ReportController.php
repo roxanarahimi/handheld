@@ -39,24 +39,24 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat = Order::orderByDesc('OrderID')
-            ->where('Number',56156)
-            ->with('OrderItems',function($x){})
-            ->with('AssignmentDeliveryItem',function($q){
-                $q->with('Assignment',function($z){
-                    $z->with('SalesOffice',function($t){
-                        $t->with('Address');
-                    });
-                });
-            })
-            ->get();
-        return $dat;
+//        $dat = Order::orderByDesc('OrderID')
+//            ->where('Number',56156)
+//            ->with('OrderItems',function($x){})
+//            ->with('AssignmentDeliveryItem',function($q){
+//                $q->with('Assignment',function($z){
+//                    $z->with('SalesOffice',function($t){
+//                        $t->with('Address');
+//                    });
+//                });
+//            })
+//            ->get();
+//        return $dat;
 //        return OrderResource::collection($dat);
 //
-        $dat = Order::orderByDesc('OrderID')
-            ->where('Number',$request['Number'])
-            ->get();
-        return OrderResource::collection($dat);
+//        $dat = Order::orderByDesc('OrderID')
+//            ->where('Number',$request['Number'])
+//            ->get();
+//        return OrderResource::collection($dat);
 //        $dat0 = Order::
 //
 //        where('Date', '>=', today()->subDays(15))
