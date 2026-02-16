@@ -22,5 +22,8 @@ class OrderItem extends Model
     {
         return $this->hasOne(Product::class, 'ProductID', 'ProductRef');
     }
-
+    public function IssuePermitItem()
+    {
+        return $this->hasOne(IssuePermitItem::class, 'IssuePermitItemID','ReferenceRef');
+    }
 }
