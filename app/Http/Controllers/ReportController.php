@@ -67,7 +67,9 @@ class ReportController extends Controller
             ->where('FiscalYearRef', 1405)
             ->orderByDesc('OrderID')
 
-            ->whereIn('AssignmentDeliveryItem.Assignment.Plant.PlantID', $storeIDs)
+            ->whereHas('AssignmentDeliveryItem.Assignment.Plant', function ($p) use ($storeIDs) {
+                $p->whereIn('PlantID',$storeIDs);
+            })
 
             ->whereHas('OrderItems')
             ->whereHas('AssignmentDeliveryItem', function ($q) {
