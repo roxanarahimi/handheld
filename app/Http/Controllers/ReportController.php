@@ -39,15 +39,15 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat = Order::orderByDesc('OrderID')
-            ->where('Number',56156)
-            ->with('OrderItems',function($x){})
-            ->whereHas('OrderItems')
-            ->with('OrderItems',function ($q){
-                $q->whereHas('IssuePermitItem')->with('IssuePermitItem');
-            })
-            ->get();
-        return $dat;
+//        $dat = Order::orderByDesc('OrderID')
+//            ->where('Number',"56156")
+//            ->with('OrderItems',function($x){})
+//            ->whereHas('OrderItems')
+//            ->with('OrderItems',function ($q){
+//                $q->whereHas('IssuePermitItem')->with('IssuePermitItem');
+//            })
+//            ->get();
+//        return $dat;
 //        return OrderResource::collection($dat);
 //
 //        $dat = Order::orderByDesc('OrderID')
@@ -83,16 +83,10 @@ class ReportController extends Controller
 ////            ->paginate(200);
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
-////        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
-//            ->
-//        whereHas('Store')
-//            ->
+//        ->
         where('FiscalYearRef', 1405)
             ->where('InventoryVoucherSpecificationRef', 10003)
-            ->whereHas('OrderItems', function ($q) {
-//                $q->havingRaw('SUM(Quantity) >= ?', [200]);
-            })
-                        ->where('Number', 56156)
+            ->whereHas('OrderItems')->where('Number', "56156")
             ->orderBy('InventoryVoucherID')
             ->get();
         return $dat;
