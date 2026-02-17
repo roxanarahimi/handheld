@@ -42,15 +42,16 @@ class ReportController extends Controller
         $dat = Order::
         orderByDesc('OrderID')
             ->whereHas('AssignmentDeliveryItem')
-             ->with('AssignmentDeliveryItem',function ($q){
-                        $q->whereHas('Assignment',function ($t){
-                            $t->where('Number',56156);
+            ->with('AssignmentDeliveryItem', function ($q) {
+                $q->whereHas('Assignment', function ($t) {
+                    $t->where('Number', 56156);
+                })
+                ->with('Assignment')
+                ->with('Customer', function ($x) {
+                        $x->with('CustomerAddress', function ($z) {
+                            $z->with('Address');
                         });
-                        $q->with('Customer',function ($x){
-                            $x->with('CustomerAddress',function ($z){
-                                $z->with('Address');
-                            });
-                        });
+                    });
             })
             ->with('OrderItems')
             ->get();
@@ -124,8 +125,8 @@ class ReportController extends Controller
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')
             ->with('Invoice')
             ->with('Order')
-            ->whereHas('Order',function ($q){
-                $q->where('Number',"56156");
+            ->whereHas('Order', function ($q) {
+                $q->where('Number', "56156");
             })
             ->get();
         return $dat5;
@@ -135,10 +136,10 @@ class ReportController extends Controller
 //        $dat6 = InventoryVoucherItem::orderByDesc('InventoryVoucherItemID')->first();
 //        $dat7 = IssuePermit::orderByDesc('IssuePermitID')->first();
         $dat8 = InventoryVoucher::orderByDesc('InventoryVoucherID')
-            ->where('InventoryVoucherSpecificationRef','10003')
+            ->where('InventoryVoucherSpecificationRef', '10003')
 //            ->where('Number','56156')
             ->whereHas('OrderItems')
-            ->with('OrderItems',function ($q){
+            ->with('OrderItems', function ($q) {
                 $q->whereHas('IssuePermitItem')->with('IssuePermitItem');
             })
             ->first();
@@ -146,8 +147,8 @@ class ReportController extends Controller
 //        inventoryvoucherItem
 //        issuepermitItem
 //        return [$dat8];
-        return [ $dat5,$dat6,$dat7,$dat8];
-        return [ $dat6, $dat7,$dat, $dat2, $dat3, $dat4, $dat5];
+        return [$dat5, $dat6, $dat7, $dat8];
+        return [$dat6, $dat7, $dat, $dat2, $dat3, $dat4, $dat5];
 
         $t = Invoice::where('id', 3997)->first();
         $t->update(['Sum' => 888]);
