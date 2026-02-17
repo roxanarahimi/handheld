@@ -41,16 +41,18 @@ class ReportController extends Controller
     {
         $dat = Order::
         orderByDesc('OrderID')
-            ->where('Number',56156)
             ->whereHas('AssignmentDeliveryItem')
-            ->with('AssignmentDeliveryItem',function ($q){
-                        $q->with('Invoice');
+             ->with('AssignmentDeliveryItem',function ($q){
+                        $q->whereHas('Assignment',function ($t){
+                            $t->where('Number',56156);
+                        });
                         $q->with('Customer',function ($x){
                             $x->with('CustomerAddress',function ($z){
                                 $z->with('Address');
                             });
                         });
             })
+            ->with('OrderItems')
             ->get();
         return $dat;
         $dat = InventoryVoucher::
