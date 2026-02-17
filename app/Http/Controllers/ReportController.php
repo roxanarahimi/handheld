@@ -39,10 +39,36 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
+        $storeIDs = Plant::orderBy('Code')
+        ->where(function ($query) {
+            $query->where('Name', 'LIKE', '%گرمدره%')
+                ->orwhere('Name', 'LIKE', "%مارکتینگ%")
+                ->orWhere('Name', 'LIKE', "%ضایعات%")
+                ->orWhere('Name', 'LIKE', "%برگشتی%")
+                ->orWhere('Code', "1000");
+        })
+        ->where(function ($q) {
+            $q->whereHas('Plant', function ($x) {
+                $x->where('Name', 'LIKE', '%گرمدره%')
+                    ->orwhereHas('Address', function ($y) {
+                        $y->where('Details', 'LIKE', "%گرمدره%");
+                    });
+            });
+        })
+            ->whereNot(function ($query) {
+                    where('Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('Name', 'LIKE', "%برگشتی%");
+            })
+            ->pluck('StoreID');
+
         $dat = Order::query()
             ->where('Date', '>=', today()->subDays(7))
             ->where('FiscalYearRef', 1405)
             ->orderByDesc('OrderID')
+
+            ->whereIn('AssignmentDeliveryItem.Assignment.Plant.PlantID', $storeIDs)
+
             ->whereHas('OrderItems')
             ->whereHas('AssignmentDeliveryItem', function ($q) {
                 $q->whereHas('Assignment.Plant');
