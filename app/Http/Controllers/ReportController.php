@@ -84,7 +84,7 @@ class ReportController extends Controller
         $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
 //        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
             ->whereHas('Store')
-            ->where('Number', 16156)
+//            ->where('Number', 16156)
             ->where('FiscalYearRef', 1405)
             ->where('InventoryVoucherSpecificationRef', 10003)
             ->whereHas('OrderItems', function ($q) {
