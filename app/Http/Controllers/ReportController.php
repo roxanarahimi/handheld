@@ -78,14 +78,14 @@ class ReportController extends Controller
             ->where('FiscalYearRef', 1405)
             ->where('InventoryRef', 1)
             ->where('Type', 0)
-            ->where('State', 2)
+//            ->where('State', 2)
             ->orderByDesc('OrderID')
             ->whereHas('OrderItems')
             ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs, $request) {
                 $p->whereIn('PlantRef', $storeIDs)
-//                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
-//                    ->orWhere('Number', $request['n2'])// 👈 این خط اضافه شد
-//                    ->orWhere('Number', $request['n3'])// 👈 این خط اضافه شد
+                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
+                    ->orWhere('Number', $request['n2'])// 👈 این خط اضافه شد
+                    ->orWhere('Number', $request['n3'])// 👈 این خط اضافه شد
                 ;
             })
             ->with([
