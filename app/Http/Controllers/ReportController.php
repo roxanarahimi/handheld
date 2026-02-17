@@ -39,7 +39,7 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $storeIDs = Plant::orderBy('Code')
+        $storeIDs = Plant::orderBy('PlantID')
             ->where(function ($query) {
                 $query->where('Name', 'LIKE', '%مرکزی%');
 //                    ->orWhere('Code', "1000");
