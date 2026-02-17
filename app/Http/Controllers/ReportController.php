@@ -152,7 +152,7 @@ class ReportController extends Controller
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')
             ->with('Invoice')
             ->with('Order',function ($q){
-                $q->where('Number',56156);
+                $q->where('Number',"56156");
             })
             ->first();
         return $dat5;
