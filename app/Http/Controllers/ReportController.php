@@ -43,7 +43,6 @@ class ReportController extends Controller
 
             ->orderByDesc('OrderID')
             ->where('FiscalYearRef',1405)
-            ->where('Type',0)
             ->whereHas('OrderItems')
             ->whereHas('AssignmentDeliveryItem', function ($q) use ($request) {
                 $q->whereHas('Assignment', function ($t) use ($request) {
