@@ -55,17 +55,34 @@ class ReportController extends Controller
                     ->orWhere('Name', 'LIKE', "%برگشتی%");
             })
             ->pluck('PlantID');
+//        $dat = Order::query()
+//            ->where('Date', '>=', today()->subDays(7))
+//            ->where('FiscalYearRef', 1405)
+//            ->where('InventoryRef', 1)
+//            ->where('State', 2)
+////            ->where('Type', 2)
+//
+//            ->orderByDesc('OrderID')
+//            ->whereHas('OrderItems')
+//            ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs) {
+//                $p->whereIn('PlantRef', $storeIDs);
+//            })
+//            ->with([
+//                'AssignmentDeliveryItem.Assignment.Plant.Address',
+//                'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
+//                'OrderItems'
+//            ])
+//            ->paginate(100);
         $dat = Order::query()
             ->where('Date', '>=', today()->subDays(7))
             ->where('FiscalYearRef', 1405)
             ->where('InventoryRef', 1)
             ->where('State', 2)
-//            ->where('Type', 2)
-
             ->orderByDesc('OrderID')
             ->whereHas('OrderItems')
-            ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs) {
-                $p->whereIn('PlantRef', $storeIDs);
+            ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs, $request) {
+                $p->whereIn('PlantRef', $storeIDs)
+                    ->where('Number', $request['Number']);   // 👈 این خط اضافه شد
             })
             ->with([
                 'AssignmentDeliveryItem.Assignment.Plant.Address',
@@ -73,7 +90,6 @@ class ReportController extends Controller
                 'OrderItems'
             ])
             ->paginate(100);
-
         return [$dat->count(), $dat];
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
