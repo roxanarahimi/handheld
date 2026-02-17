@@ -42,12 +42,11 @@ class ReportController extends Controller
         $dat = Order::
         orderByDesc('OrderID')
             ->where('Number',56156)
-            ->whereHas('OrderItems')
-            ->with('OrderItems',function ($q){
-                $q->whereHas('IssuePermitItem')
-                    ->with('IssuePermitItem',function ($x){
-                        $x->with('Part');
-                });
+            ->whereHas('AssignmentDeliveryItem')
+            ->with('AssignmentDeliveryItem',function ($q){
+                        $q->with('Part');
+                        $q->with('Invoice');
+                        $q->with('Customer');
             })
             ->get();
         return $dat;

@@ -24,4 +24,9 @@ class AssignmentDeliveryItem extends Model
     {
         return $this->hasOne(InvoiceERP::class, 'InvoiceID', 'InvoiceRef');
     }
+    public function Customer()
+    {
+        return $this->belongsTo(Customer::class, 'CustomerRef', 'CustomerID');
+    }
+
 }
