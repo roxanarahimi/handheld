@@ -42,7 +42,6 @@ class ReportController extends Controller
         $dat = InventoryVoucher::
         orderByDesc('InventoryVoucherID')
             ->where('Number',"56156")
-            ->whereHas('OrderItems')
             ->with('OrderItems',function ($q){
                 $q->whereHas('IssuePermitItem')
                     ->with('IssuePermitItem',function ($x){
