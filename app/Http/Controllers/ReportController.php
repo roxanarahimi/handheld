@@ -56,7 +56,7 @@ class ReportController extends Controller
             });
         })
             ->whereNot(function ($query) {
-                    where('Name', 'LIKE', "%مارکتینگ%")
+                $query->where('Name', 'LIKE', "%مارکتینگ%")
                     ->orWhere('Name', 'LIKE', "%ضایعات%")
                     ->orWhere('Name', 'LIKE', "%برگشتی%");
             })
