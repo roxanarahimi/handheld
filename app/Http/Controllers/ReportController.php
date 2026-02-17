@@ -45,7 +45,9 @@ class ReportController extends Controller
             ->whereHas('AssignmentDeliveryItem')
             ->with('AssignmentDeliveryItem',function ($q){
                         $q->with('Invoice');
-                        $q->with('Customer');
+                        $q->with('Customer',function ($x){
+                            $x->with('Address');
+                        });
             })
             ->get();
         return $dat;
