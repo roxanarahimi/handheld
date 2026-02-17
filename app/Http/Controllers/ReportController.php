@@ -50,7 +50,8 @@ class ReportController extends Controller
             })
             ->with([
                 'AssignmentDeliveryItem' => function ($q) use ($request) {
-                    $q->with([
+                    $q->whereHas('Assignment')
+                        ->with([
                             'Assignment',
                             'Customer.CustomerAddress.Address'
                         ]);
