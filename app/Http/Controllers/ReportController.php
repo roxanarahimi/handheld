@@ -92,7 +92,7 @@ class ReportController extends Controller
             ->whereHas('OrderItems', function ($q) {
 //                $q->havingRaw('SUM(Quantity) >= ?', [200]);
             })
-                        ->where('Number', 15156)
+                        ->where('Number', 56156)
             ->orderBy('InventoryVoucherID')
             ->get();
         return $dat;
