@@ -23,4 +23,8 @@ class Assignment extends Model
     {
         return $this->hasMany(SalesOffice::class, 'SalesOfficeID', 'SalesOfficeRef');
     }
+    public function Plant()
+    {
+        return $this->hasMany(Plant::class, 'PlantID', 'PlantRef');
+    }
 }
