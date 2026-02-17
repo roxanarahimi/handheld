@@ -43,7 +43,7 @@ class ReportController extends Controller
             ->where('Number',"56156")
             ->whereHas('OrderItems')
             ->with('OrderItems',function ($q){
-                $q->whereHas('IssuePermitItem',function ($x){
+                $q->whereHas('IssuePermitItem')->with('IssuePermitItem',function ($x){
                     $x->with('Part');
                 });
             })
