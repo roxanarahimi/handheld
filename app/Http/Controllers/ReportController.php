@@ -42,9 +42,6 @@ class ReportController extends Controller
         $storeIDs = Plant::orderBy('Code')
             ->where(function ($query) {
                 $query->where('Name', 'LIKE', '%گرمدره%')
-                    ->orwhere('Name', 'LIKE', "%مارکتینگ%")
-                    ->orWhere('Name', 'LIKE', "%ضایعات%")
-                    ->orWhere('Name', 'LIKE', "%برگشتی%")
                     ->orWhere('Code', "1000");
             })
             ->whereHas('Address', function ($x) {
@@ -57,7 +54,7 @@ class ReportController extends Controller
                     ->orWhere('Name', 'LIKE', "%ضایعات%")
                     ->orWhere('Name', 'LIKE', "%برگشتی%");
             })
-            ->pluck('StoreID');
+            ->pluck('PlantID');
         $dat = Order::query()
             ->where('Date', '>=', today()->subDays(7))
             ->where('FiscalYearRef', 1405)
