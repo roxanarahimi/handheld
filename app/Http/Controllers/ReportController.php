@@ -46,12 +46,13 @@ class ReportController extends Controller
             ->where('FiscalYearRef',1405)
             ->whereHas('OrderItems')
             ->whereHas('AssignmentDeliveryItem', function ($q) use ($request) {
-                $q->whereHas('Assignment');
+                $q->whereHas('Assignment', function ($t) use ($request) {
+                    $t->where('Number', $request['Number']);
+                });
             })
             ->with([
                 'AssignmentDeliveryItem' => function ($q) use ($request) {
-                    $q->whereHas('Assignment')
-                        ->with([
+                    $q->with([
                             'Assignment',
                             'Customer.CustomerAddress.Address'
                         ]);
