@@ -39,15 +39,15 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-//        $dat = Order::orderByDesc('OrderID')
-//            ->where('Number',56156)
-//            ->with('OrderItems',function($x){})
-//            ->whereHas('OrderItems')
-//            ->with('OrderItems',function ($q){
-//                $q->whereHas('IssuePermitItem')->with('IssuePermitItem');
-//            })
-//            ->get();
-//        return $dat;
+        $dat = Order::orderByDesc('OrderID')
+            ->where('Number',56156)
+            ->with('OrderItems',function($x){})
+            ->whereHas('OrderItems')
+            ->with('OrderItems',function ($q){
+                $q->whereHas('IssuePermitItem')->with('IssuePermitItem');
+            })
+            ->get();
+        return $dat;
 //        return OrderResource::collection($dat);
 //
 //        $dat = Order::orderByDesc('OrderID')
