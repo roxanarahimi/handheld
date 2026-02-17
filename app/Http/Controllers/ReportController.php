@@ -78,7 +78,7 @@ class ReportController extends Controller
                 'OrderItems'
 
             ])
-            ->paginate(200);
+            ->paginate(100);
         return [$dat->count(),$dat];
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
