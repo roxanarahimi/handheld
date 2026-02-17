@@ -39,15 +39,15 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat = Order::orderByDesc('OrderID')
-            ->where('Number',56156)
-            ->with('OrderItems',function($x){})
-            ->whereHas('OrderItems')
-            ->with('OrderItems',function ($q){
-                $q->whereHas('IssuePermitItem')->with('IssuePermitItem');
-            })
-            ->get();
-        return $dat;
+//        $dat = Order::orderByDesc('OrderID')
+//            ->where('Number',56156)
+//            ->with('OrderItems',function($x){})
+//            ->whereHas('OrderItems')
+//            ->with('OrderItems',function ($q){
+//                $q->whereHas('IssuePermitItem')->with('IssuePermitItem');
+//            })
+//            ->get();
+//        return $dat;
 //        return OrderResource::collection($dat);
 //
 //        $dat = Order::orderByDesc('OrderID')
@@ -151,8 +151,11 @@ class ReportController extends Controller
         $dat4 = Assignment::orderByDesc('AssignmentID')->first();
         $dat5 = AssignmentDeliveryItem::orderByDesc('AssignmentDeliveryItemID')
             ->with('Invoice')
-            ->with('Order')
+            ->with('Order',function ($q){
+                $q->where('Number',56156);
+            })
             ->first();
+        return $dat5;
 //        where('Number','38993')
 //        $dat6 = IssuePermit::orderByDesc('IssuePermitID')->first();
 //        $dat5 = IssuePermitItem::orderByDesc('IssuePermitItemID')->first();
@@ -169,7 +172,7 @@ class ReportController extends Controller
 
 //        inventoryvoucherItem
 //        issuepermitItem
-        return [$dat8];
+//        return [$dat8];
         return [ $dat5,$dat6,$dat7,$dat8];
         return [ $dat6, $dat7,$dat, $dat2, $dat3, $dat4, $dat5];
 
