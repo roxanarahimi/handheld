@@ -74,7 +74,7 @@ class ReportController extends Controller
 //            ])
 //            ->paginate(100);
         $dat = Order::query()
-            ->where('Date', '>=', today()->subDays(20))
+            ->where('Date', '>=', today()->subDays(2))
             ->where('FiscalYearRef', 1405)
             ->where('InventoryRef', 1)
             ->where('State', 2)
@@ -82,7 +82,8 @@ class ReportController extends Controller
             ->whereHas('OrderItems')
             ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs, $request) {
                 $p->whereIn('PlantRef', $storeIDs)
-                    ->where('Number', $request['Number']);   // 👈 این خط اضافه شد
+//                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
+                ;
             })
             ->with([
                 'AssignmentDeliveryItem.Assignment.Plant.Address',
