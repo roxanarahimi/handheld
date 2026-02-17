@@ -41,13 +41,11 @@ class ReportController extends Controller
     {
         $storeIDs = Plant::orderBy('Code')
             ->where(function ($query) {
-                $query->where('Name', 'LIKE', '%گرمدره%')
-                    ->orWhere('Code', "1000");
+                $query->where('Name', 'LIKE', '%مرکزی%');
+//                    ->orWhere('Code', "1000");
             })
             ->whereHas('Address', function ($x) {
-                $x->where('Name', 'LIKE', '%گرمدره%')
-                  ->orWhere('Details', 'LIKE', "%گرمدره%");
-
+                $x->where('Name', 'LIKE', '%مرکزی%');
             })
             ->whereNot(function ($query) {
                 $query->where('Name', 'LIKE', "%مارکتینگ%")
