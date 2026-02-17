@@ -155,7 +155,7 @@ class ReportController extends Controller
             ->whereHas('Order',function ($q){
                 $q->where('Number',"56156");
             })
-            ->first();
+            ->get();
         return $dat5;
 //        where('Number','38993')
 //        $dat6 = IssuePermit::orderByDesc('IssuePermitID')->first();
