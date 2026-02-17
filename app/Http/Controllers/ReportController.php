@@ -64,7 +64,7 @@ class ReportController extends Controller
 
             ])
             ->get();
-        return $dat;
+        return [$dat->count(),$dat];
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
 //        ->
