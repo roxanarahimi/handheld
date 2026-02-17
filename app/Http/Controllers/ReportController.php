@@ -45,15 +45,15 @@ class ReportController extends Controller
             ->where('FiscalYearRef',1405)
             ->where('Type',0)
             ->whereHas('OrderItems')
-            ->whereHas('AssignmentDeliveryItem', function ($q) {
-                $q->whereHas('Assignment', function ($t) {
-                    $t->where('Number', 56156);
+            ->whereHas('AssignmentDeliveryItem', function ($q) use ($request) {
+                $q->whereHas('Assignment', function ($t) use ($request) {
+                    $t->where('Number', $request['Number']);
                 });
             })
             ->with([
-                'AssignmentDeliveryItem' => function ($q) {
-                    $q->whereHas('Assignment', function ($t) {
-                        $t->where('Number', 56156);
+                'AssignmentDeliveryItem' => function ($q) use ($request) {
+                    $q->whereHas('Assignment', function ($t) use ($request) {
+                        $t->where('Number', $request['Number']);
                     })
                         ->with([
                             'Assignment',
