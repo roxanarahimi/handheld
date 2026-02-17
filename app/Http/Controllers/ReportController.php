@@ -81,11 +81,14 @@ class ReportController extends Controller
 ////            ->with('OrderItems')
 ////            ->orderBy('InventoryVoucherID')
 ////            ->paginate(200);
-        $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
-//        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
-            ->whereHas('Store')
+        $dat = InventoryVoucher::
+//        where('Date', '>=', today()->subDays(2))//
+////        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
+//            ->
+//        whereHas('Store')
 //            ->where('Number', 16156)
-            ->where('FiscalYearRef', 1405)
+//            ->
+        where('FiscalYearRef', 1405)
             ->where('InventoryVoucherSpecificationRef', 10003)
             ->whereHas('OrderItems', function ($q) {
 //                $q->havingRaw('SUM(Quantity) >= ?', [200]);
