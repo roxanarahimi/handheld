@@ -45,13 +45,13 @@ class ReportController extends Controller
             ->with('AssignmentDeliveryItem', function ($q) {
                 $q->whereHas('Assignment', function ($t) {
                     $t->where('Number', 56156);
-                })
-                ->with('Assignment')
-                ->with('Customer', function ($x) {
-                        $x->with('CustomerAddress', function ($z) {
-                            $z->with('Address');
-                        });
+                });
+                $q->with('Assignment');
+                $q->with('Customer', function ($x) {
+                    $x->with('CustomerAddress', function ($z) {
+                        $z->with('Address');
                     });
+                });
             })
             ->with('OrderItems')
             ->get();
