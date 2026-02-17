@@ -42,7 +42,7 @@ class ReportController extends Controller
         $dat = Order::query()
             ->orderByDesc('OrderID')
             ->where('FiscalYearRef',1405)
-            ->where('State',2)
+//            ->where('State',2)
             ->whereHas('AssignmentDeliveryItem', function ($q) {
                 $q->whereHas('Assignment', function ($t) {
                     $t->where('Number', 56156);
