@@ -74,7 +74,7 @@ class ReportController extends Controller
 //            ])
 //            ->paginate(100);
         $dat = Order::query()
-            ->where('Date', '>=', today()->subDays(20))
+            ->where('Date', '>=', today()->subDays(200))
             ->where('FiscalYearRef', 1405)
             ->where('InventoryRef', 1)
 //            ->where('State', 2)
