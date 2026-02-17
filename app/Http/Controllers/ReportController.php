@@ -39,24 +39,6 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $storeIDs = Store::orderBy('Code')
-            ->whereNot(function ($query) {
-                $query->where('Name', 'LIKE', '%گرمدره%')
-                    ->orwhere('Name', 'LIKE', "%مارکتینگ%")
-                    ->orWhere('Name', 'LIKE', "%ضایعات%")
-                    ->orWhere('Name', 'LIKE', "%برگشتی%")
-                    ->orWhere('Code', "1000");
-            })
-            ->whereNot(function ($q) {
-                $q->whereHas('Plant', function ($x) {
-                    $x->where('Name', 'LIKE', '%گرمدره%')
-                        ->orwhereHas('Address', function ($y) {
-                            $y->where('Details', 'LIKE', "%گرمدره%");
-                        });
-                });
-            })
-            ->pluck('StoreID');
-
         $dat = Order::query()
             ->where('Date', '>=', today()->subDays(7))
 
@@ -68,17 +50,18 @@ class ReportController extends Controller
             })
             ->with([
                 'AssignmentDeliveryItem' => function ($q) use ($request) {
-                    $q->whereHas('Assignment')
+                    $q->whereHas('Assignment', function ($t) use ($request) {
+                        $t->whereHas('Plant')->with('Plant.Address');
+                    })
                         ->with([
                             'Assignment',
-                            'Customer.CustomerAddress.Address',
-                            'Plant.Address'
+                            'Customer.CustomerAddress.Address'
                         ]);
                 },
                 'OrderItems'
 
             ])
-            ->paginate(100);
+            ->get();
         return [$dat->count(),$dat];
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
