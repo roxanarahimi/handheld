@@ -76,7 +76,7 @@ class ReportController extends Controller
         $dat = Order::query()
             ->where('Date', '>=', today()->subDays(7))
             ->where('FiscalYearRef', 1405)
-            ->where('InventoryRef', 1)
+//            ->where('InventoryRef', 1)
 //            ->where('State', 2)
             ->orderByDesc('OrderID')
             ->whereHas('OrderItems')
