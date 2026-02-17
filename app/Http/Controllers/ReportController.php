@@ -86,13 +86,13 @@ class ReportController extends Controller
 ////        ->whereNotIn('InventoryVoucherID', $inventoryVoucherIDs)
 //            ->
 //        whereHas('Store')
-//            ->where('Number', 16156)
 //            ->
         where('FiscalYearRef', 1405)
             ->where('InventoryVoucherSpecificationRef', 10003)
             ->whereHas('OrderItems', function ($q) {
 //                $q->havingRaw('SUM(Quantity) >= ?', [200]);
             })
+                        ->where('Number', 15156)
             ->orderBy('InventoryVoucherID')
             ->get();
         return $dat;
