@@ -39,48 +39,14 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-//        $dat = Order::orderByDesc('OrderID')
-//            ->where('Number',"56156")
-//            ->with('OrderItems',function($x){})
-//            ->whereHas('OrderItems')
-//            ->with('OrderItems',function ($q){
-//                $q->whereHas('IssuePermitItem')->with('IssuePermitItem');
-//            })
-//            ->get();
-//        return $dat;
-//        return OrderResource::collection($dat);
-//
-//        $dat = Order::orderByDesc('OrderID')
-//            ->where('Number',$request['Number'])
-//            ->get();
-//        return OrderResource::collection($dat);
-//        $dat0 = Order::
-//
-//        where('Date', '>=', today()->subDays(15))
-//            ->where('Number','39497')->get();
-//        return $dat0;
-////            ->where('InventoryVoucherSpecificationRef', 10003)
-//////            ->where('State', 2)
-////            ->where('FiscalYearRef', 1405)
-//////            ->where('Number', '840040')
-//////            ->whereHas('Customer', function ($c) {
-//////                $c->whereHas('CustomerAddress', function ($a) {
-//////                    $a->where('Type', 2);
-//////                });
-//////            })
-////            ->whereHas('AssignmentDeliveryItem', function ($p) {
-////                $p->whereHas('Assignment', function ($d) {
-////                    $d->with('SalesOffice');
-////                });
-////                $p->with('Assignment');
-////            })
-////            ->whereHas('OrderItems', function ($q) {
-////                $q->havingRaw('SUM(Quantity) >= ?', [200]);
-////            })
-//////            ->with('AssignmentDeliveryItem')
-////            ->with('OrderItems')
-////            ->orderBy('InventoryVoucherID')
-////            ->paginate(200);
+        $dat = Order::orderByDesc('OrderID')
+            ->where('Number',"56156")
+            ->whereHas('OrderItems')
+            ->with('OrderItems',function ($q){
+                $q->whereHas('IssuePermitItem')->with('Part');
+            })
+            ->get();
+        return $dat;
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
 //        ->
