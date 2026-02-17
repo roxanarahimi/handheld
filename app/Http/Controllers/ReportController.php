@@ -61,31 +61,21 @@ class ReportController extends Controller
                     ->orWhere('Name', 'LIKE', "%برگشتی%");
             })
             ->pluck('StoreID');
-
         $dat = Order::query()
             ->where('Date', '>=', today()->subDays(7))
             ->where('FiscalYearRef', 1405)
             ->orderByDesc('OrderID')
-
-            ->whereHas('AssignmentDeliveryItem.Assignment.Plant', function ($p) use ($storeIDs) {
-                $p->whereIn('PlantID',$storeIDs);
-            })
-
             ->whereHas('OrderItems')
-            ->whereHas('AssignmentDeliveryItem', function ($q) {
-                $q->whereHas('Assignment.Plant');
+            ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs) {
+                $p->whereIn('PlantRef', $storeIDs);
             })
             ->with([
-                'AssignmentDeliveryItem' => function ($q) {
-                    $q->whereHas('Assignment.Plant')
-                        ->with([
-                            'Assignment.Plant.Address',
-                            'Customer.CustomerAddress.Address'
-                        ]);
-                },
+                'AssignmentDeliveryItem.Assignment.Plant.Address',
+                'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
                 'OrderItems'
             ])
             ->paginate(100);
+
         return [$dat->count(),$dat];
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
