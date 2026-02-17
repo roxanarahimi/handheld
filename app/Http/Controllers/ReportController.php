@@ -40,17 +40,21 @@ class ReportController extends Controller
     public function test(Request $request)
     {
         $dat = Order::query()
-            ->where('Date', '>=', today()->subDays(10))
+            ->where('Date', '>=', today()->subDays(20))
 
             ->orderByDesc('OrderID')
             ->where('FiscalYearRef',1405)
             ->whereHas('OrderItems')
             ->whereHas('AssignmentDeliveryItem', function ($q) use ($request) {
-                $q->whereHas('Assignment');
+                $q->whereHas('Assignment', function ($t) use ($request) {
+                    $t->where('Number', $request['Number']);
+                });
             })
             ->with([
                 'AssignmentDeliveryItem' => function ($q) use ($request) {
-                    $q->whereHas('Assignment')
+                    $q->whereHas('Assignment', function ($t) use ($request) {
+                        $t->where('Number', $request['Number']);
+                    })
                         ->with([
                             'Assignment',
                             'Customer.CustomerAddress.Address'
@@ -59,7 +63,7 @@ class ReportController extends Controller
                 'OrderItems'
 
             ])
-            ->paginate(200);
+            ->get();
         return [$dat->count(),$dat];
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
