@@ -40,21 +40,18 @@ class ReportController extends Controller
     public function test(Request $request)
     {
         $storeIDs = Plant::orderBy('Code')
-        ->where(function ($query) {
-            $query->where('Name', 'LIKE', '%گرمدره%')
-                ->orwhere('Name', 'LIKE', "%مارکتینگ%")
-                ->orWhere('Name', 'LIKE', "%ضایعات%")
-                ->orWhere('Name', 'LIKE', "%برگشتی%")
-                ->orWhere('Code', "1000");
-        })
-        ->where(function ($q) {
-            $q->whereHas('Plant', function ($x) {
+            ->where(function ($query) {
+                $query->where('Name', 'LIKE', '%گرمدره%')
+                    ->orwhere('Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('Name', 'LIKE', "%برگشتی%")
+                    ->orWhere('Code', "1000");
+            })
+            ->whereHas('Address', function ($x) {
                 $x->where('Name', 'LIKE', '%گرمدره%')
-                    ->orwhereHas('Address', function ($y) {
-                        $y->where('Details', 'LIKE', "%گرمدره%");
-                    });
-            });
-        })
+                  ->orWhere('Details', 'LIKE', "%گرمدره%");
+
+            })
             ->whereNot(function ($query) {
                 $query->where('Name', 'LIKE', "%مارکتینگ%")
                     ->orWhere('Name', 'LIKE', "%ضایعات%")
@@ -76,7 +73,7 @@ class ReportController extends Controller
             ])
             ->paginate(100);
 
-        return [$dat->count(),$dat];
+        return [$dat->count(), $dat];
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
 //        ->
