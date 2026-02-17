@@ -39,7 +39,8 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat = Order::query()->where('Date', '>=', today()->subDays(2))
+        $dat = Order::query()
+//            ->where('Date', '>=', today()->subDays(2))
 
             ->orderByDesc('OrderID')
             ->where('FiscalYearRef',1405)
