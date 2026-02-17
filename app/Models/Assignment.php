@@ -25,6 +25,6 @@ class Assignment extends Model
     }
     public function Plant()
     {
-        return $this->hasMany(Plant::class, 'PlantID', 'PlantRef');
+        return $this->hasOne(Plant::class, 'PlantID', 'PlantRef');
     }
 }
