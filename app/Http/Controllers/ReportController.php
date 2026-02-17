@@ -41,27 +41,23 @@ class ReportController extends Controller
     {
         $dat = Order::query()
             ->where('Date', '>=', today()->subDays(7))
-
+            ->where('FiscalYearRef', 1405)
             ->orderByDesc('OrderID')
-            ->where('FiscalYearRef',1405)
             ->whereHas('OrderItems')
-            ->whereHas('AssignmentDeliveryItem', function ($q) use ($request) {
-                $q->whereHas('Assignment');
+            ->whereHas('AssignmentDeliveryItem', function ($q) {
+                $q->whereHas('Assignment.Plant');
             })
             ->with([
-                'AssignmentDeliveryItem' => function ($q) use ($request) {
-                    $q->whereHas('Assignment', function ($t) use ($request) {
-                        $t->whereHas('Plant')->with('Plant.Address');
-                    })
+                'AssignmentDeliveryItem' => function ($q) {
+                    $q->whereHas('Assignment.Plant')
                         ->with([
-                            'Assignment',
+                            'Assignment.Plant.Address',
                             'Customer.CustomerAddress.Address'
                         ]);
                 },
                 'OrderItems'
-
             ])
-            ->get();
+            ->paginate(100);
         return [$dat->count(),$dat];
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
