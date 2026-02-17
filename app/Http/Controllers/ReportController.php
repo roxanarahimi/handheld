@@ -79,6 +79,7 @@ class ReportController extends Controller
             ->where('InventoryRef', 1)
 //            ->where('Type', 0)
 //            ->where('State', 2)
+            ->where('CustomerType', 0)
             ->orderByDesc('OrderID')
             ->whereHas('OrderItems')
             ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs, $request) {
