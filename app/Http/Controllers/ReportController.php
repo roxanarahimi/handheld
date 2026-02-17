@@ -39,12 +39,14 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $dat = Order::orderByDesc('OrderID')
+        $dat = InventoryVoucher::
+        orderByDesc('InventoryVoucherID')
             ->where('Number',"56156")
             ->whereHas('OrderItems')
             ->with('OrderItems',function ($q){
-                $q->whereHas('IssuePermitItem')->with('IssuePermitItem',function ($x){
-                    $x->with('Part');
+                $q->whereHas('IssuePermitItem')
+                    ->with('IssuePermitItem',function ($x){
+                        $x->with('Part');
                 });
             })
             ->get();
