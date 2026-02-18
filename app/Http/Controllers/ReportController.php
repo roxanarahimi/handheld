@@ -79,7 +79,7 @@ class ReportController extends Controller
             ->where('InventoryRef', 1)
 
             ->where('Type', 0)
-            ->where('State', 4)
+            ->where('State', 2)
             ->where('CustomerType', 0)
 //            ->where('DeliveryAddressType', 1)
 
