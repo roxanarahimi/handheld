@@ -78,8 +78,8 @@ class ReportController extends Controller
             ->where('FiscalYearRef', 1405)
             ->where('InventoryRef', 1)
 
-            ->where('Type', 0)
-            ->where('State', $request['state'])
+//            ->where('Type', 0)
+//            ->where('State', $request['state'])
 
             ->orderByDesc('OrderID')
             ->whereHas('OrderItems')
