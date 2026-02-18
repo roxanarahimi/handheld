@@ -83,10 +83,7 @@ class ReportController extends Controller
 
             ->orderByDesc('OrderID')
             ->whereHas('OrderItems')
-            ->whereHas('AssignmentDeliveryItem', function ($r) use ($storeIDs, $request) {
-                    $r->where('DeliveryState', 1)
-                ;
-            })
+            ->whereHas('AssignmentDeliveryItem')
              ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs, $request) {
                 $p->whereIn('PlantRef', $storeIDs)
 //                    ->where('State', 5)// 👈 این خط اضافه شد???????????????????
