@@ -178,9 +178,9 @@ class InvoiceController extends Controller
                 'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
                 'OrderItems'
             ])->first();
-        return new OrderResource2($item);
-        return $item;
-                        $exx3 = Invoice::where('OrderID',$item->OrderID)->where('OrderNumber',$item->Number)->where('Type','Order')->first();
+//        return new OrderResource2($item);
+//        return $item;
+                        $exx3 = Invoice::where('OrderID',$item->OrderID)->where('OrderNumber',$item->Number)->where('Type','InventoryVoucher')->where('BroadcastDelivery',1)->first();
                 if(!$exx3){
                     $invoice = Invoice::create([
                         'Type' => 'Order',
