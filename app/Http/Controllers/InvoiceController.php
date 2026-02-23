@@ -8,6 +8,7 @@ use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\OrderResource2;
 use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
 use App\Models\Invoice;
