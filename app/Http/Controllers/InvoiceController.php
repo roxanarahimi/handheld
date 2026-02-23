@@ -185,9 +185,9 @@ class InvoiceController extends Controller
         if (!$exx3) {
             $invoice = Invoice::create([
                 'Type' => 'InventoryVoucher',
-                'OrderID' => $item->OrderID,
-                'OrderNumber' => $item->Number,
                 'BroadcastDelivery' => 1,
+                'OrderID' => $item->OrderID,
+                'OrderNumber' => $request->Number,//
                 'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
                 'Sum' => $item->OrderItems->sum('Quantity'),
                 'DeliveryDate' => $item->DeliveryDate
