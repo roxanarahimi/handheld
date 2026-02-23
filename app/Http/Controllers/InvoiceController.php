@@ -7,6 +7,7 @@ use App\Http\Resources\InventoryVoucherResource;
 use App\Http\Resources\InvoiceItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
+use App\Http\Resources\OrderResource;
 use App\Http\Resources\RemittanceResource;
 use App\Models\InventoryVoucher;
 use App\Models\Invoice;
@@ -176,6 +177,7 @@ class InvoiceController extends Controller
                 'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
                 'OrderItems'
             ])->first();
+        return new OrderResource::($item);
         return $item;
                         $exx3 = Invoice::where('OrderID',$item->OrderID)->where('OrderNumber',$item->Number)->where('Type','Order')->first();
                 if(!$exx3){
