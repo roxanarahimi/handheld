@@ -178,7 +178,7 @@ class InvoiceController extends Controller
             ])->first();
 //        return new OrderResource2($item);
 //        return $item;
-        $exx3 = Invoice::where('OrderID', $item->OrderID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
+        $exx3 = Invoice::where('OrderID', $item->OrderID)->where('OrderNumber', $request->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
         if ($exx3) {
             return response(['invoice exists!',new InvoiceResource($exx3)], 200);
         }
