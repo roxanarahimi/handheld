@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('Type');
             $table->string('OrderID');
             $table->string('OrderNumber');
+            $table->boolean('BroadcastDelivery');
             $table->integer('Sum');
             $table->string('AddressID');
             $table->string('DeliveryDate');

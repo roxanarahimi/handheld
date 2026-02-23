@@ -17,6 +17,7 @@ class OrderResource extends JsonResource
         return [
             "OrderID" => $this->OrderID,
             "OrderNumber" => $this->Number,
+            "BroadcastDelivery"=>$this->BroadcastDelivery,
 
             "AddressID" => $this->Customer->CustomerAddress->Address->AddressID,
             "AddressName" => $this->Customer->CustomerAddress->Address->Name,
