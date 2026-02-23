@@ -7,6 +7,7 @@ use App\Http\Resources\InvoiceBarcodeResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\OrderResource2;
 use App\Http\Resources\RemittanceResource;
 use App\Models\Address;
 use App\Models\Assignment;
@@ -87,7 +88,7 @@ class ReportController extends Controller
              ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs, $request) {
                 $p->whereIn('PlantRef', $storeIDs)
 //                    ->where('State', 5)// 👈 این خط اضافه شد???????????????????
-//                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
+                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
 //                    ->orWhere('Number', $request['n2'])// 👈 این خط اضافه شد
 //                    ->orWhere('Number', $request['n3'])// 👈 این خط اضافه شد
                 ;
@@ -97,7 +98,9 @@ class ReportController extends Controller
                 'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
                 'OrderItems'
             ])
-            ->paginate(100);
+            ->get();
+        return response(OrderResource2::collection($dat), 200);
+
         return [$dat->count(), $dat];
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
