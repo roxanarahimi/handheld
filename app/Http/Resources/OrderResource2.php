@@ -18,7 +18,7 @@ class OrderResource2 extends JsonResource
             "OrderID" => $this->OrderID,
             "OrderNumber" => $this->AssignmentDeliveryItem->Assignment->Number,
             "OrderNumber1" => $this->Number,
-            "BroadcastDelivery"=>$this->BroadcastDelivery,
+            "BroadcastDelivery"=>1,
             "AddressID" => $this->Customer->CustomerAddress->Address->AddressID,
             "AddressName" => $this->Customer->CustomerAddress->Address->Name,
             "Address" => $this->Customer->CustomerAddress->Address->Details,
