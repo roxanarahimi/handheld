@@ -58,3 +58,8 @@ Route::controller(App\Http\Controllers\ReportController::class)->group(function 
 
 });
 
+
+Route::controller(App\Http\Controllers\InvoiceController::class)->group(function () {
+    Route::get('/make', 'makePakhsh');
+});
+

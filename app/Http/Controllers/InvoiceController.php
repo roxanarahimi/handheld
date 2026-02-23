@@ -13,6 +13,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceAddress;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceProduct;
+use App\Models\Order;
 use App\Models\Part;
 use App\Models\PartUnit;
 use App\Models\Product;
@@ -153,4 +154,75 @@ class InvoiceController extends Controller
 
     }
 
+    public function makePaksh(Request $request)
+    {
+        $item = Order::query()
+            ->where('Date', '>=', today()->subDays(10))
+            ->where('FiscalYearRef', 1405)
+            ->where('InventoryRef', 1)
+
+            ->where('Type', 0)
+            ->where('State', 2)
+
+            ->orderByDesc('OrderID')
+            ->whereHas('OrderItems')
+            ->whereHas('AssignmentDeliveryItem')
+            ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($request) {
+                    $p->where('Number', $request['Number'])// 👈 این خط اضافه شد
+                ;
+            })
+            ->with([
+                'AssignmentDeliveryItem.Assignment.Plant.Address',
+                'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
+                'OrderItems'
+            ])->first();
+        return $item;
+                        $exx3 = Invoice::where('OrderID',$item->OrderID)->where('OrderNumber',$item->Number)->where('Type','Order')->first();
+                if(!$exx3){
+                    $invoice = Invoice::create([
+                        'Type' => 'Order',
+                        'OrderID' => $item->OrderID,
+                        'OrderNumber' => $item->Number,
+                        'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
+                        'Sum' => $item->OrderItems->sum('Quantity'),
+                        'DeliveryDate' => $item->DeliveryDate
+                    ]);
+                    $address = InvoiceAddress::where('AddressID', $item->Customer->CustomerAddress->Address->AddressID)->first();
+                    if (!$address) {
+                        InvoiceAddress::create([
+                            'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
+                            'AddressName' => $item->Customer->CustomerAddress->Address->Name,
+                            'Address' => $item->Customer->CustomerAddress->Address->Details,
+                            'Phone' => $item->Customer->CustomerAddress->Address->Phone,
+                            'city' => $item->Customer->CustomerAddress->Address->Region->Name
+                        ]);
+                    }
+                    foreach ($item->OrderItems as $item2) {
+                        $exist = InvoiceItem::where('invoice_id',$invoice->id)->where('ProductNumber',$item2->Product->Number)->first();
+                        if ($exist){
+                            $exist->update(['Quantity'=>$exist->Quantity + $item2->Quantity]);
+                        }else{
+                            if (!str_contains($item2->Product->Name,'لیوانی') && !str_contains($item2->Product->Name,'کیلویی')){
+                                $invoiceItem = InvoiceItem::create([
+                                    'invoice_id' => $invoice->id,
+                                    'ProductNumber' => $item2->Product->Number,
+                                    'Quantity' => $item2->Quantity,
+                                ]);
+                            }
+
+                        }
+                        $product = InvoiceProduct::where('ProductNumber', $item2->Product->Number)->first();
+                        if (!$product) {
+                            if (!str_contains($item2->Product->Name,'لیوانی') && !str_contains($item2->Product->Name,'کیلویی')){
+                                InvoiceProduct::create([
+                                    'ProductName' => $item2->Product->Name,
+                                    'ProductNumber' => $item2->Product->Number,
+                                    'Description' => $item2->Product->Description
+                                ]);
+                            }
+
+                        }
+                    }
+                }
+    }
 }
