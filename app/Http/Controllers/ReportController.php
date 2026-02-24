@@ -123,7 +123,7 @@ class ReportController extends Controller
                 'AssignmentDeliveryItem.Order.OrderItems.Product',
                 'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
             ])
-            ->take(100)->get();
+            ->get();
         return response(OrderResource2::collection($dat), 200);
 //
         return [$dat->count(), $dat];
