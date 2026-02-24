@@ -109,8 +109,8 @@ class ReportController extends Controller
             ->with([
                 'Plant.Address',
                 'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
-                'Order',
-                'Order.OrderItems'
+                'AssignmentDeliveryItem.Order',
+                'AssignmentDeliveryItem.Order.OrderItems'
             ])
             ->take(100)->get();
 //        return response(OrderResource2::collection($dat), 200);
