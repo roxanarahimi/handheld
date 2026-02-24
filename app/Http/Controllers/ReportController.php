@@ -101,11 +101,17 @@ class ReportController extends Controller
             ->where('Date', '>=', today()->subDays(7))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
-            ->has('AssignmentDeliveryItem', '=',1)
+            ->has('AssignmentDeliveryItem', '=', 1)
             ->with('AssignmentDeliveryItem')
-            ->whereHas('AssignmentDeliveryItem',function ($q){
-                $q->whereHas('Order')->with('Order');
+            ->whereHas('AssignmentDeliveryItem', function ($q) {
+                $q->whereHas('Order');
             })
+            ->with([
+                'Plant.Address',
+                'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
+                'Order',
+                'Order.OrderItems'
+            ])
             ->take(100)->get();
 //        return response(OrderResource2::collection($dat), 200);
 //
