@@ -98,7 +98,8 @@ class ReportController extends Controller
 //            ])
 //            ->get();
         $dat = Assignment::query()
-            ->where('Date', '>=', today()->subDays(2))
+            ->where('State', 2)
+        ->where('Date', '>=', today()->subDays(2))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
             ->has('AssignmentDeliveryItem', '=', 1)
