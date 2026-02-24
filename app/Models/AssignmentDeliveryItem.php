@@ -13,7 +13,7 @@ class AssignmentDeliveryItem extends Model
     use HasFactory;
     public function Assignment()
     {
-        return $this->hasOne(Assignment::class,  'AssignmentRef','AssignmentID');
+        return $this->hasOne(Assignment::class, 'AssignmentID', 'AssignmentRef');
     }
 
     public function Order()
