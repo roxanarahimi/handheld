@@ -13,7 +13,7 @@ class Assignment extends Model
     use HasFactory;
     public function AssignmentDeliveryItem()
     {
-        return $this->belongsTo(AssignmentDeliveryItem::class, 'AssignmentID', 'AssignmentRef');
+        return $this->hasMany(AssignmentDeliveryItem::class, 'AssignmentID', 'AssignmentRef');
     }
     public function Broker()
     {

@@ -84,13 +84,10 @@ class ReportController extends Controller
 
             ->orderByDesc('OrderID')
             ->whereHas('OrderItems')
-            ->whereHas('AssignmentDeliveryItem')
+            ->whereHas('Assignment')
              ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs, $request) {
                 $p->whereIn('PlantRef', $storeIDs)
-//                    ->where('State', 5)// 👈 این خط اضافه شد???????????????????
 //                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
-//                    ->orWhere('Number', $request['n2'])// 👈 این خط اضافه شد
-//                    ->orWhere('Number', $request['n3'])// 👈 این خط اضافه شد
                 ;
             })
             ->with([
@@ -99,6 +96,15 @@ class ReportController extends Controller
                 'OrderItems'
             ])
             ->get();
+        $dat= Assignment::query()
+            ->orderByDesc('AssignmentID')
+            ->whereIn('PlantRef', $storeIDs)
+//            ->has('AssignmentDeliveryItem', '=',1)
+            ->whereHas('AssignmentDeliveryItem', function ($p) use ($storeIDs, $request) {
+            $p->whereIn('PlantRef', $storeIDs)
+//                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
+            ;
+        })->take(100)->get();
 //        return response(OrderResource2::collection($dat), 200);
 //
         return [$dat->count(), $dat];
