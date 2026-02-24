@@ -99,8 +99,8 @@ class ReportController extends Controller
                 'OrderItems'
             ])
             ->get();
-        return response(OrderResource2::collection($dat), 200);
-
+//        return response(OrderResource2::collection($dat), 200);
+//
         return [$dat->count(), $dat];
         $dat = InventoryVoucher::
 //        where('Date', '>=', today()->subDays(2))//
