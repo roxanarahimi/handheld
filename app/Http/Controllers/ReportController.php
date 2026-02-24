@@ -98,7 +98,7 @@ class ReportController extends Controller
 //            ])
 //            ->get();
         $dat = Assignment::query()
-            ->where('State', 1)
+            ->where('State', 2)
         ->where('Date', '>=', today()->subDays(2))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
@@ -109,7 +109,8 @@ class ReportController extends Controller
                     $t->where('Date', '>=', today()->subDays(2))
                         ->where('FiscalYearRef', 1405)
                         ->where('InventoryRef', 1)
-                        ->where('State', 2);
+//                        ->where('State', 2)
+;
                 });
             })
             ->with([
