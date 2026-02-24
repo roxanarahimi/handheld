@@ -110,7 +110,9 @@ class ReportController extends Controller
                         ->where('FiscalYearRef', 1405)
                         ->where('InventoryRef', 1)
                         ->where('InventoryRef', 1)
-                        ->whereHas('OrderItems')
+                        ->whereHas('OrderItems', function ($b) {
+                $b->havingRaw('SUM(Quantity) >= ?', [50]);
+            })
                         ->where('State', 2);
                 });
             })
