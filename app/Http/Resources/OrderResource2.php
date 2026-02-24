@@ -15,34 +15,27 @@ class OrderResource2 extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "OrderID" => $this->OrderID,
-            "OrderNumber" => $this->AssignmentDeliveryItem->Assignment->Number,
-            "OrderNumber1" => $this->Number,
+            "OrderID" => $this->AssignmentDeliveryItem->Order->OrderID,
+            "OrderNumber" => $this->Number,
+            "OrderNumber1" => $this->AssignmentDeliveryItem->Order->Number,
             "BroadcastDelivery"=>1,
-            "AddressID" => $this->Customer->CustomerAddress->Address->AddressID,
-            "AddressName" => $this->Customer->CustomerAddress->Address->Name,
-            "Address" => $this->Customer->CustomerAddress->Address->Details,
-            "Phone" => $this->Customer->CustomerAddress->Address->Phone,
-                        "City" => $this->City,
+            'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
+            'AssignmentDeliveryItem.Order',
+            'AssignmentDeliveryItem.Order.OrderItems',
+            'AssignmentDeliveryItem.Order.OrderItems.Product',
+            "AddressID" => $this->AssignmentDeliveryItem->Customer->CustomerAddress->Address->AddressID,
+            "AddressName" => $this->AssignmentDeliveryItem->Customer->CustomerAddress->Address->Name,
+            "Address" => $this->AssignmentDeliveryItem->Customer->CustomerAddress->Address->Details,
+            "Phone" => $this->AssignmentDeliveryItem->Customer->CustomerAddress->Address->Phone,
+                        "City" => $this->AssignmentDeliveryItem->Order->City,
 
-            "Type" => "Order",
-            'Sum' => $this->OrderItems->sum('Quantity'),
+            "Type" => "InventoryVoucher",
+            'Sum' => $this->AssignmentDeliveryItem->Order->OrderItems->sum('Quantity'),
 
-            "CreationDate" => $this->CreationDate,
-            "DeliveryDate" => $this->CreationDate,
-            "OrderItems" => OrderItemResource::collection($this->OrderItems),
-//            "ok" => 1,//
+            "CreationDate" => $this->AssignmentDeliveryItem->Order->CreationDate,
+            "DeliveryDate" => $this->AssignmentDeliveryItem->Order->CreationDate,
+            "OrderItems" => OrderItemResource::collection($this->AssignmentDeliveryItem->Order->OrderItems),
 
-
-//            "InventoryVoucherSpecificationRef" => $this->InventoryVoucherSpecificationRef,
-//            "CounterpartEntityRef" => $this->CounterpartEntityRef,
-//            "AddressID" => $this->Store?->Plant->Address->AddressID. $this->AddressID,
-//            "AddressName" => $this->Store?->Name . $this->CounterpartEntityText . ' ' .$this->AddressName,
-//            "Address" => $this->Store?->Plant->Address->Details. $this->Details,
-
-//
-//            "Type" => $type,
-//            'Sum' => $this->OrderItems->sum('Quantity'),
 
         ];
     }

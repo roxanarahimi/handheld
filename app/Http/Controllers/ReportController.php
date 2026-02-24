@@ -122,7 +122,7 @@ class ReportController extends Controller
                 'AssignmentDeliveryItem.Order.OrderItems.Product'
             ])
             ->take(100)->get();
-        return response(OrderResource2::collection($dat->AssignmentDeliveryItem->Order), 200);
+        return response(OrderResource2::collection($dat->AssignmentDeliveryItem), 200);
 //
         return [$dat->count(), $dat];
         $dat = InventoryVoucher::
