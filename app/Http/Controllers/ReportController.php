@@ -101,7 +101,7 @@ class ReportController extends Controller
             ->where('Date', '>=', today()->subDays(7))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
-//            ->has('AssignmentDeliveryItem', '=',1)
+            ->has('AssignmentDeliveryItem', '=',1)
             ->whereHas('AssignmentDeliveryItem')
             ->with('AssignmentDeliveryItem')
             ->take(100)->get();
