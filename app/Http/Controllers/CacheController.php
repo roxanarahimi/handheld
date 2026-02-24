@@ -206,7 +206,7 @@ class CacheController extends Controller
                 });
             })
             ->get();
-        return response(OrderResource2::collection($dat), 200);
+        $dat;
     }
 
 //    public function getOrders($orderIDs)
