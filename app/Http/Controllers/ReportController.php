@@ -103,7 +103,6 @@ class ReportController extends Controller
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
             ->has('AssignmentDeliveryItem', '=', 1)
-            ->with('AssignmentDeliveryItem')
             ->whereHas('AssignmentDeliveryItem', function ($q) {
                 $q->whereHas('Order', function ($t) {
                     $t->where('Date', '>=', today()->subDays(2))
@@ -111,17 +110,18 @@ class ReportController extends Controller
                         ->where('InventoryRef', 1)
                         ->where('InventoryRef', 1)
                         ->whereHas('OrderItems', function ($b) {
-                $b->havingRaw('SUM(Quantity) >= ?', [50]);
-            })
+                            $b->havingRaw('SUM(Quantity) >= ?', [50]);
+                        })
                         ->where('State', 2);
                 });
             })
             ->with([
 //                'Plant.Address',
-                'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
+                'AssignmentDeliveryItem',
                 'AssignmentDeliveryItem.Order',
                 'AssignmentDeliveryItem.Order.OrderItems',
-                'AssignmentDeliveryItem.Order.OrderItems.Product'
+                'AssignmentDeliveryItem.Order.OrderItems.Product',
+                'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
             ])
             ->take(100)->get();
         return response(OrderResource2::collection($dat), 200);
