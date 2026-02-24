@@ -112,7 +112,7 @@ class ReportController extends Controller
                 });
             })
             ->with([
-                'Plant.Address',
+//                'Plant.Address',
                 'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
                 'AssignmentDeliveryItem.Order',
                 'AssignmentDeliveryItem.Order.OrderItems'
