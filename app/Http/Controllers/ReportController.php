@@ -88,7 +88,7 @@ class ReportController extends Controller
              ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs, $request) {
                 $p->whereIn('PlantRef', $storeIDs)
 //                    ->where('State', 5)// 👈 این خط اضافه شد???????????????????
-                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
+//                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
 //                    ->orWhere('Number', $request['n2'])// 👈 این خط اضافه شد
 //                    ->orWhere('Number', $request['n3'])// 👈 این خط اضافه شد
                 ;

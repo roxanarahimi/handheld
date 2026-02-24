@@ -168,7 +168,7 @@ class InvoiceController extends Controller
             ->whereHas('OrderItems')
             ->whereHas('AssignmentDeliveryItem')
             ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($request) {
-//                $p->where('Number', $request['Number'])// 👈 این خط اضافه شد
+                $p->where('Number', $request['Number'])// 👈 این خط اضافه شد
                 ;
             })
             ->with([
