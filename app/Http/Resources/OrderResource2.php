@@ -15,22 +15,22 @@ class OrderResource2 extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "OrderID" => $this->AssignmentDeliveryItem->Order->OrderID,
+            "OrderID" => $this->AssignmentDeliveryItem[0]->Order->OrderID,
             "OrderNumber" => $this->Number,
-            "OrderNumber1" => $this->AssignmentDeliveryItem->Order->Number,
+            "OrderNumber1" => $this->AssignmentDeliveryItem[0]->Order->Number,
             "BroadcastDelivery"=>1,
-            "AddressID" => $this->AssignmentDeliveryItem->Customer->CustomerAddress->Address->AddressID,
-            "AddressName" => $this->AssignmentDeliveryItem->Customer->CustomerAddress->Address->Name,
-            "Address" => $this->AssignmentDeliveryItem->Customer->CustomerAddress->Address->Details,
-            "Phone" => $this->AssignmentDeliveryItem->Customer->CustomerAddress->Address->Phone,
-                        "City" => $this->AssignmentDeliveryItem->Order->City,
+            "AddressID" => $this->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID,
+            "AddressName" => $this->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Name,
+            "Address" => $this->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Details,
+            "Phone" => $this->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Phone,
+                        "City" => $this->AssignmentDeliveryItem[0]->Order->City,
 
             "Type" => "InventoryVoucher",
-            'Sum' => $this->AssignmentDeliveryItem->Order->OrderItems->sum('Quantity'),
+            'Sum' => $this->AssignmentDeliveryItem[0]->Order->OrderItems->sum('Quantity'),
 
-            "CreationDate" => $this->AssignmentDeliveryItem->Order->CreationDate,
-            "DeliveryDate" => $this->AssignmentDeliveryItem->Order->CreationDate,
-            "OrderItems" => OrderItemResource::collection($this->AssignmentDeliveryItem->Order->OrderItems),
+            "CreationDate" => $this->AssignmentDeliveryItem[0]->Order->CreationDate,
+            "DeliveryDate" => $this->AssignmentDeliveryItem[0]->Order->CreationDate,
+            "OrderItems" => OrderItemResource::collection($this->AssignmentDeliveryItem[0]->Order->OrderItems),
 
 
         ];
