@@ -99,7 +99,6 @@ class ReportController extends Controller
 //            ->get();
         $dat= Assignment::query()
             ->orderByDesc('AssignmentID')
-            ->whereIn('PlantRef', $storeIDs)
 //            ->has('AssignmentDeliveryItem', '=',1)
             ->whereHas('AssignmentDeliveryItem')->take(100)->get();
 //        return response(OrderResource2::collection($dat), 200);
