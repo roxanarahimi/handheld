@@ -74,37 +74,34 @@ class ReportController extends Controller
 //                'OrderItems'
 //            ])
 //            ->paginate(100);
-        $dat = Order::query()
-            ->where('Date', '>=', today()->subDays(10))
-            ->where('FiscalYearRef', 1405)
-            ->where('InventoryRef', 1)
 
-            ->where('Type', 0)
-            ->where('State', 2)
-
-            ->orderByDesc('OrderID')
-            ->whereHas('OrderItems')
-            ->whereHas('Assignment')
-             ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs, $request) {
-                $p->whereIn('PlantRef', $storeIDs)
-//                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
-                ;
-            })
-            ->with([
-                'AssignmentDeliveryItem.Assignment.Plant.Address',
-                'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
-                'OrderItems'
-            ])
-            ->get();
+//        $dat = Order::query()
+//            ->where('Date', '>=', today()->subDays(10))
+//            ->where('FiscalYearRef', 1405)
+//            ->where('InventoryRef', 1)
+//
+//            ->where('Type', 0)
+//            ->where('State', 2)
+//
+//            ->orderByDesc('OrderID')
+//            ->whereHas('OrderItems')
+//            ->whereHas('Assignment')
+//             ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($storeIDs, $request) {
+//                $p->whereIn('PlantRef', $storeIDs)
+////                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
+//                ;
+//            })
+//            ->with([
+//                'AssignmentDeliveryItem.Assignment.Plant.Address',
+//                'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
+//                'OrderItems'
+//            ])
+//            ->get();
         $dat= Assignment::query()
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
 //            ->has('AssignmentDeliveryItem', '=',1)
-            ->whereHas('AssignmentDeliveryItem', function ($p) use ($storeIDs, $request) {
-            $p->whereIn('PlantRef', $storeIDs)
-//                    ->where('Number', $request['Number'])// 👈 این خط اضافه شد
-            ;
-        })->take(100)->get();
+            ->whereHas('AssignmentDeliveryItem')->take(100)->get();
 //        return response(OrderResource2::collection($dat), 200);
 //
         return [$dat->count(), $dat];
