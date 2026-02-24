@@ -154,24 +154,6 @@ class CacheController extends Controller
 
     public function getBroadcastDelivery($broadcastIds)
     {
-//        $dat2 = Order::
-//        where('Date', '>=', today()->subDays(2))
-//            ->whereNotIn('OrderID', $orderIDs)
-//            ->where('InventoryRef', 1)
-//            ->where('State', 2)
-//            ->where('FiscalYearRef', 1405)
-//            ->whereHas('Customer', function ($c) {
-//                $c->whereHas('CustomerAddress', function ($a) {
-//                    $a->where('Type', 2);
-//                });
-//            })
-//            ->whereHas('OrderItems')
-//            ->whereHas('OrderItems', function ($q) {
-//                $q->havingRaw('SUM(Quantity) >= ?', [50]);
-//            })
-//            ->orderBy('OrderID')
-//            ->get();
-////        return $dat2;
         $storeIDs = Plant::orderBy('PlantID')
             ->where(function ($query) {
                 $query->where('Name', 'LIKE', '%گرمدره%');
@@ -188,6 +170,7 @@ class CacheController extends Controller
                     ->orWhere('Name', 'LIKE', "%برگشتی%");
             })
             ->pluck('PlantID');
+
         $dat = Assignment::query()
             ->where('State', 2)
             ->where('Date', '>=', today()->subDays(2))
@@ -206,7 +189,7 @@ class CacheController extends Controller
                 });
             })
             ->get();
-        $dat;
+        return $dat;
     }
 
 //    public function getOrders($orderIDs)
