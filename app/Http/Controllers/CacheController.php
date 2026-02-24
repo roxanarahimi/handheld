@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Resources\InvoiceResource;
+use App\Http\Resources\OrderResource2;
+use App\Models\Assignment;
 use App\Models\InventoryVoucher;
 use App\Models\Invoice;
 use App\Models\InvoiceAddress;
@@ -11,6 +14,7 @@ use App\Models\InvoiceProduct;
 use App\Models\Order;
 use App\Models\Part;
 use App\Models\PartUnit;
+use App\Models\Plant;
 use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Support\Facades\DB;
@@ -148,48 +152,106 @@ class CacheController extends Controller
         return $dat;
     }
 
-    public function getOrders($orderIDs)
+    public function getBroadcastDelivery($broadcastIds)
     {
-//        $dat2 = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
-//            "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
-//            'GNR3.Address.AddressID', 'GNR3.RegionalDivision.Name as City')
-//            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
-//            ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
-//            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
-//            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
-////            ->where('SLS3.Order.Date', '>=', today()->subDays(2))
-//            ->whereNotIn('SLS3.Order.OrderID', $orderIDs)
-//            ->where('SLS3.Order.InventoryRef', 1)
-//            ->where('SLS3.Order.State', 2)
-//            ->where('SLS3.Order.FiscalYearRef', 1405)
-//            ->where('SLS3.CustomerAddress.Type', 2)
+//        $dat2 = Order::
+//        where('Date', '>=', today()->subDays(2))
+//            ->whereNotIn('OrderID', $orderIDs)
+//            ->where('InventoryRef', 1)
+//            ->where('State', 2)
+//            ->where('FiscalYearRef', 1405)
+//            ->whereHas('Customer', function ($c) {
+//                $c->whereHas('CustomerAddress', function ($a) {
+//                    $a->where('Type', 2);
+//                });
+//            })
 //            ->whereHas('OrderItems')
 //            ->whereHas('OrderItems', function ($q) {
 //                $q->havingRaw('SUM(Quantity) >= ?', [50]);
 //            })
 //            ->orderBy('OrderID')
 //            ->get();
+////        return $dat2;
+        $storeIDs = Plant::orderBy('PlantID')
+            ->where(function ($query) {
+                $query->where('Name', 'LIKE', '%گرمدره%');
+//                    ->orWhere('Code', "1000");
+            })
+            ->whereHas('Address', function ($x) {
+                $x->where('Name', 'LIKE', '%گرمدره%')
+                    ->orWhere('Details', 'LIKE', "%گرمدره%");
 
-//        $dat2 = OrderResource::collection($dat2);
-        $dat2 = Order::
-        where('Date', '>=', today()->subDays(2))
-            ->whereNotIn('OrderID', $orderIDs)
-            ->where('InventoryRef', 1)
+            })
+            ->whereNot(function ($query) {
+                $query->where('Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('Name', 'LIKE', "%برگشتی%");
+            })
+            ->pluck('PlantID');
+        $dat = Assignment::query()
             ->where('State', 2)
-            ->where('FiscalYearRef', 1405)
-            ->whereHas('Customer',function ($c){
-                $c->whereHas('CustomerAddress',function ($a){
-                    $a->where('Type', 2);
+            ->where('Date', '>=', today()->subDays(2))
+            ->orderByDesc('AssignmentID')
+            ->whereIn('PlantRef', $storeIDs)
+            ->has('AssignmentDeliveryItem', '=', 1)
+            ->whereHas('AssignmentDeliveryItem', function ($q) {
+                $q->whereHas('Order', function ($t) {
+                    $t->where('Date', '>=', today()->subDays(2))
+                        ->where('FiscalYearRef', 1405)
+                        ->where('InventoryRef', 1)
+                        ->whereHas('OrderItems', function ($b) {
+                            $b->where('Quantity', '>=', 200);
+                        })
+                        ->where('State', 2);
                 });
             })
-            ->whereHas('OrderItems')
-            ->whereHas('OrderItems', function ($q) {
-                $q->havingRaw('SUM(Quantity) >= ?', [50]);
-            })
-            ->orderBy('OrderID')
             ->get();
-        return $dat2;
+        return response(OrderResource2::collection($dat), 200);
     }
+
+//    public function getOrders($orderIDs)
+//    {
+////        $dat2 = Order::select("SLS3.Order.OrderID", "SLS3.Order.Number",
+////            "SLS3.Order.CreationDate", "Date as DeliveryDate", 'SLS3.Order.CustomerRef',
+////            'GNR3.Address.AddressID', 'GNR3.RegionalDivision.Name as City')
+////            ->join('SLS3.Customer', 'SLS3.Customer.CustomerID', '=', 'SLS3.Order.CustomerRef')
+////            ->join('SLS3.CustomerAddress', 'SLS3.CustomerAddress.CustomerRef', '=', 'SLS3.Customer.CustomerID')
+////            ->join('GNR3.Address', 'GNR3.Address.AddressID', '=', 'SLS3.CustomerAddress.AddressRef')
+////            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
+//////            ->where('SLS3.Order.Date', '>=', today()->subDays(2))
+////            ->whereNotIn('SLS3.Order.OrderID', $orderIDs)
+////            ->where('SLS3.Order.InventoryRef', 1)
+////            ->where('SLS3.Order.State', 2)
+////            ->where('SLS3.Order.FiscalYearRef', 1405)
+////            ->where('SLS3.CustomerAddress.Type', 2)
+////            ->whereHas('OrderItems')
+////            ->whereHas('OrderItems', function ($q) {
+////                $q->havingRaw('SUM(Quantity) >= ?', [50]);
+////            })
+////            ->orderBy('OrderID')
+////            ->get();
+//
+////        $dat2 = OrderResource::collection($dat2);
+//
+//        $dat2 = Order::
+//        where('Date', '>=', today()->subDays(2))
+//            ->whereNotIn('OrderID', $orderIDs)
+//            ->where('InventoryRef', 1)
+//            ->where('State', 2)
+//            ->where('FiscalYearRef', 1405)
+//            ->whereHas('Customer',function ($c){
+//                $c->whereHas('CustomerAddress',function ($a){
+//                    $a->where('Type', 2);
+//                });
+//            })
+//            ->whereHas('OrderItems')
+//            ->whereHas('OrderItems', function ($q) {
+//                $q->havingRaw('SUM(Quantity) >= ?', [50]);
+//            })
+//            ->orderBy('OrderID')
+//            ->get();
+//        return $dat2;
+//    }
 
     public function cacheInvoice()
     {
@@ -205,17 +267,21 @@ class CacheController extends Controller
 
             $this->cacheProducts();
             $inventoryVoucherIDs = Invoice::
-            where('DeliveryDate', '>=', today()->subDays(2))->//
+            where('DeliveryDate', '>=', today()->subDays(2))->
             where('Type', 'InventoryVoucher')->orderBy('id')->pluck('OrderID');
             $deputationIds = Invoice::
-            where('DeliveryDate', '>=', today()->subDays(2))->//
+            where('DeliveryDate', '>=', today()->subDays(2))->
             where('Type', 'Deputation')->orderBy('id')->pluck('OrderID');
+            $broadcastIds = Invoice::
+            where('DeliveryDate', '>=', today()->subDays(2))->
+            where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->orderBy('id')->pluck('OrderID');
 
 //            $orderIDs = Invoice:://            where('DeliveryDate', '>=', today()->subDays(2))->
 //            where('Type', 'Order')->orderBy('id')->pluck('OrderID');
             $d1 = $this->getInventoryVouchers($inventoryVoucherIDs);
             $d2 = $this->getInventoryVouchersDeputation($deputationIds);
 //            $d3 = $this->getOrders($orderIDs);
+            $d4 = $this->getBroadcastDelivery($broadcastIds);
 
 
             foreach ($d1 as $item) {
@@ -323,6 +389,61 @@ class CacheController extends Controller
                         }
                     }
                 }
+            }
+            foreach ($d4 as $item) {
+                $exx3 = Invoice::where('OrderID', $item->AssignmentDeliveryItem[0]->Order->OrderID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
+//                if ($exx3) {
+//                    return response(['invoice exists!',new InvoiceResource($exx3)], 200);
+//                }
+                if (!$exx3) {
+                    $invoice = Invoice::create([
+                        'Type' => 'InventoryVoucher',
+                        'BroadcastDelivery' => 1,
+                        'OrderID' => $item->AssignmentDeliveryItem[0]->Order->OrderID,
+                        'OrderNumber' => $item->Number,//
+                        "AddressID" => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID,
+                        'Sum' => $item->AssignmentDeliveryItem[0]->Order->OrderItems->sum('Quantity'),
+                        'DeliveryDate' => $item->AssignmentDeliveryItem[0]->Order->DeliveryDate
+                    ]);
+                    $address = InvoiceAddress::where('AddressID', $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID)->first();
+                    if (!$address) {
+                        InvoiceAddress::create([
+                            'AddressID' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID,
+                            'AddressName' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Name,
+                            'Address' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Details,
+                            'Phone' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Phone,
+                            'city' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Region->Name
+                        ]);
+                    }
+                    foreach ($item->AssignmentDeliveryItem[0]->Order->OrderItems as $item2) {
+                        $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Product->Number)->first();
+                        if ($exist) {
+                            $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
+                        } else {
+                            if (!str_contains($item2->Product->Name, 'لیوانی') && !str_contains($item2->Product->Name, 'کیلویی')) {
+                                $invoiceItem = InvoiceItem::create([
+                                    'invoice_id' => $invoice->id,
+                                    'ProductNumber' => $item2->Product->Number,
+                                    'Quantity' => $item2->Quantity,
+                                ]);
+                            }
+
+                        }
+                        $product = InvoiceProduct::where('ProductNumber', $item2->Product->Number)->first();
+                        if (!$product) {
+                            if (!str_contains($item2->Product->Name, 'لیوانی') && !str_contains($item2->Product->Name, 'کیلویی')) {
+                                InvoiceProduct::create([
+                                    'ProductName' => $item2->Product->Name,
+                                    'ProductNumber' => $item2->Product->Number,
+                                    'Description' => $item2->Product->Description
+                                ]);
+                            }
+
+                        }
+                    }
+
+                }
+
             }
 //            foreach ($d3 as $item) {
 //                $exx3 = Invoice::where('OrderID',$item->OrderID)->where('OrderNumber',$item->Number)->where('Type','Order')->first();
