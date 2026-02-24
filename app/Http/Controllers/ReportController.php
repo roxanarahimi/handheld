@@ -47,7 +47,7 @@ class ReportController extends Controller
             })
             ->whereHas('Address', function ($x) {
                 $x->where('Name', 'LIKE', '%گرمدره%')
-                  ->orWhere('Details', 'LIKE', "%گرمدره%");
+                    ->orWhere('Details', 'LIKE', "%گرمدره%");
 
             })
             ->whereNot(function ($query) {
@@ -97,11 +97,14 @@ class ReportController extends Controller
 //                'OrderItems'
 //            ])
 //            ->get();
-        $dat= Assignment::query()
+        $dat = Assignment::query()
+            ->where('Date', '>=', today()->subDays(7))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
 //            ->has('AssignmentDeliveryItem', '=',1)
-            ->whereHas('AssignmentDeliveryItem')->take(100)->get();
+            ->whereHas('AssignmentDeliveryItem')
+            ->with('AssignmentDeliveryItem')
+            ->take(100)->get();
 //        return response(OrderResource2::collection($dat), 200);
 //
         return [$dat->count(), $dat];
