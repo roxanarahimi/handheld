@@ -108,9 +108,8 @@ class ReportController extends Controller
                     $t->where('Date', '>=', today()->subDays(2))
                         ->where('FiscalYearRef', 1405)
                         ->where('InventoryRef', 1)
-                        ->where('InventoryRef', 1)
                         ->whereHas('OrderItems', function ($b) {
-                            $b->havingRaw('SUM(Quantity) >= ?', [50]);
+                            $b->where('Quantity', '>=', 200);
                         })
                         ->where('State', 2);
                 });
