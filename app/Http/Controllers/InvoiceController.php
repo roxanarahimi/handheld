@@ -33,7 +33,7 @@ class InvoiceController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware(Token::class)->except('info', 'updateInvoiceItems', 'showInventoryVoucher', 'makePaksh','makeInvoice','deleteInvoice');
+        $this->middleware(Token::class)->except('info', 'updateInvoiceItems', 'showInventoryVoucher','showPakhsh', 'makePakhsh','makeInvoice','deleteInvoice');
     }
 
     public function index(Request $request)
@@ -362,7 +362,11 @@ class InvoiceController extends Controller
     public function showPakhsh(Request $request)
     {
         try{
-            $item = Assignment::query()->where('Number', $request['Number'])->first();
+            $item = Assignment::query()
+                ->where('Number', $request['Number'])
+                ->orderByDesc('AssignmentID')
+                ->with('AssignmentDeliveryItem')
+                ->first();
             if ($item){
                 return response(new OrderResource2($item), 200);
             }else{
