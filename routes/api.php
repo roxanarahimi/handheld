@@ -44,8 +44,8 @@ Route::controller(App\Http\Controllers\CacheController::class)->group(function (
 Route::controller(App\Http\Controllers\InvoiceController::class)->group(function () {
     Route::get('/info', 'info');
     Route::post('/update', 'updateInvoiceItems');
-    Route::get('/erp', 'showInventoryVoucher');
-    Route::get('/erpp', 'showPakhsh');
+    Route::post('/erp', 'showInventoryVoucher');
+    Route::post('/erpp', 'showPakhsh');
 
     Route::post('/product/{id}', 'showProduct');
     Route::post('/productTest/{id}', 'showProductTest');//??

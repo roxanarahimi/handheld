@@ -10,6 +10,7 @@ use App\Http\Resources\InvoiceResource2;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\OrderResource2;
 use App\Http\Resources\RemittanceResource;
+use App\Models\Assignment;
 use App\Models\Customer;
 use App\Models\InventoryVoucher;
 use App\Models\Invoice;
@@ -358,30 +359,17 @@ class InvoiceController extends Controller
         }
         return response(new InvoiceResource($invoice), 200);
     }
-    public function showPaksh(Request $request)
+    public function showPakhsh(Request $request)
     {
-        $item = Order::query()
-            ->where('Date', '>=', today()->subDays(10))
-            ->where('FiscalYearRef', 1405)
-            ->where('InventoryRef', 1)
-            ->where('Type', 0)
-            ->where('State', 2)
-            ->orderByDesc('OrderID')
-            ->whereHas('OrderItems')
-            ->whereHas('AssignmentDeliveryItem')
-            ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($request) {
-                $p->where('Number', $request['Number'])// 👈 این خط اضافه شد
-                ;
-            })
-            ->with([
-                'AssignmentDeliveryItem.Assignment.Plant.Address',
-                'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
-                'OrderItems'
-            ])->first();
-        if ($item){
-            return response(new OrderResource2($item), 200);
-        }else{
-            return response('Not Found', 404);
+        try{
+            $item = Assignment::query()->where('Number', $request['Number'])->first();
+            if ($item){
+                return response(new OrderResource2($item), 200);
+            }else{
+                return response('Not Found', 404);
+            }
+        }catch(\Exception $exception){
+            return response($exception);
         }
 
     }
@@ -389,12 +377,6 @@ class InvoiceController extends Controller
     public function makeInvoice(Request $request)
     {
         try{
-            $x= explode('-',$request['items']);
-            $t=[];
-            foreach ($x as $itemm){
-                $t[] = explode(',',$itemm);
-            }
-            return $t;
             $customer = Customer::where('Number',$request['Customer'])->first();
             $addressID = $customer->CustomerAddress->AddressRef;
             $address = InvoiceAddress::where('AddressID',$addressID)->first();
@@ -423,8 +405,11 @@ class InvoiceController extends Controller
                 ]);
             }
             $x= explode('-',$request['items']);
+            $t=[];
             foreach ($x as $itemm){
-                $item = explode(',',$itemm);
+                $t[] = explode(',',$itemm);
+            }
+            foreach ($t as $item){
                 InvoiceItem::create([
                     "invoice_id"=>$invoice->id,
                     "ProductNumber"=>$item[0],
