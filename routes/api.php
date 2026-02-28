@@ -44,7 +44,8 @@ Route::controller(App\Http\Controllers\CacheController::class)->group(function (
 Route::controller(App\Http\Controllers\InvoiceController::class)->group(function () {
     Route::get('/info', 'info');
     Route::post('/update', 'updateInvoiceItems');
-    Route::post('/erp', 'showInventoryVoucher');
+    Route::get('/erp', 'showInventoryVoucher');
+    Route::get('/erpp', 'showPakhsh');
 
     Route::post('/product/{id}', 'showProduct');
     Route::post('/productTest/{id}', 'showProductTest');//??
@@ -61,5 +62,8 @@ Route::controller(App\Http\Controllers\ReportController::class)->group(function 
 
 Route::controller(App\Http\Controllers\InvoiceController::class)->group(function () {
     Route::get('/make', 'makePaksh');
+    Route::get('/makeV', 'makeInventoryVoucher');
+    Route::get('/makeInvoice', 'makeInvoice');
+    Route::get('/deleteInvoice', 'deleteInvoice');
 });
 
