@@ -172,8 +172,6 @@ class CacheController extends Controller
             ->pluck('PlantID');
 
         $dat = Assignment::query()
-            ->where('State', 2)
-            ->where('Date', '>=', today()->subDays(2))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
             ->has('AssignmentDeliveryItem', '=', 1)
@@ -268,7 +266,7 @@ class CacheController extends Controller
 
 
             foreach ($d1 as $item) {
-                $exx = Invoice::where('OrderID', $item->InventoryVoucherID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->first();
+                $exx = Invoice::where('AddressID', $item->Store->Plant->Address->AddressID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->first();
                 if (!$exx) {
                     $invoice = Invoice::create([
                         'Type' => 'InventoryVoucher',
@@ -318,7 +316,7 @@ class CacheController extends Controller
                 }
             }
             foreach ($d2 as $item) {
-                $exx2 = Invoice::where('OrderID', $item->InventoryVoucherID)->where('OrderNumber', $item->Number)->where('Type', 'Deputation')->first();
+                $exx2 = Invoice::where('AddressID', $item->Party->PartyAddress->Address->AddressID)->where('OrderNumber', $item->Number)->where('Type', 'Deputation')->first();
                 if (!$exx2) {
                     $invoice = Invoice::create([
                         'Type' => 'Deputation',
@@ -374,7 +372,7 @@ class CacheController extends Controller
                 }
             }
             foreach ($d4 as $item) {
-                $exx3 = Invoice::where('OrderID', $item->AssignmentDeliveryItem[0]->Order->OrderID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
+                $exx3 = Invoice::where('AddressID', $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
 //                if ($exx3) {
 //                    return response(['invoice exists!',new InvoiceResource($exx3)], 200);
 //                }

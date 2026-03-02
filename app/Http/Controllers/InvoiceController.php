@@ -49,13 +49,15 @@ class InvoiceController extends Controller
     public function info(Request $request)
     {
         try {
-            $d3 = Invoice::where('DeliveryDate', '>=', today()->subDays(15))
-                ->whereNot('Type', 'Order')
+            $d3 = Invoice::orderByDesc('id')
+                ->where('DeliveryDate', '>=', today()->subDays(10))
+//                ->whereNot('Type', 'Order')
                 ->orderByDesc('Type')
-                ->orderByDesc('OrderID')
-                ->paginate(100);
-            $data = InvoiceResource::collection($d3);
-            return response()->json($d3, 200);
+//                ->orderByDesc('OrderNumber')
+                ->take(200)->get();
+//            $data = InvoiceResource::collection($d3);
+//            return response()->json($d3, 200);
+            return response(InvoiceResource::collection($d3), 200);
 
         } catch (\Exception $exception) {
             return response($exception);
@@ -284,52 +286,38 @@ class InvoiceController extends Controller
     }
     public function makePaksh(Request $request)
     {
-        $item = Order::query()
-            ->where('Date', '>=', today()->subDays(10))
-            ->where('FiscalYearRef', 1405)
-            ->where('InventoryRef', 1)
-            ->where('Type', 0)
-            ->where('State', 2)
-            ->orderByDesc('OrderID')
-            ->whereHas('OrderItems')
-            ->whereHas('AssignmentDeliveryItem')
-            ->whereHas('AssignmentDeliveryItem.Assignment', function ($p) use ($request) {
-                $p->where('Number', $request['Number'])// 👈 این خط اضافه شد
-                ;
-            })
-            ->with([
-                'AssignmentDeliveryItem.Assignment.Plant.Address',
-                'AssignmentDeliveryItem.Customer.CustomerAddress.Address',
-                'OrderItems'
-            ])->first();
+        $item = Assignment::query()
+            ->where('Number', $request['Number'])
+            ->orderByDesc('AssignmentID')
+            ->first();
         if (!$item){
             return response('Not Found', 404);
         }
-        $exx3 = Invoice::where('OrderID', $item->OrderID)->where('OrderNumber', $request->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
-        if ($exx3) {
-            return response(['invoice exists!', new InvoiceResource($exx3)], 200);
-        }
-        if (!$exx3) {
+        $invoice = Invoice::where('OrderID', $item->AssignmentDeliveryItem[0]->Order->OrderID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
+//                if ($exx3) {
+//                    return response(['invoice exists!',new InvoiceResource($exx3)], 200);
+//                }
+        if (!$invoice) {
             $invoice = Invoice::create([
                 'Type' => 'InventoryVoucher',
                 'BroadcastDelivery' => 1,
-                'OrderID' => $item->OrderID,
-                'OrderNumber' => $request->Number,//
-                'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
-                'Sum' => $item->OrderItems->sum('Quantity'),
-                'DeliveryDate' => $item->DeliveryDate
+                'OrderID' => $item->AssignmentDeliveryItem[0]->Order->OrderID,
+                'OrderNumber' => $item->Number,//
+                "AddressID" => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID,
+                'Sum' => $item->AssignmentDeliveryItem[0]->Order->OrderItems->sum('Quantity'),
+                'DeliveryDate' => $item->AssignmentDeliveryItem[0]->Order->DeliveryDate
             ]);
-            $address = InvoiceAddress::where('AddressID', $item->Customer->CustomerAddress->Address->AddressID)->first();
+            $address = InvoiceAddress::where('AddressID', $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID)->first();
             if (!$address) {
                 InvoiceAddress::create([
-                    'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
-                    'AddressName' => $item->Customer->CustomerAddress->Address->Name,
-                    'Address' => $item->Customer->CustomerAddress->Address->Details,
-                    'Phone' => $item->Customer->CustomerAddress->Address->Phone,
-                    'city' => $item->Customer->CustomerAddress->Address->Region->Name
+                    'AddressID' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID,
+                    'AddressName' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Name,
+                    'Address' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Details,
+                    'Phone' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Phone,
+                    'city' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Region->Name
                 ]);
             }
-            foreach ($item->OrderItems as $item2) {
+            foreach ($item->AssignmentDeliveryItem[0]->Order->OrderItems as $item2) {
                 $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Product->Number)->first();
                 if ($exist) {
                     $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
@@ -365,9 +353,9 @@ class InvoiceController extends Controller
             $item = Assignment::query()
                 ->where('Number', $request['Number'])
                 ->orderByDesc('AssignmentID')
-                ->with('AssignmentDeliveryItem')
                 ->first();
             if ($item){
+//                return response($item, 200);
                 return response(new OrderResource2($item), 200);
             }else{
                 return response('Not Found', 404);
@@ -399,10 +387,10 @@ class InvoiceController extends Controller
                 "OrderID"=> $request['OrderNumber'].time(),
                 "Type"=> $request['Type'],
                 "Sum"=> $request['Sum'],
-                'DeliveryDate' => new \DateTime("now")
+                'DeliveryDate' => new \DateTime(now())
 
             ]);
-            if ($request['Type'] === 'BroadCast'){
+            if ($request['Type'] === 'Broadcast'){
                 $invoice->update([
                     "Type"=> 'InventoryVoucher',
                     "BroadcastDelivery"=> 1,
