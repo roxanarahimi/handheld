@@ -23,6 +23,7 @@ class InventoryVoucherResource extends JsonResource
         return [
             "OrderID" => $this->InventoryVoucherID,
             "OrderNumber" => $this->Number,
+            "FiscalYearRef" => $this->FiscalYearRef,
             "InventoryVoucherSpecificationRef" => $this->InventoryVoucherSpecificationRef,
             "CounterpartEntityRef" => $this->CounterpartEntityRef,
             "AddressID" => $this->Store?->Plant->Address->AddressID. $this->AddressID,
