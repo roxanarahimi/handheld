@@ -92,7 +92,7 @@ class CacheController extends Controller
 //            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
 //            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $inventoryVoucherIDs)
 //            ->whereIn('LGS3.Store.StoreID', $storeIDs)
-//            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
+//            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1406)
 //            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 68)
 //            ->whereHas('OrderItems', function ($q) use ($partIDs) {
 //                $q->whereIn('PartRef', $partIDs);
@@ -105,7 +105,7 @@ class CacheController extends Controller
             ->whereHas('Store', function ($s) use ($storeIDs) {
                 $s->whereIn('StoreID', $storeIDs);
             })
-            ->where('FiscalYearRef', 1405)
+            ->where('FiscalYearRef', 1406)
             ->where('InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
@@ -127,7 +127,7 @@ class CacheController extends Controller
 //            ->join('GNR3.RegionalDivision', 'GNR3.RegionalDivision.RegionalDivisionID', '=', 'GNR3.Address.RegionalDivisionRef')
 //            ->where('LGS3.InventoryVoucher.Date', '>=', today()->subDays(2))//
 //            ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
-//            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1405)
+//            ->where('LGS3.InventoryVoucher.FiscalYearRef', 1406)
 //            ->where('LGS3.InventoryVoucher.InventoryVoucherSpecificationRef', 69)
 //            ->whereHas('OrderItems', function ($q) use ($partIDs) {
 //                $q->whereIn('PartRef', $partIDs);
@@ -137,7 +137,7 @@ class CacheController extends Controller
 //            ->get();
         $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
         ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
-            ->where('FiscalYearRef', 1405)
+            ->where('FiscalYearRef', 1406)
             ->where('InventoryVoucherSpecificationRef', 69)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
@@ -180,7 +180,7 @@ class CacheController extends Controller
             ->whereHas('AssignmentDeliveryItem', function ($q) {
                 $q->whereHas('Order', function ($t) {
                     $t->where('Date', '>=', today()->subDays(2))
-                        ->where('FiscalYearRef', 1405)
+                        ->where('FiscalYearRef', 1406)
                         ->where('InventoryRef', 1)
                         ->whereHas('OrderItems', function ($b) {
                             $b->where('Quantity', '>=', 100);
@@ -205,7 +205,7 @@ class CacheController extends Controller
 ////            ->whereNotIn('SLS3.Order.OrderID', $orderIDs)
 ////            ->where('SLS3.Order.InventoryRef', 1)
 ////            ->where('SLS3.Order.State', 2)
-////            ->where('SLS3.Order.FiscalYearRef', 1405)
+////            ->where('SLS3.Order.FiscalYearRef', 1406)
 ////            ->where('SLS3.CustomerAddress.Type', 2)
 ////            ->whereHas('OrderItems')
 ////            ->whereHas('OrderItems', function ($q) {
@@ -221,7 +221,7 @@ class CacheController extends Controller
 //            ->whereNotIn('OrderID', $orderIDs)
 //            ->where('InventoryRef', 1)
 //            ->where('State', 2)
-//            ->where('FiscalYearRef', 1405)
+//            ->where('FiscalYearRef', 1406)
 //            ->whereHas('Customer',function ($c){
 //                $c->whereHas('CustomerAddress',function ($a){
 //                    $a->where('Type', 2);
