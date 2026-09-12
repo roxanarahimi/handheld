@@ -54,7 +54,7 @@ class InvoiceController extends Controller
 //                ->whereNot('Type', 'Order')
                 ->orderByDesc('Type')
 //                ->orderByDesc('OrderNumber')
-                ->take(200)->pajinate(100);
+                ->take(200)->paginate(100);
             $data = InvoiceResource::collection($d3);
 //            return response()->json($d3, 200);
             return response($d3, 200);
