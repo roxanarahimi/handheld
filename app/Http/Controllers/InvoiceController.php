@@ -96,47 +96,50 @@ class InvoiceController extends Controller
             $invoice = Invoice::find($request['id']);
             $item = InventoryVoucher::where('InventoryVoucherID', $invoice['OrderID'])->first();
 
-
-            $invoice->invoiceItems->each->delete();
-
-            if ($invoice->Type == 'InventoryVoucher') {
-                foreach ($item->OrderItems as $item2) {
-                    $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
-                    if ($exist) {
-                        $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
-                    } else {
-                        if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
-                            InvoiceItem::create([
-                                'invoice_id' => $invoice->id,
-                                'ProductNumber' => $item2->Part->Code,
-                                'Quantity' => $item2->Quantity,
-                            ]);
+            if ($invoice->BroadcastDelivery ===0){
+                $invoice->invoiceItems->each->delete();
+                if ($invoice->Type == 'InventoryVoucher') {
+                    foreach ($item->OrderItems as $item2) {
+                        $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
+                        if ($exist) {
+                            $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
+                        } else {
+                            if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
+                                InvoiceItem::create([
+                                    'invoice_id' => $invoice->id,
+                                    'ProductNumber' => $item2->Part->Code,
+                                    'Quantity' => $item2->Quantity,
+                                ]);
+                            }
+                        }
+                    }
+                }
+                if ($invoice->Type == 'Deputation') {
+                    foreach ($item->OrderItems as $item2) {
+                        $q = $item2->Quantity;
+                        $int = (int)$item2->Quantity;
+                        if (str_contains($item2->PartUnit->Name, 'پک')) {
+                            $t = (int)PartUnit::where('PartID', $item2->PartRef)->where('Name', 'like', '%کارتن%')->pluck('DSRatio')[0];
+                            $q = (string)floor($int / $t);
+                        }
+                        $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
+                        if ($exist) {
+                            $exist->update(['Quantity' => $exist->Quantity + $q]);
+                        } else {
+                            if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
+                                InvoiceItem::create([
+                                    'invoice_id' => $invoice->id,
+                                    'ProductNumber' => $item2->Part->Code,
+                                    'Quantity' => $q,
+                                ]);
+                            }
                         }
                     }
                 }
             }
-            if ($invoice->Type == 'Deputation') {
-                foreach ($item->OrderItems as $item2) {
-                    $q = $item2->Quantity;
-                    $int = (int)$item2->Quantity;
-                    if (str_contains($item2->PartUnit->Name, 'پک')) {
-                        $t = (int)PartUnit::where('PartID', $item2->PartRef)->where('Name', 'like', '%کارتن%')->pluck('DSRatio')[0];
-                        $q = (string)floor($int / $t);
-                    }
-                    $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Part->Code)->first();
-                    if ($exist) {
-                        $exist->update(['Quantity' => $exist->Quantity + $q]);
-                    } else {
-                        if (!str_contains($item2->Part->Name, 'لیوانی') && !str_contains($item2->Part->Name, 'کیلویی')) {
-                            InvoiceItem::create([
-                                'invoice_id' => $invoice->id,
-                                'ProductNumber' => $item2->Part->Code,
-                                'Quantity' => $q,
-                            ]);
-                        }
-                    }
-                }
-            }
+
+
+
             $i = Invoice::where('id', $invoice->id)->first();
             $i->update(['Sum' => $i->invoiceItems->sum('Quantity')]);
             return response(new InvoiceResource($i), 200);
