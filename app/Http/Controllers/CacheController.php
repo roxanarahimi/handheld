@@ -105,7 +105,7 @@ class CacheController extends Controller
             ->whereHas('Store', function ($s) use ($storeIDs) {
                 $s->whereIn('StoreID', $storeIDs);
             })
-            ->where('FiscalYearRef', 1406)
+            ->where('FiscalYearRef', 1405)
             ->where('InventoryVoucherSpecificationRef', 68)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
@@ -137,7 +137,7 @@ class CacheController extends Controller
 //            ->get();
         $dat = InventoryVoucher::where('Date', '>=', today()->subDays(2))//
         ->whereNotIn('LGS3.InventoryVoucher.InventoryVoucherID', $deputationIds)
-            ->where('FiscalYearRef', 1406)
+            ->where('FiscalYearRef', 1405)
             ->where('InventoryVoucherSpecificationRef', 69)
             ->whereHas('OrderItems', function ($q) use ($partIDs) {
                 $q->whereIn('PartRef', $partIDs);
@@ -172,16 +172,18 @@ class CacheController extends Controller
             ->pluck('PlantID');
 
         $dat = Assignment::query()
+            ->where('State', 2)
+            ->where('Date', '>=', today()->subDays(2))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
             ->has('AssignmentDeliveryItem', '=', 1)
             ->whereHas('AssignmentDeliveryItem', function ($q) {
                 $q->whereHas('Order', function ($t) {
                     $t->where('Date', '>=', today()->subDays(2))
-                        ->where('FiscalYearRef', 1406)
+                        ->where('FiscalYearRef', 1405)
                         ->where('InventoryRef', 1)
                         ->whereHas('OrderItems', function ($b) {
-                            $b->where('Quantity', '>=', 100);
+                            $b->where('Quantity', '>=', 200);
                         })
                         ->where('State', 2);
                 });
@@ -266,7 +268,7 @@ class CacheController extends Controller
 
 
             foreach ($d1 as $item) {
-                $exx = Invoice::where('AddressID', $item->Store->Plant->Address->AddressID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->first();
+                $exx = Invoice::where('OrderID', $item->InventoryVoucherID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->first();
                 if (!$exx) {
                     $invoice = Invoice::create([
                         'Type' => 'InventoryVoucher',
@@ -316,7 +318,7 @@ class CacheController extends Controller
                 }
             }
             foreach ($d2 as $item) {
-                $exx2 = Invoice::where('AddressID', $item->Party->PartyAddress->Address->AddressID)->where('OrderNumber', $item->Number)->where('Type', 'Deputation')->first();
+                $exx2 = Invoice::where('OrderID', $item->InventoryVoucherID)->where('OrderNumber', $item->Number)->where('Type', 'Deputation')->first();
                 if (!$exx2) {
                     $invoice = Invoice::create([
                         'Type' => 'Deputation',
@@ -372,7 +374,7 @@ class CacheController extends Controller
                 }
             }
             foreach ($d4 as $item) {
-                $exx3 = Invoice::where('AddressID', $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
+                $exx3 = Invoice::where('OrderID', $item->AssignmentDeliveryItem[0]->Order->OrderID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
 //                if ($exx3) {
 //                    return response(['invoice exists!',new InvoiceResource($exx3)], 200);
 //                }
