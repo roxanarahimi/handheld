@@ -40,16 +40,6 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        try {
-            $d3 = Invoice::orderByDesc('id')
-                ->where('DeliveryDate', '>=', today()->subDays(10))
-                ->take(200)->get();
-            return response(["data"=>InvoiceResource::collection($d3)], 200);
-
-        } catch (\Exception $exception) {
-            return response($exception);
-        }
-
         $storeIDs = Plant::orderBy('PlantID')
             ->where(function ($query) {
                 $query->where('Name', 'LIKE', '%گرمدره%');
