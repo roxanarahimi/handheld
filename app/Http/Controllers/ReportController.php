@@ -57,7 +57,7 @@ class ReportController extends Controller
         ->pluck('PlantID');
 
         $dat = Assignment::query()
-            ->where('State', 2)
+//            ->where('State', 2)
             ->where('Date', '>=', today()->subDays(1))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
@@ -69,8 +69,8 @@ class ReportController extends Controller
                         ->where('InventoryRef', 1)
                         ->whereHas('OrderItems', function ($b) {
                             $b->where('Quantity', '>=', 100);
-                        });
-//                        ->where('State', 2);
+                        })
+                        ->where('State', 2);
                 });
             })
             ->get();
