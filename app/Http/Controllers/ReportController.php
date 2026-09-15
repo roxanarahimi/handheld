@@ -57,7 +57,7 @@ class ReportController extends Controller
         ->pluck('PlantID');
 
         $dat = Assignment::query()
-//            ->where('State', 2)
+            ->where('State', 2)
             ->where('Date', '>=', today()->subDays(1))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
