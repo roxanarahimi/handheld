@@ -39,32 +39,36 @@ use Illuminate\Support\Facades\DB;
 class ReportController extends Controller
 {
     public function test(Request $request)
-    {  $storeIDs = Plant::orderBy('PlantID')
-        ->where(function ($query) {
-            $query->where('Name', 'LIKE', '%گرمدره%');
+    {
+        $storeIDs = Plant::orderBy('PlantID')
+            ->where(function ($query) {
+                $query->where('Name', 'LIKE', '%گرمدره%');
 //                    ->orWhere('Code', "1000");
-        })
-        ->whereHas('Address', function ($x) {
-            $x->where('Name', 'LIKE', '%گرمدره%')
-                ->orWhere('Details', 'LIKE', "%گرمدره%");
+            })
+            ->whereHas('Address', function ($x) {
+                $x->where('Name', 'LIKE', '%گرمدره%')
+                    ->orWhere('Details', 'LIKE', "%گرمدره%");
 
-        })
-        ->whereNot(function ($query) {
-            $query->where('Name', 'LIKE', "%مارکتینگ%")
-                ->orWhere('Name', 'LIKE', "%ضایعات%")
-                ->orWhere('Name', 'LIKE', "%برگشتی%");
-        })
-        ->pluck('PlantID');
+            })
+            ->whereNot(function ($query) {
+                $query->where('Name', 'LIKE', "%مارکتینگ%")
+                    ->orWhere('Name', 'LIKE', "%ضایعات%")
+                    ->orWhere('Name', 'LIKE', "%برگشتی%");
+            })
+            ->pluck('PlantID');
 
         $dat = Assignment::query()
-//            ->where('State', 2)
+            ->where(function ($s) {
+                $s->where('State', 2)
+                    ->orWhere('State', 3);
+            })
             ->where('Date', '>=', today()->subDays(1))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
             ->has('AssignmentDeliveryItem', '=', 1)
             ->whereHas('AssignmentDeliveryItem', function ($q) {
                 $q->whereHas('Order', function ($t) {
-                    $t->where('Date', '>=', today()->subDays(2))
+                    $t->where('Date', '>=', today()->subDays(1))
                         ->where('FiscalYearRef', 1406)
                         ->where('InventoryRef', 1)
                         ->whereHas('OrderItems', function ($b) {
@@ -75,7 +79,6 @@ class ReportController extends Controller
             })
             ->get();
         return $dat;
-
 
 
         $storeIDs = Plant::orderBy('PlantID')

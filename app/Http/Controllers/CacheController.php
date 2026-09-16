@@ -172,7 +172,10 @@ class CacheController extends Controller
             ->pluck('PlantID');
 
         $dat = Assignment::query()
-            ->where('State', 2)
+            ->where(function ($s) {
+                $s->where('State', 2)
+                    ->orWhere('State', 3);
+            })
             ->where('Date', '>=', today()->subDays(2))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
