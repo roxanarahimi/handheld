@@ -78,10 +78,12 @@ class ReportController extends Controller
                           ->where('FiscalYearRef', 1406)
                           ->where('InventoryRef', 1)
                           ->whereHas('OrderItems', function ($b) {
-                              $b->whereHas('ProductGrouping',function ($g){
-                                  $g->whereHas('EntityGroup', function ($e){
-                                      $e->where('EntityGroupID', 334)
-                                          ->where('EntityGroupingRef', 49);
+                              $b->whereHas('Product',function ($h){
+                                  $h->whereHas('ProductGroupMember',function ($g){
+                                      $g->whereHas('EntityGroup', function ($e){
+                                          $e->where('EntityGroupID', 334)
+                                              ->where('EntityGroupingRef', 49);
+                                      });
                                   });
                               });
                               $b->where('Quantity', '>=', 100);
