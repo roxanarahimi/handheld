@@ -42,9 +42,11 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $e = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
-        $f = ProductGroupMember::all()->first();
-        return [$e];
+      try{
+          $we = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
+          $f = ProductGroupMember::all()->first();
+          return [$we,$f];
+      }catch (\Exception $e){return $e;}
         $storeIDs = Plant::orderBy('PlantID')
             ->where(function ($query) {
                 $query->where('Name', 'LIKE', '%گرمدره%');
