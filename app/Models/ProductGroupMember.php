@@ -9,7 +9,7 @@ class ProductGroupMember extends Model
 {
     use HasFactory;
     protected $connection = 'sqlsrv';
-    protected $table = 'SLS3.ProductGrouping';
+    protected $table = 'SLS3.ProductGroupingMember';
     protected $hidden = ['Version'];
 
     public function Product()
