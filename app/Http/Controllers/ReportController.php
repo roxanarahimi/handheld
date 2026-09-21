@@ -50,7 +50,7 @@ class ReportController extends Controller
           $p= Product::where('Number','7010304351')->with('ProductGroupMember',function ($k){
               $k->whereHas('EntityGroup',function ($q){
                   $q->where('EntityGroupID',334)->where('EntityGroupingRef','49');
-              });
+              })->with('EntityGroup');
           })->first();
           return $p;
           $storeIDs = Plant::orderBy('PlantID')
