@@ -11,9 +11,5 @@ class EntityGroup extends Model
     protected $connection = 'sqlsrv';
     protected $table = 'GNR3.EntityGroup';
     protected $hidden = ['Version'];
-    public function ProductGroupMember()
-    {
-        return $this->hasOne(ProductGroupMember::class, 'GroupRef','EntityGroupID');
-    }
 
 }
