@@ -14,6 +14,7 @@ use App\Models\Assignment;
 use App\Models\AssignmentDeliveryItem;
 use App\Models\Broker;
 use App\Models\Customer;
+use App\Models\EntityGroup;
 use App\Models\InventoryVoucher;
 use App\Models\InventoryVoucherItem;
 use App\Models\Invoice;
@@ -28,6 +29,7 @@ use App\Models\OrderItem;
 use App\Models\Part;
 use App\Models\PartUnit;
 use App\Models\Plant;
+use App\Models\ProductGroupMember;
 use App\Models\Remittance;
 use App\Models\SalesOffice;
 use App\Models\Store;
@@ -40,6 +42,9 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
+        $e = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
+        $f = ProductGroupMember::where('ProductGroupMemberID',334)->first();
+        return [$e,$f];
         $storeIDs = Plant::orderBy('PlantID')
             ->where(function ($query) {
                 $query->where('Name', 'LIKE', '%گرمدره%');
