@@ -42,8 +42,8 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-        $e = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
-        $f = ProductGroupMember::where('ProductGroupMemberID',334)->first();
+        $e = EntityGroup::where('EntityGroupID',334)->first();//->where('EntityGroupingRef',49)
+//        $f = ProductGroupMember::where('ProductGroupMemberID',334)->first();
         return [$e];
         $storeIDs = Plant::orderBy('PlantID')
             ->where(function ($query) {
