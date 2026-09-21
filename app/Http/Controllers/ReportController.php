@@ -44,7 +44,7 @@ class ReportController extends Controller
     {
         $e = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
         $f = ProductGroupMember::where('ProductGroupMemberID',334)->first();
-        return [$e,$f];
+        return [$e];
         $storeIDs = Plant::orderBy('PlantID')
             ->where(function ($query) {
                 $query->where('Name', 'LIKE', '%گرمدره%');
