@@ -47,18 +47,18 @@ class ReportController extends Controller
 //          $we = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
 //          $f = ProductGroupMember::all()->first();
 //          return [$we,$f];
-//          $p = Product::where('Number', '7010304351')
-//              ->whereHas('ProductGroupMember', function ($member) {
-//                  $member->whereHas('EntityGroup', function ($group) {
-//                      $group->where('EntityGroupID', 334)
-//                          ->where('EntityGroupingRef', 49);
-//                  });
-//              })
-//              ->with('ProductGroupMember',function ($member) {
-//                      $member->with('EntityGroup');
-//                  })
-//              ->get();
-//          return $p;
+          $p = Product::where('Number', '7010304351')
+              ->whereHas('ProductGroupMember', function ($member) {
+                  $member->whereHas('EntityGroup', function ($group) {
+                      $group->where('EntityGroupID', 334)
+                          ->where('EntityGroupingRef', 49);
+                  });
+              })
+              ->with('ProductGroupMember',function ($member) {
+                      $member->with('EntityGroup');
+                  })
+              ->get();
+          return $p;
           $storeIDs = Plant::orderBy('PlantID')
               ->where(function ($query) {
                   $query->where('Name', 'LIKE', '%گرمدره%');
