@@ -48,6 +48,7 @@ class ReportController extends Controller
 //          $f = ProductGroupMember::all()->first();
 //          return [$we,$f];
           $p= Product::where('Number','	7010304351')->with('ProductGroupMember')->first();
+          return $p;
           $storeIDs = Plant::orderBy('PlantID')
               ->where(function ($query) {
                   $query->where('Name', 'LIKE', '%گرمدره%');
