@@ -17,6 +17,6 @@ class Product extends Model
     }
     public function ProductGroupMember()
     {
-        return $this->BelongsTo(ProductGroupMember::class,  'ProductID','MemberID',);
+        return $this->HasOne(ProductGroupMember::class,  'MemberID','ProductID');
     }
 }
