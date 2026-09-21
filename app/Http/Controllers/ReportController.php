@@ -51,7 +51,7 @@ class ReportController extends Controller
               $k->whereHas('EntityGroup',function ($q){
                   $q->where('EntityGroupID',"334")->where('EntityGroupingRef','49');
               })->with('EntityGroup');
-          })->get();
+          })->take(100)->get();
           return $p;
           $storeIDs = Plant::orderBy('PlantID')
               ->where(function ($query) {
