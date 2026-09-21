@@ -91,7 +91,7 @@ class ReportController extends Controller
 //            ->has('AssignmentDeliveryItem', '=', 1)
                 ->whereHas('AssignmentDeliveryItem', function ($q) {
                     $q->whereHas('Order', function ($t) {
-                        $t->where('Date', '>=', today()->subDays(2))
+                        $t->where('Date', '>=', today()->subDays(10))
                             ->where('FiscalYearRef', 1406)
                             ->where('InventoryRef', 1)
                             ->whereHas('OrderItems', function ($b) {
