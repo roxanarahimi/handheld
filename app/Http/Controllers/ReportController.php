@@ -43,67 +43,68 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
-      try{
+        try {
 //          $we = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
 //          $f = ProductGroupMember::all()->first();
 //          return [$we,$f];
-          $p= Product::where('Number','7010304351')->whereHas('ProductGroupMember',function ($k){
-              $k->whereHas('EntityGroup',function ($q){
-                  $q->where('EntityGroupID',"334")
-                      ->where('EntityGroupingRef','49');
-              });
-                  $k->with('EntityGroup');
-          })->with('ProductGroupMember')->get();
-          return $p;
-          $storeIDs = Plant::orderBy('PlantID')
-              ->where(function ($query) {
-                  $query->where('Name', 'LIKE', '%گرمدره%');
+            $p = Product::whereHas('ProductGroupMember', function ($k) {
+                $k->whereHas('EntityGroup', function ($q) {
+                    $q->where('EntityGroupID', "334")
+                        ->where('EntityGroupingRef', '49');
+                });
+                $k->with('EntityGroup');
+            })->with('ProductGroupMember')->get();
+            return $p;
+            $storeIDs = Plant::orderBy('PlantID')
+                ->where(function ($query) {
+                    $query->where('Name', 'LIKE', '%گرمدره%');
 //                    ->orWhere('Code', "1000");
-              })
-              ->whereHas('Address', function ($x) {
-                  $x->where('Name', 'LIKE', '%گرمدره%')
-                      ->orWhere('Details', 'LIKE', "%گرمدره%");
+                })
+                ->whereHas('Address', function ($x) {
+                    $x->where('Name', 'LIKE', '%گرمدره%')
+                        ->orWhere('Details', 'LIKE', "%گرمدره%");
 
-              })
-              ->whereNot(function ($query) {
-                  $query->where('Name', 'LIKE', "%مارکتینگ%")
-                      ->orWhere('Name', 'LIKE', "%ضایعات%")
-                      ->orWhere('Name', 'LIKE', "%برگشتی%");
-              })
-              ->pluck('PlantID');
+                })
+                ->whereNot(function ($query) {
+                    $query->where('Name', 'LIKE', "%مارکتینگ%")
+                        ->orWhere('Name', 'LIKE', "%ضایعات%")
+                        ->orWhere('Name', 'LIKE', "%برگشتی%");
+                })
+                ->pluck('PlantID');
 
-          $dat = Assignment::query()
-              ->where(function ($s) {
-                  $s->where('State', 2)
-                      ->orWhere('State', 3);
-              })
-              ->where('Date', '>=', today()->subDays(3))
-              ->orderByDesc('AssignmentID')
-              ->whereIn('PlantRef', $storeIDs)
+            $dat = Assignment::query()
+                ->where(function ($s) {
+                    $s->where('State', 2)
+                        ->orWhere('State', 3);
+                })
+                ->where('Date', '>=', today()->subDays(3))
+                ->orderByDesc('AssignmentID')
+                ->whereIn('PlantRef', $storeIDs)
 //            ->has('AssignmentDeliveryItem', '=', 1)
-              ->whereHas('AssignmentDeliveryItem', function ($q) {
-                  $q->whereHas('Order', function ($t) {
-                      $t->where('Date', '>=', today()->subDays(2))
-                          ->where('FiscalYearRef', 1406)
-                          ->where('InventoryRef', 1)
-                          ->whereHas('OrderItems', function ($b) {
-                              $b->whereHas('Product',function ($h){
-                                  $h->whereHas('ProductGroupMember',function ($g){
+                ->whereHas('AssignmentDeliveryItem', function ($q) {
+                    $q->whereHas('Order', function ($t) {
+                        $t->where('Date', '>=', today()->subDays(2))
+                            ->where('FiscalYearRef', 1406)
+                            ->where('InventoryRef', 1)
+                            ->whereHas('OrderItems', function ($b) {
+                                $b->whereHas('Product', function ($h) {
+                                    $h->whereHas('ProductGroupMember', function ($g) {
 //                                      $g->whereHas('EntityGroup', function ($e){
 //                                          $e->where('EntityGroupID', 334)
 //                                              ->where('EntityGroupingRef', 49);
 //                                      });
-                                  });
-                              });
-                              $b->where('Quantity', '>=', 100);
-                          })
-                          ->where('State', 2);
-                  });
-              })
-              ->get();
-          return $dat;
-      }catch (\Exception $e){return $e;}
-
+                                    });
+                                });
+                                $b->where('Quantity', '>=', 100);
+                            })
+                            ->where('State', 2);
+                    });
+                })
+                ->get();
+            return $dat;
+        } catch (\Exception $e) {
+            return $e;
+        }
 
 
         $storeIDs = Plant::orderBy('PlantID')
