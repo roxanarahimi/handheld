@@ -84,7 +84,7 @@ class ReportController extends Controller
                     $s->where('State', 2)
                         ->orWhere('State', 3);
                 })
-                ->where('Date', '>=', today()->subDays(2))
+                ->where('Date', '>=', today()->subDays(10))
                 ->orderByDesc('AssignmentID')
                 ->whereIn('PlantRef', $storeIDs)
                 ->has('AssignmentDeliveryItem', '=', 1)
