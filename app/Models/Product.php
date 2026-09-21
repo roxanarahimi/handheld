@@ -15,4 +15,8 @@ class Product extends Model
     {
         return $this->belongsTo(InvoiceItem::class,  'ProductID','ProductID');
     }
+    public function ProductGrouping()
+    {
+        return $this->BelongsTo(ProductGrouping::class,  'MemberID','ProductID');
+    }
 }

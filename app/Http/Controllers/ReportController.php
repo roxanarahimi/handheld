@@ -62,16 +62,22 @@ class ReportController extends Controller
                 $s->where('State', 2)
                     ->orWhere('State', 3);
             })
-            ->where('Date', '>=', today()->subDays(1))
+            ->where('Date', '>=', today()->subDays(2))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
-            ->has('AssignmentDeliveryItem', '=', 1)
+//            ->has('AssignmentDeliveryItem', '=', 1)
             ->whereHas('AssignmentDeliveryItem', function ($q) {
                 $q->whereHas('Order', function ($t) {
-                    $t->where('Date', '>=', today()->subDays(1))
+                    $t->where('Date', '>=', today()->subDays(2))
                         ->where('FiscalYearRef', 1406)
                         ->where('InventoryRef', 1)
                         ->whereHas('OrderItems', function ($b) {
+                            $b->whereHas('ProductGrouping',function ($g){
+                                $g->whereHas('EntityGroup', function ($e){
+                                    $e->where('EntityGroupID', 334)
+                                        ->where('EntityGroupingRef', 49);
+                                });
+                            });
                             $b->where('Quantity', '>=', 100);
                         })
                         ->where('State', 2);
