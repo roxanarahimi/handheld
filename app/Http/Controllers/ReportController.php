@@ -29,6 +29,7 @@ use App\Models\OrderItem;
 use App\Models\Part;
 use App\Models\PartUnit;
 use App\Models\Plant;
+use App\Models\Product;
 use App\Models\ProductGroupMember;
 use App\Models\Remittance;
 use App\Models\SalesOffice;
@@ -46,6 +47,7 @@ class ReportController extends Controller
 //          $we = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
 //          $f = ProductGroupMember::all()->first();
 //          return [$we,$f];
+          $p= Product::where('Number','	7010304351')->with('ProductGroupMember')->first();
           $storeIDs = Plant::orderBy('PlantID')
               ->where(function ($query) {
                   $query->where('Name', 'LIKE', '%گرمدره%');
