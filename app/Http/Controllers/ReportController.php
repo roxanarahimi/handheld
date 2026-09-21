@@ -47,21 +47,21 @@ class ReportController extends Controller
 //          $we = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
 //          $f = ProductGroupMember::all()->first();
 //          return [$we,$f];
-//            $p = Product::whereHas('ProductGroupMember', function ($k) {
-//                $k->whereHas('EntityGroup', function ($q) {
-//                    $q->where('EntityGroupID', "334")
-//                        ->where('EntityGroupingRef', '49');
-//                });
-//            })
-//                ->with([
-//                    'ProductGroupMember' => function ($member) {
-//                        $member->whereHas('EntityGroup', function ($group) {
-//                            $group->where('EntityGroupID', "334")
-//                                ->where('EntityGroupingRef', "49");
-//                        })->with('EntityGroup');
-//                    }
-//                ])
-//                ->get();
+            $p = Product::whereHas('ProductGroupMember', function ($k) {
+                $k->whereHas('EntityGroup', function ($q) {
+                    $q->where('EntityGroupID', "334")
+                        ->where('EntityGroupingRef', '49');
+                });
+            })
+                ->with([
+                    'ProductGroupMember' => function ($member) {
+                        $member->whereHas('EntityGroup', function ($group) {
+                            $group->where('EntityGroupID', "334")
+                                ->where('EntityGroupingRef', "49");
+                        })->with('EntityGroup');
+                    }
+                ])
+                ->get();
 //            return $p;
             $storeIDs = Plant::orderBy('PlantID')
                 ->where(function ($query) {
