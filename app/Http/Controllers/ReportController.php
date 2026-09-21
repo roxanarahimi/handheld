@@ -79,7 +79,28 @@ class ReportController extends Controller
                         ->orWhere('Name', 'LIKE', "%برگشتی%");
                 })
                 ->pluck('PlantID');
-
+            $dat = Assignment::query()
+                ->where(function ($s) {
+                    $s->where('State', 2)
+                        ->orWhere('State', 3);
+                })
+                ->where('Date', '>=', today()->subDays(2))
+                ->orderByDesc('AssignmentID')
+                ->whereIn('PlantRef', $storeIDs)
+                ->has('AssignmentDeliveryItem', '=', 1)
+                ->whereHas('AssignmentDeliveryItem', function ($q) {
+                    $q->whereHas('Order', function ($t) {
+                        $t->where('Date', '>=', today()->subDays(2))
+                            ->where('FiscalYearRef', 1406)
+                            ->where('InventoryRef', 1)
+                            ->whereHas('OrderItems', function ($b) {
+                                $b->where('Quantity', '>=', 100);
+                            })
+                            ->where('State', 2);
+                    });
+                })
+                ->get();
+            return $dat;
             $dat = Assignment::query()
                 ->where(function ($s) {
                     $s->where('State', 2)
