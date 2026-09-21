@@ -18,6 +18,6 @@ class ProductGroupMember extends Model
     }
     public function EntityGroup()
     {
-        return $this->hasOne(EntityGroup::class, 'EntityGroupingRef','GroupRef');
+        return $this->hasOne(EntityGroup::class, 'EntityGroupID','GroupRef');
     }
 }
