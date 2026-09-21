@@ -47,16 +47,13 @@ class ReportController extends Controller
 //          $we = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
 //          $f = ProductGroupMember::all()->first();
 //          return [$we,$f];
-          $p = Product::whereHas('ProductGroupMember', function ($member) {
-                  $member->whereHas('EntityGroup', function ($group) {
-                      $group->where('EntityGroupID', 334)
-                          ->where('EntityGroupingRef', 49);
-                  });
-              })
-              ->with('ProductGroupMember',function ($member) {
-                      $member->with('EntityGroup');
-                  })
-              ->first();
+          $p= Product::where('Number','7010304351')->whereHas('ProductGroupMember',function ($k){
+              $k->whereHas('EntityGroup',function ($q){
+                  $q->where('EntityGroupID',"334")
+                      ->where('EntityGroupingRef','49');
+              });
+                  $k->with('EntityGroup');
+          })->with('ProductGroupMember')->get();
           return $p;
           $storeIDs = Plant::orderBy('PlantID')
               ->where(function ($query) {
@@ -91,15 +88,12 @@ class ReportController extends Controller
                           ->where('InventoryRef', 1)
                           ->whereHas('OrderItems', function ($b) {
                               $b->whereHas('Product',function ($h){
-                                  $h->whereHas('ProductGroupMember', function ($member) {
-                                      $member->whereHas('EntityGroup', function ($group) {
-                                          $group->where('EntityGroupID', 334)
-                                              ->where('EntityGroupingRef', 49);
-                                      });
-                                  })
-                                      ->with('ProductGroupMember',function ($member) {
-                                          $member->with('EntityGroup');
-                                      });
+                                  $h->whereHas('ProductGroupMember',function ($g){
+//                                      $g->whereHas('EntityGroup', function ($e){
+//                                          $e->where('EntityGroupID', 334)
+//                                              ->where('EntityGroupingRef', 49);
+//                                      });
+                                  });
                               });
                               $b->where('Quantity', '>=', 100);
                           })
