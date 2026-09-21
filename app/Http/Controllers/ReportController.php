@@ -68,7 +68,7 @@ class ReportController extends Controller
                   $s->where('State', 2)
                       ->orWhere('State', 3);
               })
-              ->where('Date', '>=', today()->subDays(2))
+              ->where('Date', '>=', today()->subDays(3))
               ->orderByDesc('AssignmentID')
               ->whereIn('PlantRef', $storeIDs)
 //            ->has('AssignmentDeliveryItem', '=', 1)
@@ -80,10 +80,10 @@ class ReportController extends Controller
                           ->whereHas('OrderItems', function ($b) {
                               $b->whereHas('Product',function ($h){
                                   $h->whereHas('ProductGroupMember',function ($g){
-                                      $g->whereHas('EntityGroup', function ($e){
-                                          $e->where('EntityGroupID', 334)
-                                              ->where('EntityGroupingRef', 49);
-                                      });
+//                                      $g->whereHas('EntityGroup', function ($e){
+//                                          $e->where('EntityGroupID', 334)
+//                                              ->where('EntityGroupingRef', 49);
+//                                      });
                                   });
                               });
                               $b->where('Quantity', '>=', 100);
