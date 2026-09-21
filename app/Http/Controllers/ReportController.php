@@ -49,7 +49,7 @@ class ReportController extends Controller
 //          return [$we,$f];
           $p= Product::with('ProductGroupMember',function ($k){
               $k->whereHas('EntityGroup',function ($q){
-                  $q->where('EntityGroupID',334)->where('EntityGroupingRef','49');
+                  $q->where('EntityGroupID',"334")->where('EntityGroupingRef','49');
               })->with('EntityGroup');
           })->get();
           return $p;
