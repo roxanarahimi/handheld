@@ -17,6 +17,6 @@ class Product extends Model
     }
     public function ProductGroupMember()
     {
-        return $this->HasOne(ProductGroupMember::class,  'MemberID','ProductID');
+        return $this->HasOne(ProductGroupMember::class,  'GroupingRef','ProductID');
     }
 }
