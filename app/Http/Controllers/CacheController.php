@@ -176,19 +176,22 @@ class CacheController extends Controller
                 $s->where('State', 2)
                     ->orWhere('State', 3);
             })
-            ->where('Date', '>=', today()->subDays(2))
+            ->where('Date', '>=', today()->subDays(10))
             ->orderByDesc('AssignmentID')
             ->whereIn('PlantRef', $storeIDs)
-            ->has('AssignmentDeliveryItem', '=', 1)
+//                ->has('AssignmentDeliveryItem', '=', 1)
             ->whereHas('AssignmentDeliveryItem', function ($q) {
                 $q->whereHas('Order', function ($t) {
-                    $t->where('Date', '>=', today()->subDays(2))
+                    $t->where('Date', '>=', today()->subDays(10))
                         ->where('FiscalYearRef', 1406)
                         ->where('InventoryRef', 1)
                         ->whereHas('OrderItems', function ($b) {
-                            $b->where('Quantity', '>=', 100);
-                        })
-                        ->where('State', 2);
+                            $b->whereHas('ProductGroupMember', function ($k) {
+                                $k->where('GroupRef','334');
+                            });
+                            $b->havingRaw('SUM(Quantity) >= ?', [100]);
+                        });
+//                            ->where('State', 2);
                 });
             })
             ->get();
