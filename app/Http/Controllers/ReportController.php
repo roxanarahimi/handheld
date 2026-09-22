@@ -83,9 +83,9 @@ class ReportController extends Controller
                             ->where('FiscalYearRef', 1406)
                             ->where('InventoryRef', 1)
                             ->whereHas('OrderItems', function ($b) {
-//                                $b->whereHas('ProductGroupMember', function ($k) {
-//                                    $k->where('GroupRef','334');
-//                                });
+                                $b->whereHas('ProductGroupMember', function ($k) {
+                                    $k->where('GroupRef','334');
+                                });
                                 $b->where('Quantity', '>=', 100);
                             })
                             ->where('State', 2);
