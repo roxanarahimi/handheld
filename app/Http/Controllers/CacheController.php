@@ -186,7 +186,7 @@ class CacheController extends Controller
                         ->where('FiscalYearRef', 1406)
                         ->where('InventoryRef', 1)
                         ->whereHas('OrderItems', function ($b) {
-                            $b->where('Quantity', '>=', 50);
+                            $b->where('Quantity', '>=', 100);
                         })
                         ->where('State', 2);
                 });

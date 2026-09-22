@@ -86,7 +86,7 @@ class ReportController extends Controller
                                 $b->whereHas('ProductGroupMember', function ($k) {
                                     $k->where('GroupRef','334');
                                 });
-                                $b->where('Quantity', '>=', 100);
+                                $b->where('Quantity', '>=', 50);
                             });
 //                            ->where('State', 2);
                     });
