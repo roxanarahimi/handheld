@@ -87,12 +87,15 @@ class ReportController extends Controller
                                     $k->where('GroupRef','334');
                                 });
                                 $b->where('Quantity', '>=', 100);
-                            })
-                            ->where('State', 2);
+                            });
+//                            ->where('State', 2);
                     });
                 })
                 ->get();
             return $dat;
+
+
+
             $dat = Assignment::query()
                 ->where(function ($s) {
                     $s->where('State', 2)
