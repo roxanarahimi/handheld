@@ -92,6 +92,7 @@ class ReportController extends Controller
                     });
                 })
                 ->get();
+            return $dat;
             $dat = Assignment::query()
                 ->where(function ($s) {
                     $s->where('State', 2)
