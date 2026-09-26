@@ -54,7 +54,7 @@ class ReportController extends Controller
                 });
             })
             ->get();
-        return $dat;
+        return $dat[0];
 
 
         try {
