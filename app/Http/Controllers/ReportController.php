@@ -43,6 +43,19 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
+        $invoice = Invoice::find($request['id']);
+        $itemN = Assignment::whereHas('AssignmentDeliveryItem',function ($q) use ($invoice) {
+            $q->whereHas('Order',function($x) use ($invoice) {
+                $x->where('OrderID',$invoice['OrderID']);
+                $x->whereHas('OrderItems');
+            });
+        })->where('Number',$invoice['OrderNumber'])->first();
+        $itemX = $itemN[0];
+        return response($itemX,200);
+
+
+
+
         try {
 //          $we = EntityGroup::where('EntityGroupID',334)->where('EntityGroupingRef',49)->first();
 //          $f = ProductGroupMember::all()->first();
