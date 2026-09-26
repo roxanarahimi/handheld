@@ -93,9 +93,22 @@ class InvoiceController extends Controller
         try {
 //            $item = InventoryVoucher::where('InventoryVoucherID', $request['OrderID'])->where('Number', $request['OrderNumber'])->first();
 //            $invoice = Invoice::orderByDesc('id')->where('OrderID', $item['InventoryVoucherID'])->where('OrderNumber', $request['OrderNumber'])->first();
+//            $exx3 = Invoice::where('OrderID', $item->AssignmentDeliveryItem[0]->Order->OrderID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
+
             $invoice = Invoice::find($request['id']);
             $item = InventoryVoucher::where('InventoryVoucherID', $invoice['OrderID'])->first();
-
+            $invoice = Invoice::find($request['id']);
+            $dat = Assignment::where('Number', $invoice['OrderNumber'])
+                ->orderByDesc('AssignmentID')
+                ->whereHas('AssignmentDeliveryItem', function ($q) use ($invoice) {
+                    $q->whereHas('Order', function ($t) use ($invoice) {
+                        $t->where('OrderID', $invoice['OrderID']);
+                        $t->whereHas('OrderItems', function ($b) {
+                        });
+                    });
+                })
+                ->get();
+            $itemx =  $dat[0];
             if ($invoice->BroadcastDelivery ===0){
                 $invoice->invoiceItems->each->delete();
                 if ($invoice->Type == 'InventoryVoucher') {
@@ -136,6 +149,33 @@ class InvoiceController extends Controller
                         }
                     }
                 }
+            }
+            if ($invoice->BroadcastDelivery ===1){
+//                $invoice->invoiceItems->each->delete();
+
+                $items = [];
+                foreach ($itemx->AssignmentDeliveryItem->Order->OrderItems as $item3) {
+
+                    $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item3->Product->Number)->first();
+                    if ($exist) {
+//                        $exist->update(['Quantity' => $exist->Quantity + $item3->Quantity]);
+                    } else {
+                        if (!str_contains($item3->Product->Name, 'لیوانی') && !str_contains($item3->Product->Name, 'کیلویی')) {
+//                            InvoiceItem::create([
+//                                'invoice_id' => $invoice->id,
+//                                'ProductNumber' => $item3->Product->Number,
+//                                'Quantity' => $item3->Quantity,
+//                            ]);
+                            $items[] = [
+                                'invoice_id' => $invoice->id,
+                                'ProductNumber' => $item3->Product->Number,
+                                'Quantity' => $item3->Quantity,
+                            ];
+                        }
+                    }
+                }
+
+                return $items;
             }
 
 
