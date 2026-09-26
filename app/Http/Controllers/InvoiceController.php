@@ -149,33 +149,33 @@ class InvoiceController extends Controller
                     }
                 }
             }
-            if ($invoice->BroadcastDelivery ===1){
-//                $invoice->invoiceItems->each->delete();
-
-                $items = [];
-                foreach ($itemx->AssignmentDeliveryItem[0]->Order->OrderItems as $item3) {
-
-                    $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item3->Product->Number)->first();
-                    if ($exist) {
-//                        $exist->update(['Quantity' => $exist->Quantity + $item3->Quantity]);
-                    } else {
-                        if (!str_contains($item3->Product->Name, 'لیوانی') && !str_contains($item3->Product->Name, 'کیلویی')) {
-//                            InvoiceItem::create([
+//            if ($invoice->BroadcastDelivery ===1){
+////                $invoice->invoiceItems->each->delete();
+//
+//                $items = [];
+//                foreach ($itemx->AssignmentDeliveryItem[0]->Order->OrderItems as $item3) {
+//
+//                    $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item3->Product->Number)->first();
+//                    if ($exist) {
+////                        $exist->update(['Quantity' => $exist->Quantity + $item3->Quantity]);
+//                    } else {
+//                        if (!str_contains($item3->Product->Name, 'لیوانی') && !str_contains($item3->Product->Name, 'کیلویی')) {
+////                            InvoiceItem::create([
+////                                'invoice_id' => $invoice->id,
+////                                'ProductNumber' => $item3->Product->Number,
+////                                'Quantity' => $item3->Quantity,
+////                            ]);
+//                            $items[] = [
 //                                'invoice_id' => $invoice->id,
 //                                'ProductNumber' => $item3->Product->Number,
 //                                'Quantity' => $item3->Quantity,
-//                            ]);
-                            $items[] = [
-                                'invoice_id' => $invoice->id,
-                                'ProductNumber' => $item3->Product->Number,
-                                'Quantity' => $item3->Quantity,
-                            ];
-                        }
-                    }
-                }
-
-                return $items;
-            }
+//                            ];
+//                        }
+//                    }
+//                }
+//
+//                return $items;
+//            }
 
 
 
