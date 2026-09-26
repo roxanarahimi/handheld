@@ -51,7 +51,7 @@ class ReportController extends Controller
             });
         })->where('Number',$invoice['OrderNumber'])->first();
         $itemX = $itemN[0];
-        return response($itemX,400);
+        return response($itemX,200);
 
 
 
