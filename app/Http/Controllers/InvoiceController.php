@@ -154,11 +154,7 @@ class InvoiceController extends Controller
 
                 $items = [];
                 foreach ($itemx->AssignmentDeliveryItem[0]->Order->OrderItems as $item3) {
-                    $items[] = [
-                        'invoice_id' => $invoice->id,
-                        'ProductNumber' => $item3->Product->Number,
-                        'Quantity' => $item3->Quantity,
-                    ];
+
                     $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item3->Product->Number)->first();
                     if ($exist) {
 //                        $exist->update(['Quantity' => $exist->Quantity + $item3->Quantity]);
@@ -169,7 +165,11 @@ class InvoiceController extends Controller
 //                                'ProductNumber' => $item3->Product->Number,
 //                                'Quantity' => $item3->Quantity,
 //                            ]);
-
+                            $items[] = [
+                                'invoice_id' => $invoice->id,
+                                'ProductNumber' => $item3->Product->Number,
+                                'Quantity' => $item3->Quantity,
+                            ];
                         }
                     }
                 }
