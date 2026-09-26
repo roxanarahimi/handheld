@@ -107,7 +107,7 @@ class InvoiceController extends Controller
                         });
                     });
                 })
-                ->get();
+                ->first();
             if ($invoice->BroadcastDelivery ===0){
                 $invoice->invoiceItems->each->delete();
                 if ($invoice->Type == 'InventoryVoucher') {
