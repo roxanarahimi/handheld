@@ -98,7 +98,7 @@ class InvoiceController extends Controller
             $invoice = Invoice::find($request['id']);
             $item = InventoryVoucher::where('InventoryVoucherID', $invoice['OrderID'])->first();
             $invoice = Invoice::find($request['id']);
-            $dat = Assignment::where('Number', $invoice['OrderNumber'])
+            $itemx = Assignment::where('Number', $invoice['OrderNumber'])
                 ->orderByDesc('AssignmentID')
                 ->whereHas('AssignmentDeliveryItem', function ($q) use ($invoice) {
                     $q->whereHas('Order', function ($t) use ($invoice) {
@@ -108,7 +108,6 @@ class InvoiceController extends Controller
                     });
                 })
                 ->get();
-            $itemx =  $dat[0];
             if ($invoice->BroadcastDelivery ===0){
                 $invoice->invoiceItems->each->delete();
                 if ($invoice->Type == 'InventoryVoucher') {
@@ -154,7 +153,7 @@ class InvoiceController extends Controller
 //                $invoice->invoiceItems->each->delete();
 
                 $items = [];
-                foreach ($itemx->AssignmentDeliveryItem->Order->OrderItems as $item3) {
+                foreach ($itemx->AssignmentDeliveryItem[0]->Order->OrderItems as $item3) {
 
                     $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item3->Product->Number)->first();
                     if ($exist) {
