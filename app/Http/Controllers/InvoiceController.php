@@ -50,7 +50,7 @@ class InvoiceController extends Controller
     {
         try {
             $d3 = Invoice::orderByDesc('id')
-                ->where('DeliveryDate', '>=', today()->subDays(7))
+                ->where('DeliveryDate', '>=', today()->subDays(4))
 //                ->whereNot('Type', 'Order')
                 ->orderByDesc('Type')
 //                ->orderByDesc('OrderNumber')
