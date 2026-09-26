@@ -44,16 +44,17 @@ class ReportController extends Controller
     public function test(Request $request)
     {
         $invoice = Invoice::find($request['id']);
-        $itemN = Assignment::whereHas('AssignmentDeliveryItem',function ($q) use ($invoice) {
-            $q->whereHas('Order',function($x) use ($invoice) {
-                $x->where('OrderID',$invoice['OrderID']);
-                $x->whereHas('OrderItems');
-            });
-        })->where('Number',$invoice['OrderNumber'])->first();
-        $itemX = $itemN[0];
-        return response($itemX,200);
-
-
+        $dat = Assignment::where('Number', $invoice['OrderNumber'])
+            ->orderByDesc('AssignmentID')
+            ->whereHas('AssignmentDeliveryItem', function ($q) use ($invoice) {
+                $q->whereHas('Order', function ($t) use ($invoice) {
+                    $t->where('OrderID', $invoice['OrderID']);
+                    $t->whereHas('OrderItems', function ($b) {
+                    });
+                });
+            })
+            ->get();
+        return $dat;
 
 
         try {
@@ -61,7 +62,7 @@ class ReportController extends Controller
 //          $f = ProductGroupMember::all()->first();
 //          return [$we,$f];
             $p = Product::whereHas('ProductGroupMember', function ($k) {
-                $k->where('GroupRef','334');
+                $k->where('GroupRef', '334');
             })
                 ->with('ProductGroupMember')->get();
 //            return $p;
@@ -97,7 +98,7 @@ class ReportController extends Controller
                             ->where('InventoryRef', 1)
                             ->whereHas('OrderItems', function ($b) {
                                 $b->whereHas('ProductGroupMember', function ($k) {
-                                    $k->where('GroupRef','334');
+                                    $k->where('GroupRef', '334');
                                 });
                                 $b->where('Quantity', '>=', 50);
                             });
@@ -106,7 +107,6 @@ class ReportController extends Controller
                 })
                 ->get();
             return $dat;
-
 
 
             $dat = Assignment::query()
