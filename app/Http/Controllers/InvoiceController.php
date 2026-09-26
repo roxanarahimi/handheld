@@ -98,16 +98,16 @@ class InvoiceController extends Controller
             $invoice = Invoice::find($request['id']);
             $item = InventoryVoucher::where('InventoryVoucherID', $invoice['OrderID'])->first();
             $invoice = Invoice::find($request['id']);
-            $itemx = Assignment::where('Number', $invoice['OrderNumber'])
-                ->orderByDesc('AssignmentID')
-                ->whereHas('AssignmentDeliveryItem', function ($q) use ($invoice) {
-                    $q->whereHas('Order', function ($t) use ($invoice) {
-                        $t->where('OrderID', $invoice['OrderID']);
-                        $t->whereHas('OrderItems', function ($b) {
-                        });
-                    });
-                })
-                ->first();
+//            $itemx = Assignment::where('Number', $invoice['OrderNumber'])
+//                ->orderByDesc('AssignmentID')
+//                ->whereHas('AssignmentDeliveryItem', function ($q) use ($invoice) {
+//                    $q->whereHas('Order', function ($t) use ($invoice) {
+//                        $t->where('OrderID', $invoice['OrderID']);
+//                        $t->whereHas('OrderItems', function ($b) {
+//                        });
+//                    });
+//                })
+//                ->first();
             if ($invoice->BroadcastDelivery ===0){
                 $invoice->invoiceItems->each->delete();
                 if ($invoice->Type == 'InventoryVoucher') {
