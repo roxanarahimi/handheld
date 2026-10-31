@@ -47,7 +47,7 @@ class ReportController extends Controller
         where('State', 2)
 //            ->where('Date', '>=', today()->subDays(2))
             ->orderByDesc('AssignmentID')
-            ->where('Number','36968')
+            ->where('Number','36978')
 //            ->whereIn('PlantRef', $storeIDs)
 //                ->has('AssignmentDeliveryItem', '=', 1)
             ->with('AssignmentDeliveryItem')
