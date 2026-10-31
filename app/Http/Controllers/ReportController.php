@@ -76,7 +76,11 @@ class ReportController extends Controller
         $t=[];
             foreach ($dat[0]->AssignmentDeliveryItem as $item) {
                 if ($item->Order->OrderItems->sum('Quantity')>=0) {
-                    $t[]= [$item->Order->OrderItems->sum('Quantity'),$item->Customer->CustomerAddress->Address->AddressID,$item];
+                    $t[]= [
+                        $dat[0]->SalesOffice->Address->AddressID,
+                        $item->Order->OrderItems->sum('Quantity'),
+                        $item->Customer->CustomerAddress->Address->AddressID,
+                        $item];
                 }
             }
             return $t;
