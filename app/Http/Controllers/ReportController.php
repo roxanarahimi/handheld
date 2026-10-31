@@ -51,10 +51,12 @@ class ReportController extends Controller
 //                ->has('AssignmentDeliveryItem', '=', 1)
             ->with('AssignmentDeliveryItem')
             ->whereHas('AssignmentDeliveryItem', function ($q) {
+                $q->with('Order');
                 $q->whereHas('Order', function ($t) {
                     $t->where('Date', '>=', today()->subDays(2))
                         ->where('FiscalYearRef', 1406)
                         ->where('InventoryRef', 1)
+                        ->with('OrderItems')
                         ->whereHas('OrderItems', function ($b) {
                             $b->whereHas('ProductGroupMember', function ($k) {
                                 $k->where('GroupRef','334');
