@@ -65,7 +65,7 @@ class ReportController extends Controller
                 });
             })
             ->with([
-                'AssignmentDeliveryItem.Order.OrderItems.ProductGroupMember'
+                'AssignmentDeliveryItem.Order.OrderItems'
             ])
             ->get();
 
