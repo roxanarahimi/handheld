@@ -72,11 +72,11 @@ class ReportController extends Controller
         return $dat;
 
 
-            foreach ($dat[0]->AssignmentDeliveryItem as $item) {}
-            if(count($item->Order->OrderItems)>0){
-                return $item;
+            foreach ($dat[0]->AssignmentDeliveryItem as $item) {
+                if (count($item->Order->OrderItems) > 0) {
+                    return $item;
+                }
             }
-
 
 
 
