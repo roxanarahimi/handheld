@@ -387,6 +387,8 @@ class CacheController extends Controller
                         'Sum' => 2000,
                         'DeliveryDate' => $item0->Date
                     ]);
+                }else{
+                    $invoice = $exx3;
                 }
                 $address = InvoiceAddress::where('AddressID', $item0->SalesOffice->Address->AddressID)->first();
                 if (!$address) {
