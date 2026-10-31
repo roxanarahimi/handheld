@@ -67,17 +67,17 @@ class ReportController extends Controller
             ->with([
                 'AssignmentDeliveryItem.Order.OrderItems'
             ])
-            ->get();
+            ->first();
 //        return $dat;
 //        $exx3 = Invoice::where('OrderID', $item->AssignmentDeliveryItem[0]->Order->OrderID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
 //        return $dat;
 
 
         $t=[];
-            foreach ($dat[0]->AssignmentDeliveryItem as $item) {
+            foreach ($dat->AssignmentDeliveryItem as $item) {
                 if ($item->Order->OrderItems->sum('Quantity')>=0) {
                     $t[]= [
-                        $dat[0]->SalesOffice->Address->Name,
+                        $dat->SalesOffice->Address->Name,
                         $item->Order->OrderItems->sum('Quantity'),
                         $item->Customer->CustomerAddress->Address->AddressID,
                         $item];

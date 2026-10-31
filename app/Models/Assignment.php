@@ -21,7 +21,7 @@ class Assignment extends Model
     }
     public function SalesOffice()
     {
-        return $this->hasMany(SalesOffice::class, 'SalesOfficeID', 'SalesOfficeRef');
+        return $this->hasOne(SalesOffice::class, 'SalesOfficeID', 'SalesOfficeRef');
     }
     public function Plant()
     {
