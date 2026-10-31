@@ -69,7 +69,7 @@ class ReportController extends Controller
             ])
             ->get();
 //        $exx3 = Invoice::where('OrderID', $item->AssignmentDeliveryItem[0]->Order->OrderID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
-        return $dat;
+//        return $dat;
 
 
             foreach ($dat[0]->AssignmentDeliveryItem as $item) {
