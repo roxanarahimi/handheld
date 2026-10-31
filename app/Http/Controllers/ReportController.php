@@ -71,12 +71,12 @@ class ReportController extends Controller
 //        $exx3 = Invoice::where('OrderID', $item->AssignmentDeliveryItem[0]->Order->OrderID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
         return $dat;
 
-        foreach ($dat as $item0) {
-            foreach ($item0->AssignmentDeliveryItem as $item) {}
+
+            foreach ($dat[0]->AssignmentDeliveryItem as $item) {}
             if(count($item->Order->OrderItems)>0){
                 return $item;
             }
-        }
+
 
 
 
