@@ -43,6 +43,31 @@ class ReportController extends Controller
 {
     public function test(Request $request)
     {
+        $dat = Assignment::where('State', 2)
+            ->where('Date', '>=', today()->subDays(2))
+            ->orderByDesc('AssignmentID')
+            ->where('Number','37240')
+//            ->whereIn('PlantRef', $storeIDs)
+//                ->has('AssignmentDeliveryItem', '=', 1)
+            ->whereHas('AssignmentDeliveryItem', function ($q) {
+                $q->whereHas('Order', function ($t) {
+                    $t->where('Date', '>=', today()->subDays(2))
+                        ->where('FiscalYearRef', 1406)
+                        ->where('InventoryRef', 1)
+                        ->whereHas('OrderItems', function ($b) {
+                            $b->whereHas('ProductGroupMember', function ($k) {
+                                $k->where('GroupRef','334');
+                            });
+                            $b->havingRaw('SUM(Quantity) >= ?', [100]);
+                        });
+//                            ->where('State', 2);
+                });
+            })
+            ->get();
+
+        return $dat;
+
+
         $invoice = Invoice::find($request['id']);
         $dat = Assignment::where('Number', $invoice['OrderNumber'])
             ->orderByDesc('AssignmentID')
