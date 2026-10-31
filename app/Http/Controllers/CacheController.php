@@ -378,24 +378,24 @@ class CacheController extends Controller
             foreach ($d4 as $item0) {
                 foreach($item0->AssignmentDeliveryItem as $item){
                     $exx3 = Invoice::where('OrderID', $item->Order->OrderID)->where('OrderNumber', $item0->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
-                    if (!$exx3 && $item->Order->OrderItems->sum('Quantity')>=100) {
+                    if (!$exx3) {
                         $invoice = Invoice::create([
                             'Type' => 'InventoryVoucher',
                             'BroadcastDelivery' => 1,
                             'OrderID' => $item->Order->OrderID,
                             'OrderNumber' => $item0->Number,//
-                            "AddressID" => $item->Customer->CustomerAddress->Address->AddressID,
+                            "AddressID" => $item0->SalesOffice->Address->AddressID,
                             'Sum' => $item->Order->OrderItems->sum('Quantity'),
                             'DeliveryDate' => $item->Order->DeliveryDate
                         ]);
-                        $address = InvoiceAddress::where('AddressID', $item->Customer->CustomerAddress->Address->AddressID)->first();
+                        $address = InvoiceAddress::where('AddressID', $item0->SalesOffice->Address->AddressID)->first();
                         if (!$address) {
                             InvoiceAddress::create([
-                                'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
-                                'AddressName' => $item->Customer->CustomerAddress->Address->Name,
-                                'Address' => $item->Customer->CustomerAddress->Address->Details,
-                                'Phone' => $item->Customer->CustomerAddress->Address->Phone,
-                                'city' => $item->Customer->CustomerAddress->Address->Region->Name
+                                'AddressID' => $item0->SalesOffice->Address->AddressID,
+                                'AddressName' => $item0->SalesOffice->Address->Name,
+                                'Address' => $item0->SalesOffice->Address->Details,
+                                'Phone' => $item0->SalesOffice->Address->Phone,
+                                'city' => $item0->SalesOffice->Address->Region->Name
                             ]);
                         }
                         foreach ($item->Order->OrderItems as $item2) {
