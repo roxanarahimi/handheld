@@ -44,8 +44,8 @@ class ReportController extends Controller
     public function test(Request $request)
     {
         $dat = Assignment::
-        where('State', 2)
-//            ->where('Date', '>=', today()->subDays(2))
+//        where('State', 2)
+            where('Date', '>=', today()->subDays(10))
             ->orderByDesc('AssignmentID')
             ->where('Number','36978')
 //            ->whereIn('PlantRef', $storeIDs)
@@ -53,7 +53,7 @@ class ReportController extends Controller
             ->with('AssignmentDeliveryItem')
             ->whereHas('AssignmentDeliveryItem', function ($q) {
                 $q->whereHas('Order', function ($t) {
-                    $t->where('Date', '>=', today()->subDays(2))
+                    $t->where('Date', '>=', today()->subDays(10))
                         ->where('FiscalYearRef', 1406)
                         ->where('InventoryRef', 1)
                         ->whereHas('OrderItems', function ($b) {
