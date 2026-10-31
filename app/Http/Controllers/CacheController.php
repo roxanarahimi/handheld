@@ -375,59 +375,59 @@ class CacheController extends Controller
                     }
                 }
             }
-            foreach ($d4 as $item) {
-                $exx3 = Invoice::where('OrderID', $item->AssignmentDeliveryItem[0]->Order->OrderID)->where('OrderNumber', $item->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
-//                if ($exx3) {
-//                    return response(['invoice exists!',new InvoiceResource($exx3)], 200);
-//                }
-                if (!$exx3) {
-                    $invoice = Invoice::create([
-                        'Type' => 'InventoryVoucher',
-                        'BroadcastDelivery' => 1,
-                        'OrderID' => $item->AssignmentDeliveryItem[0]->Order->OrderID,
-                        'OrderNumber' => $item->Number,//
-                        "AddressID" => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID,
-                        'Sum' => $item->AssignmentDeliveryItem[0]->Order->OrderItems->sum('Quantity'),
-                        'DeliveryDate' => $item->AssignmentDeliveryItem[0]->Order->DeliveryDate
-                    ]);
-                    $address = InvoiceAddress::where('AddressID', $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID)->first();
-                    if (!$address) {
-                        InvoiceAddress::create([
-                            'AddressID' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->AddressID,
-                            'AddressName' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Name,
-                            'Address' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Details,
-                            'Phone' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Phone,
-                            'city' => $item->AssignmentDeliveryItem[0]->Customer->CustomerAddress->Address->Region->Name
+            foreach ($d4 as $item0) {
+                foreach($item0->AssignmentDeliveryItem as $item){
+                    $exx3 = Invoice::where('OrderID', $item->Order->OrderID)->where('OrderNumber', $item0->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
+                    if (!$exx3 && $item->Order->OrderItems->sum('Quantity')>=100) {
+                        $invoice = Invoice::create([
+                            'Type' => 'InventoryVoucher',
+                            'BroadcastDelivery' => 1,
+                            'OrderID' => $item->Order->OrderID,
+                            'OrderNumber' => $item0->Number,//
+                            "AddressID" => $item->Customer->CustomerAddress->Address->AddressID,
+                            'Sum' => $item->Order->OrderItems->sum('Quantity'),
+                            'DeliveryDate' => $item->Order->DeliveryDate
                         ]);
-                    }
-                    foreach ($item->AssignmentDeliveryItem[0]->Order->OrderItems as $item2) {
-                        $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Product->Number)->first();
-                        if ($exist) {
-                            $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
-                        } else {
-                            if (!str_contains($item2->Product->Name, 'لیوانی') && !str_contains($item2->Product->Name, 'کیلویی')) {
-                                $invoiceItem = InvoiceItem::create([
-                                    'invoice_id' => $invoice->id,
-                                    'ProductNumber' => $item2->Product->Number,
-                                    'Quantity' => $item2->Quantity,
-                                ]);
-                            }
-
+                        $address = InvoiceAddress::where('AddressID', $item->Customer->CustomerAddress->Address->AddressID)->first();
+                        if (!$address) {
+                            InvoiceAddress::create([
+                                'AddressID' => $item->Customer->CustomerAddress->Address->AddressID,
+                                'AddressName' => $item->Customer->CustomerAddress->Address->Name,
+                                'Address' => $item->Customer->CustomerAddress->Address->Details,
+                                'Phone' => $item->Customer->CustomerAddress->Address->Phone,
+                                'city' => $item->Customer->CustomerAddress->Address->Region->Name
+                            ]);
                         }
-                        $product = InvoiceProduct::where('ProductNumber', $item2->Product->Number)->first();
-                        if (!$product) {
-                            if (!str_contains($item2->Product->Name, 'لیوانی') && !str_contains($item2->Product->Name, 'کیلویی')) {
-                                InvoiceProduct::create([
-                                    'ProductName' => $item2->Product->Name,
-                                    'ProductNumber' => $item2->Product->Number,
-                                    'Description' => $item2->Product->Description
-                                ]);
+                        foreach ($item->Order->OrderItems as $item2) {
+                            $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Product->Number)->first();
+                            if ($exist) {
+                                $exist->update(['Quantity' => $exist->Quantity + $item2->Quantity]);
+                            } else {
+                                if (!str_contains($item2->Product->Name, 'لیوانی') && !str_contains($item2->Product->Name, 'کیلویی')) {
+                                    $invoiceItem = InvoiceItem::create([
+                                        'invoice_id' => $invoice->id,
+                                        'ProductNumber' => $item2->Product->Number,
+                                        'Quantity' => $item2->Quantity,
+                                    ]);
+                                }
+
                             }
+                            $product = InvoiceProduct::where('ProductNumber', $item2->Product->Number)->first();
+                            if (!$product) {
+                                if (!str_contains($item2->Product->Name, 'لیوانی') && !str_contains($item2->Product->Name, 'کیلویی')) {
+                                    InvoiceProduct::create([
+                                        'ProductName' => $item2->Product->Name,
+                                        'ProductNumber' => $item2->Product->Number,
+                                        'Description' => $item2->Product->Description
+                                    ]);
+                                }
 
+                            }
                         }
-                    }
 
+                    }
                 }
+
 
             }
 //            foreach ($d3 as $item) {
