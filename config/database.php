@@ -94,7 +94,8 @@ return [
         'sqlsrv' => [
             'driver' => 'sqlsrv',
 //            'host' => '92.61.183.36',
-            'host' => '185.119.242.105',
+//            'host' => '185.119.242.105',
+        'host'=>'AlazizPakhsh-DB.abramad.cloud',
             'port' => '1433',
             'database' => 'Rahkaran_Alpa',
             'username' => 'IT',
