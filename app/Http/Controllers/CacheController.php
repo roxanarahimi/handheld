@@ -428,6 +428,8 @@ class CacheController extends Controller
                     }
                 }
 
+                $i = Invoice::where('OrderID', $item->Order->OrderID)->where('OrderNumber', $item0->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
+               if($i){ $i->update(['Sum'=>$i->invoiceItems->sum('Quantity')]);}
 
             }
 //            foreach ($d3 as $item) {
