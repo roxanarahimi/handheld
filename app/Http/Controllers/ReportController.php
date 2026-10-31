@@ -73,8 +73,8 @@ class ReportController extends Controller
 
 
             foreach ($dat[0]->AssignmentDeliveryItem as $item) {
-                if (count($item->Order->OrderItems) > 0) {
-                    return $item;
+                if ($item->Order->OrderItems->sum('Quantity')>=100) {
+                    return [$item->Order->OrderItems->sum('Quantity'),$item];
                 }
             }
 
