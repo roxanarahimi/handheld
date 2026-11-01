@@ -387,20 +387,17 @@ class CacheController extends Controller
                         'Sum' => 2000,
                         'DeliveryDate' => $item0->Date
                     ]);
-                }else{
-                    $invoice = $exx3;
-                }
-                $address = InvoiceAddress::where('AddressID', $item0->SalesOffice->Address->AddressID)->first();
-                if (!$address) {
-                    InvoiceAddress::create([
-                        'AddressID' => $item0->SalesOffice->Address->AddressID,
-                        'AddressName' => $item0->SalesOffice->Address->Name,
-                        'Address' => $item0->SalesOffice->Address->Details,
-                        'Phone' => $item0->SalesOffice->Address->Phone,
-                        'city' => $item0->SalesOffice->Address->Region->Name
-                    ]);
-                }
-                foreach($item0->AssignmentDeliveryItem as $item){
+                    $address = InvoiceAddress::where('AddressID', $item0->SalesOffice->Address->AddressID)->first();
+                    if (!$address) {
+                        InvoiceAddress::create([
+                            'AddressID' => $item0->SalesOffice->Address->AddressID,
+                            'AddressName' => $item0->SalesOffice->Address->Name,
+                            'Address' => $item0->SalesOffice->Address->Details,
+                            'Phone' => $item0->SalesOffice->Address->Phone,
+                            'city' => $item0->SalesOffice->Address->Region->Name
+                        ]);
+                    }
+                    foreach($item0->AssignmentDeliveryItem as $item){
                         foreach ($item->Order->OrderItems as $item2) {
                             $exist = InvoiceItem::where('invoice_id', $invoice->id)->where('ProductNumber', $item2->Product->Number)->first();
                             if ($exist) {
@@ -427,10 +424,10 @@ class CacheController extends Controller
 
                             }
                         }
+                    }
                 }
 
                 $i = Invoice::where('OrderID', $item0->AssignmentID)->where('OrderNumber', $item0->Number)->where('Type', 'InventoryVoucher')->where('BroadcastDelivery', 1)->first();
-
                 if($i){ $i->update(['Sum'=>$i->invoiceItems->sum('Quantity')]);}
 
             }
